@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>谁是你的对象？ - Chapter 02 Free Explore Sample</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body class="chapter2-page free-explore-page">
+    <main class="game-shell" aria-label="第二章自由探索样张">
+      <header class="topbar" aria-label="顶部功能栏">
+        <button class="icon-btn" type="button" aria-label="菜单">
+          <span></span><span></span><span></span>
+          <small>菜单</small>
+        </button>
+        <button class="icon-btn" type="button" aria-label="手机">
+          <span class="phone-icon"></span>
+          <small>手机</small>
+        </button>
+        <button class="icon-btn" type="button" aria-label="证据">
+          <span class="folder-icon"></span>
+          <small>证据</small>
+        </button>
+        <button class="icon-btn" type="button" aria-label="日志">
+          <span class="note-icon"></span>
+          <small>日志</small>
+        </button>
+        <button class="icon-btn" type="button" aria-label="设置">
+          <span class="gear-icon"></span>
+          <small>设置</small>
+        </button>
+      </header>
+
+      <section class="scene-card free-explore-scene free-room free-view-center" id="freeScene" aria-label="自由探索房间">
+        <div class="chapter-bubble">
+          <strong>第二章：交换证词</strong>
+          <span id="freeGoal">自由探索样张</span>
+        </div>
+        <div class="mascot404" aria-label="404 引导">404</div>
+        <div class="free-pan-controls" aria-label="左右查看房间">
+          <button type="button" data-free-pan="left" aria-label="查看书桌左侧">‹</button>
+          <button type="button" data-free-pan="right" aria-label="查看书架右侧">›</button>
+        </div>
+
+        <div class="free-zones" aria-label="可探索区域">
+          <button type="button" data-free-zone="drawer" aria-label="探索抽屉"></button>
+          <button type="button" data-free-zone="album" aria-label="探索照片墙"></button>
+          <button type="button" data-free-zone="shelf" aria-label="观察书架"></button>
+          <button type="button" data-free-zone="window" aria-label="观察窗边"></button>
+          <button type="button" data-free-zone="calendar" aria-label="查看书架上的日历"></button>
+          <button type="button" data-free-zone="bed" aria-label="观察床铺"></button>
+        </div>
+
+        <div class="free-detail-zones" aria-label="放大调查区域">
+          <button class="free-record-zone" type="button" data-free-detail="record" aria-label="记录当前线索"></button>
+          <button class="free-back-zone" type="button" data-free-detail="back" aria-label="返回房间">‹</button>
+        </div>
+
+        <div class="free-toast" id="freeToast" aria-live="polite"></div>
+      </section>
+    </main>
+
+    <div class="item-modal" id="itemModal" aria-hidden="true">
+      <div class="item-sheet" role="dialog" aria-modal="true" aria-label="获得证物">
+        <span class="item-kicker">获得证物</span>
+        <img class="item-image" id="itemImage" src="" alt="" />
+        <strong id="itemTitle">证物已贴进记录</strong>
+        <p id="itemDesc">新的证物已经加入证据页。</p>
+        <button type="button" id="closeItem">贴进记录</button>
+      </div>
+    </div>
+
+    <script>
+      const freeState = { mode: "room", view: "center", target: null, collected: new Set(), afterItemPopup: null };
+      const freeScene = document.querySelector("#freeScene");
+      const freeToast = document.querySelector("#freeToast");
+      const freeGoal = document.querySelector("#freeGoal");
+      const itemModal = document.querySelector("#itemModal");
+      const itemImage = document.querySelector("#itemImage");
+      const itemTitle = document.querySelector("#itemTitle");
+      const itemDesc = document.querySelector("#itemDesc");
+      const viewOrder = ["left", "center", "right"];
+      const goalByView = {
+        left: "书桌左侧",
+        center: "照片墙和书架",
+        right: "窗边和床铺",
+      };
+
+      const evidenceByTarget = {
+        drawer: {
+          title: "备用钥匙扣与维修便签",
+          desc: "房间抽屉里的生活证据，和门锁故障后的处理有关。",
+          image: "./assets/chapter2/E004_detail.png",
+        },
+        album: {
+          title: "照片墙：约拍成片与生活抓拍",
+          desc: "墙上的生活抓拍和便签，记录了一次拍摄后的关系变化。",
+          image: "./assets/chapter2/E005_detail.png",
+        },
+        calendar: {
+          title: "书架实体日历",
+          desc: "日历上同一天被分成“留下”和“新城”两组安排。",
+          image: "./assets/chapter2/E006_detail.png",
+        },
+      };
+
+      const hintByTarget = {
+        drawer: "钥匙扣和便签被放在托盘里，旁边的杯子还留着半杯咖啡。",
+        album: "照片墙上贴着约拍成片和几张随手拍。",
+        calendar: "书架上的实体日历停在同一天，两组安排挤在同一个格子里。",
+        shelf: "书架上压着一本日历。",
+        window: "窗边光线很亮，植物的影子落在床沿上。",
+        bed: "床铺整理得很随意，像有人刚从很长的睡眠里坐起来。",
+      };
+      freeGoal.textContent = goalByView[freeState.view];
+
+      document.querySelector(".free-pan-controls").addEventListener("click", (event) => {
+        const button = event.target.closest("[data-free-pan]");
+        if (!button || freeState.mode !== "room") return;
+        const currentIndex = viewOrder.indexOf(freeState.view);
+        const nextIndex = button.dataset.freePan === "left" ? currentIndex - 1 : currentIndex + 1;
+        setView(viewOrder[Math.max(0, Math.min(viewOrder.length - 1, nextIndex))]);
+      });
+
+      document.querySelector(".free-zones").addEventListener("click", (event) => {
+        const button = event.target.closest("[data-free-zone]");
+        if (!button || freeState.mode !== "room") return;
+        const target = button.dataset.freeZone;
+        if (target === "shelf") {
+          openDetail("calendar");
+          return;
+        }
+        if (target === "bed" || target === "window") {
+          showToast(hintByTarget[target]);
+          return;
+        }
+        openDetail(target);
+      });
+
+      function openDetail(target) {
+        freeState.mode = "detail";
+        freeState.target = target;
+        freeScene.className = `scene-card free-explore-scene free-detail free-detail-${target}`;
+        freeGoal.textContent = "放大调查";
+        showToast(freeState.collected.has(target) ? "这条线索已经记录过。" : hintByTarget[target]);
+      }
+
+      document.querySelector(".free-detail-zones").addEventListener("click", (event) => {
+        const button = event.target.closest("[data-free-detail]");
+        if (!button || freeState.mode !== "detail") return;
+        if (button.dataset.freeDetail === "back") {
+          backToRoom();
+          return;
+        }
+        if (!freeState.collected.has(freeState.target)) {
+          freeState.collected.add(freeState.target);
+          showItemPopup(freeState.target, backToRoom);
+        } else {
+          showToast("已经记录过了。");
+          window.setTimeout(backToRoom, 1400);
+        }
+      });
+
+      function backToRoom() {
+        freeState.mode = "room";
+        if (freeState.target === "drawer") freeState.view = "left";
+        if (freeState.target === "album") freeState.view = "center";
+        if (freeState.target === "calendar") freeState.view = "center";
+        freeState.target = null;
+        setView(freeState.view);
+      }
+
+      function setView(view, toastText) {
+        freeState.view = view;
+        freeScene.className = `scene-card free-explore-scene free-room free-view-${view}`;
+        freeGoal.textContent = goalByView[view];
+        if (toastText) showToast(toastText);
+        else hideToast();
+      }
+
+      function showToast(text) {
+        freeToast.textContent = text;
+        freeToast.classList.remove("show");
+        window.clearTimeout(freeState.toastTimer);
+        void freeToast.offsetWidth;
+        freeToast.classList.add("show");
+        freeState.toastTimer = window.setTimeout(() => freeToast.classList.remove("show"), 5200);
+      }
+
+      function hideToast() {
+        freeToast.classList.remove("show");
+        freeToast.textContent = "";
+        window.clearTimeout(freeState.toastTimer);
+      }
+
+      function showItemPopup(target, onDone) {
+        const item = evidenceByTarget[target];
+        hideToast();
+        itemImage.src = item.image;
+        itemImage.alt = item.title;
+        itemTitle.textContent = item.title;
+        itemDesc.textContent = item.desc;
+        freeState.afterItemPopup = onDone;
+        itemModal.classList.add("open");
+        itemModal.setAttribute("aria-hidden", "false");
+      }
+
+      function closeItemPopup() {
+        if (!itemModal.classList.contains("open")) return;
+        itemModal.classList.remove("open");
+        itemModal.setAttribute("aria-hidden", "true");
+        const callback = freeState.afterItemPopup;
+        freeState.afterItemPopup = null;
+        if (callback) callback();
+      }
+
+      document.querySelector("#closeItem").addEventListener("click", closeItemPopup);
+      itemModal.addEventListener("click", (event) => {
+        if (event.target === itemModal) closeItemPopup();
+      });
+    </script>
+  </body>
+</html>

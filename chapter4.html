@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>谁是你的对象？ - Chapter 04 Prototype</title>
+    <link rel="stylesheet" href="./styles.css?v=20260807-chapter4-cgreveal" />
+  </head>
+  <body class="chapter2-page chapter3-page chapter4-page">
+    <main class="game-shell" aria-label="谁是你的对象第四章界面原型">
+      <header class="topbar" aria-label="顶部功能栏">
+        <button class="icon-btn" type="button" aria-label="菜单">
+          <span></span><span></span><span></span>
+          <small>菜单</small>
+        </button>
+        <button class="icon-btn" type="button" data-action="phone" aria-label="手机">
+          <span class="phone-icon"></span>
+          <small>手机</small>
+        </button>
+        <button class="icon-btn" type="button" data-action="evidence" aria-label="证据">
+          <span class="folder-icon"></span>
+          <small>证据</small>
+        </button>
+        <button class="icon-btn" type="button" data-action="log" aria-label="日志">
+          <span class="note-icon"></span>
+          <small>日志</small>
+        </button>
+        <button class="icon-btn" type="button" aria-label="设置">
+          <span class="gear-icon"></span>
+          <small>设置</small>
+        </button>
+      </header>
+
+      <section class="scene-card chapter2-scene chapter3-scene chapter4-scene" id="sceneCard" aria-label="第四章场景">
+        <div class="chapter-bubble">
+          <strong>第四章：两种生活</strong>
+          <span id="chapterGoal">生活体验板</span>
+        </div>
+        <div class="mascot404" id="mascot404" aria-label="404 引导">404</div>
+
+        <div class="life-board" id="lifeBoard" aria-label="两种生活体验板">
+          <button class="life-card old-city" type="button" data-life-action="zhou">
+            <span>老城一周</span>
+            <strong>周砚川</strong>
+            <small id="zhouLifeStatus">未体验</small>
+          </button>
+          <button class="life-card new-city" type="button" data-life-action="lin">
+            <span>新城一周</span>
+            <strong>林夏</strong>
+            <small id="linLifeStatus">未体验</small>
+          </button>
+          <button class="life-card review locked" type="button" data-life-action="review" id="reviewCard">
+            <span>代价复核</span>
+            <strong>分析</strong>
+            <small>两条线完成后开放</small>
+          </button>
+        </div>
+
+        <div class="mini-game" id="miniGame" aria-label="第四章轻互动">
+          <div class="mini-stage">
+            <img id="miniBoardImage" src="" alt="" />
+            <div class="mini-zones" id="miniZones"></div>
+          </div>
+          <div class="mini-tray" id="miniTray" aria-label="可放置物件"></div>
+          <button class="mini-complete" type="button" id="miniComplete" hidden>完成整理</button>
+        </div>
+
+        <img
+          class="standee standee-zhou"
+          id="zhouPanel"
+          src="./assets/zhou_yanchuan_waist_transparent_v1.png"
+          alt="周砚川立绘"
+        />
+        <img
+          class="standee standee-lin"
+          id="linPanel"
+          src="./assets/lin_xia_waist_transparent_v1.png"
+          alt="林夏立绘"
+        />
+
+        <article class="dialogue-panel">
+          <div class="dialogue-copy">
+            <div class="dialogue-nameplate" id="speaker">404</div>
+            <div class="dialogue-header">
+              <span id="node">ch04_001_life_board_open</span>
+              <span class="next-cue" id="nextCue">▼</span>
+            </div>
+            <p class="dialogue-text" id="dialogueText">第三章记录已贴入生活体验板。</p>
+          </div>
+        </article>
+      </section>
+
+      <section class="choice-stack" aria-label="选择按钮" hidden>
+        <div class="question-grid collapsed" id="questionGrid" hidden>
+          <p class="question-hint" id="questionHint">点击对白继续。</p>
+        </div>
+      </section>
+    </main>
+
+    <div class="evidence-modal" id="evidenceModal" aria-hidden="true">
+      <div class="evidence-sheet" role="dialog" aria-modal="true" aria-label="证据和推理">
+        <div class="sheet-top">
+          <div>
+            <span>证据</span>
+            <strong>生活代价</strong>
+          </div>
+          <button type="button" id="closeEvidence" aria-label="关闭证据面板">关闭</button>
+        </div>
+        <aside class="evidence-rail" aria-label="证物栏">
+          <div class="panel-title">
+            <span>证物</span>
+            <small id="evidenceCount">0/3</small>
+          </div>
+          <p class="evidence-empty" id="evidenceEmpty">尚未获得第四章证据。</p>
+          <button class="evidence-card locked" type="button" data-evidence="old">
+            <img class="evidence-thumb" src="./assets/chapter4/camping_complete.png" alt="老城生活记录" />
+            <span>
+              <strong>E010 老城生活一周记录</strong>
+              <small>露营 / 流浪猫 / 重复感</small>
+            </span>
+          </button>
+          <button class="evidence-card locked" type="button" data-evidence="new">
+            <img class="evidence-thumb" src="./assets/chapter4/map_complete.png" alt="新城试住记录" />
+            <span>
+              <strong>E011 新城试住一周记录</strong>
+              <small>小公寓 / 海边 / 生活地图</small>
+            </span>
+          </button>
+          <button class="evidence-card locked" type="button" data-evidence="missing">
+            <img class="evidence-thumb" src="./assets/chapter4/home_complete.png" alt="两种生活的缺页" />
+            <span>
+              <strong>E012 两种生活的缺页</strong>
+              <small>两份记录都少了最难熬的页</small>
+            </span>
+          </button>
+        </aside>
+
+        <section class="deduction-board" aria-label="推理板">
+          <div class="panel-title">
+            <span>记录</span>
+            <small>第四章</small>
+          </div>
+          <ul class="clue-list" id="clueList">
+            <li class="empty">尚未获得第四章记录。</li>
+          </ul>
+        </section>
+      </div>
+    </div>
+
+    <div class="log-modal" id="logModal" aria-hidden="true">
+      <div class="log-sheet" role="dialog" aria-modal="true" aria-label="过往交互日志">
+        <div class="sheet-top">
+          <div>
+            <span>日志</span>
+            <strong>交互记录</strong>
+          </div>
+          <button type="button" id="closeLog" aria-label="关闭日志面板">关闭</button>
+        </div>
+        <div class="panel-title">
+          <span>已发生剧情</span>
+          <small id="logCount">0 条</small>
+        </div>
+        <p class="log-empty" id="logEmpty">还没有新的交互记录。</p>
+        <ol class="log-list" id="logList"></ol>
+      </div>
+    </div>
+
+    <div class="item-modal" id="itemModal" aria-hidden="true">
+      <div class="item-sheet" role="dialog" aria-modal="true" aria-label="获得证物">
+        <span class="item-kicker">获得证物</span>
+        <img class="item-image" id="itemImage" src="" alt="" />
+        <strong id="itemTitle">证物已贴进记录</strong>
+        <p id="itemDesc">新的证物已经加入证据页。</p>
+        <button type="button" id="closeItem">贴进记录</button>
+      </div>
+    </div>
+
+    <div class="phone-modal" id="phoneModal" aria-hidden="true">
+      <div class="phone chapter2-phone" role="dialog" aria-modal="true" aria-label="第四章手机">
+        <div class="phone-top">
+          <button type="button" id="closePhone" aria-label="关闭手机界面">‹</button>
+          <span>手机</span>
+          <span>•••</span>
+        </div>
+        <div class="phone-content">
+          <div class="phone-evidence-card">
+            <div class="phone-meta">
+              <span>第四章</span>
+              <strong>生活体验板入口</strong>
+              <small>两条生活线都体验后，才能分析代价。</small>
+            </div>
+            <button class="phone-investigate" type="button" data-phone-action="board">打开生活体验板</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="./chapter4_app.js?v=20260807-chapter4-cgreveal"></script>
+  </body>
+</html>

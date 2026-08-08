@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>谁是你的对象？ - Chapter 02 Prototype</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body class="chapter2-page free-explore-page">
+    <main class="game-shell" aria-label="谁是你的对象第二章界面原型">
+      <header class="topbar" aria-label="顶部功能栏">
+        <button class="icon-btn" type="button" aria-label="菜单">
+          <span></span><span></span><span></span>
+          <small>菜单</small>
+        </button>
+        <button class="icon-btn" type="button" data-action="phone" aria-label="手机">
+          <span class="phone-icon"></span>
+          <small>手机</small>
+        </button>
+        <button class="icon-btn" type="button" data-action="evidence" aria-label="证据">
+          <span class="folder-icon"></span>
+          <small>证据</small>
+        </button>
+        <button class="icon-btn" type="button" data-action="log" aria-label="日志">
+          <span class="note-icon"></span>
+          <small>日志</small>
+        </button>
+        <button class="icon-btn" type="button" aria-label="设置">
+          <span class="gear-icon"></span>
+          <small>设置</small>
+        </button>
+      </header>
+
+      <section class="scene-card chapter2-scene" aria-label="房间与角色">
+        <div class="chapter-bubble">
+          <strong>第二章：交换证词</strong>
+          <span id="chapterGoal">证据展示开放</span>
+        </div>
+        <div class="mascot404" id="mascot404" aria-label="404 引导">404</div>
+        <div class="room-layer" aria-hidden="true"></div>
+
+        <div class="free-pan-controls" aria-label="左右查看房间">
+          <button type="button" data-free-pan="left" aria-label="查看书桌左侧">‹</button>
+          <button type="button" data-free-pan="right" aria-label="查看书架右侧">›</button>
+        </div>
+
+        <div class="free-zones" id="roomHotspots" aria-label="可探索区域">
+          <button type="button" data-free-zone="drawer" aria-label="探索抽屉"></button>
+          <button type="button" data-free-zone="album" aria-label="探索照片墙"></button>
+          <button type="button" data-free-zone="shelf" aria-label="观察书架"></button>
+          <button type="button" data-free-zone="window" aria-label="观察窗边"></button>
+          <button type="button" data-free-zone="calendar" aria-label="查看书架上的日历"></button>
+          <button type="button" data-free-zone="bed" aria-label="观察床铺"></button>
+        </div>
+        <div class="free-detail-zones" id="detailHotspots" aria-label="放大调查区域">
+          <button class="free-record-zone" type="button" data-detail-action="collect" aria-label="记录当前线索"></button>
+          <button class="free-back-zone" type="button" data-detail-action="back" aria-label="返回房间">‹</button>
+        </div>
+        <div class="free-toast" id="roomToast" aria-live="polite"></div>
+
+        <img
+          class="standee standee-zhou"
+          id="zhouPanel"
+          src="./assets/zhou_yanchuan_waist_transparent_v1.png"
+          alt="周砚川立绘"
+          role="button"
+          tabindex="0"
+          data-character="zhou"
+        />
+        <img
+          class="standee standee-lin"
+          id="linPanel"
+          src="./assets/lin_xia_waist_transparent_v1.png"
+          alt="林夏立绘"
+          role="button"
+          tabindex="0"
+          data-character="lin"
+        />
+
+        <article class="dialogue-panel">
+          <div class="dialogue-copy">
+            <div class="dialogue-nameplate" id="speaker">404</div>
+            <div class="dialogue-header">
+              <span id="node">ch02_001_reopen_case</span>
+              <span class="next-cue" id="nextCue">▼</span>
+            </div>
+            <p class="dialogue-text" id="dialogueText">第一章记录已归档。证据展示功能开放。</p>
+          </div>
+        </article>
+      </section>
+
+      <section class="choice-stack" aria-label="选择按钮">
+        <div class="question-grid collapsed" id="questionGrid">
+          <p class="question-hint" id="questionHint">点击对白继续。</p>
+        </div>
+      </section>
+    </main>
+
+    <div class="evidence-modal" id="evidenceModal" aria-hidden="true">
+      <div class="evidence-sheet" role="dialog" aria-modal="true" aria-label="证据和推理">
+        <div class="sheet-top">
+          <div>
+            <span>证据</span>
+            <strong>关系记录</strong>
+          </div>
+          <button type="button" id="closeEvidence" aria-label="关闭证据面板">关闭</button>
+        </div>
+        <aside class="evidence-rail" aria-label="证物栏">
+          <div class="panel-title">
+            <span>证物</span>
+            <small id="evidenceCount">0/4</small>
+          </div>
+          <p class="evidence-empty" id="evidenceEmpty">尚未搜集到第二章证据。</p>
+          <button class="evidence-card locked" type="button" data-evidence="chat">
+            <img class="evidence-thumb" src="./assets/evidence/evidence_chat_snapshot_v1.png" alt="异常聊天截图" />
+            <span>
+              <strong>异常聊天截图</strong>
+              <small>第一章矛盾记录</small>
+            </span>
+          </button>
+          <button class="evidence-card locked" type="button" data-evidence="key">
+            <img class="evidence-thumb" src="./assets/chapter2/E004_card.png" alt="备用钥匙扣与维修便签" />
+            <span>
+              <strong>备用钥匙扣与维修便签</strong>
+              <small>房间抽屉</small>
+            </span>
+          </button>
+          <button class="evidence-card locked" type="button" data-evidence="album">
+            <img class="evidence-thumb" src="./assets/chapter2/E005_card.png" alt="墙上拍立得" />
+            <span>
+              <strong>墙上拍立得：约拍成片与生活抓拍</strong>
+              <small>房间墙面</small>
+            </span>
+          </button>
+          <button class="evidence-card locked" type="button" data-evidence="calendar">
+            <img class="evidence-thumb" src="./assets/chapter2/E006_card.png" alt="同一晚的两座城市日历" />
+            <span>
+              <strong>书架实体日历</strong>
+              <small>书架实体日历</small>
+            </span>
+          </button>
+        </aside>
+
+        <section class="deduction-board" aria-label="推理板">
+          <div class="panel-title">
+            <span>记录</span>
+            <small>第二次判断</small>
+          </div>
+          <ul class="clue-list" id="clueList">
+            <li class="empty">尚未获得第二章证词。</li>
+          </ul>
+          <div class="judgement-row locked" id="judgementRow" role="group" aria-label="阶段判断">
+            <button type="button" data-judge="zhou">周砚川更可信</button>
+            <button type="button" data-judge="lin">林夏更可信</button>
+            <button type="button" data-judge="info">有人利用信息</button>
+            <button type="button" data-judge="split">不像同一个故事</button>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <div class="log-modal" id="logModal" aria-hidden="true">
+      <div class="log-sheet" role="dialog" aria-modal="true" aria-label="过往交互日志">
+        <div class="sheet-top">
+          <div>
+            <span>日志</span>
+            <strong>交互记录</strong>
+          </div>
+          <button type="button" id="closeLog" aria-label="关闭日志面板">关闭</button>
+        </div>
+        <div class="panel-title">
+          <span>已发生剧情</span>
+          <small id="logCount">0 条</small>
+        </div>
+        <p class="log-empty" id="logEmpty">还没有新的交互记录。</p>
+        <ol class="log-list" id="logList"></ol>
+      </div>
+    </div>
+
+    <div class="item-modal" id="itemModal" aria-hidden="true">
+      <div class="item-sheet" role="dialog" aria-modal="true" aria-label="获得证物">
+        <span class="item-kicker">获得证物</span>
+        <img class="item-image" id="itemImage" src="" alt="" />
+        <strong id="itemTitle">证物已贴进记录</strong>
+        <p id="itemDesc">新的证物已经加入证据页。</p>
+        <button type="button" id="closeItem">贴进记录</button>
+      </div>
+    </div>
+
+    <div class="phone-modal" id="phoneModal" aria-hidden="true">
+      <div class="phone chapter2-phone" role="dialog" aria-modal="true" aria-label="第二章手机调查">
+        <div class="phone-top">
+          <button type="button" id="closePhone" aria-label="关闭手机界面">‹</button>
+          <span>手机调查</span>
+          <span>•••</span>
+        </div>
+        <div class="phone-content">
+          <div class="phone-evidence-card">
+            <div class="phone-meta">
+              <strong>我的房间入口</strong>
+            </div>
+            <button class="phone-investigate" type="button" data-phone-action="room">进入我的房间</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="./chapter2_app.js"></script>
+  </body>
+</html>

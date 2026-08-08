@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>谁是你的对象？ - Chapter 03 Prototype</title>
+    <link rel="stylesheet" href="./styles.css?v=20260807-feeling-analysis" />
+  </head>
+  <body class="chapter2-page chapter3-page">
+    <main class="game-shell" aria-label="谁是你的对象第三章界面原型">
+      <header class="topbar" aria-label="顶部功能栏">
+        <button class="icon-btn" type="button" aria-label="菜单">
+          <span></span><span></span><span></span>
+          <small>菜单</small>
+        </button>
+        <button class="icon-btn" type="button" data-action="phone" aria-label="手机">
+          <span class="phone-icon"></span>
+          <small>手机</small>
+        </button>
+        <button class="icon-btn" type="button" data-action="evidence" aria-label="证据">
+          <span class="folder-icon"></span>
+          <small>证据</small>
+        </button>
+        <button class="icon-btn" type="button" data-action="log" aria-label="日志">
+          <span class="note-icon"></span>
+          <small>日志</small>
+        </button>
+        <button class="icon-btn" type="button" aria-label="设置">
+          <span class="gear-icon"></span>
+          <small>设置</small>
+        </button>
+      </header>
+
+      <section class="scene-card chapter2-scene chapter3-scene" id="sceneCard" aria-label="第三章场景">
+        <div class="chapter-bubble">
+          <strong>第三章：两个故事的起点</strong>
+          <span id="chapterGoal">日历冲突复查</span>
+        </div>
+        <div class="mascot404" id="mascot404" aria-label="404 引导">404</div>
+
+        <div class="timeline-board-ui" id="timelineBoard" aria-label="时间对照板">
+          <button
+            class="timeline-card stay"
+            type="button"
+            data-board-action="zhou"
+            data-board-label="左侧回忆"
+            aria-label="查看左侧回忆"
+          ></button>
+          <button
+            class="timeline-card leave"
+            type="button"
+            data-board-action="lin"
+            data-board-label="右侧回忆"
+            aria-label="查看右侧回忆"
+          ></button>
+          <button
+            class="timeline-card origin locked"
+            type="button"
+            data-board-action="origin"
+            data-board-label="分析"
+            id="originCard"
+            aria-label="分析两个故事的共同起点"
+          >
+            <span>分析</span>
+          </button>
+        </div>
+
+        <div class="feeling-board" id="feelingBoard" aria-label="生活感受记录">
+          <button type="button" data-feeling="stay">
+            <img src="./assets/chapter3/feeling_stay.png" alt="" />
+            <span>喜欢留下的生活</span>
+          </button>
+          <button type="button" data-feeling="leave">
+            <img src="./assets/chapter3/feeling_leave.png" alt="" />
+            <span>期待出发的生活</span>
+          </button>
+          <button type="button" data-feeling="both">
+            <img src="./assets/chapter3/feeling_both.png" alt="" />
+            <span>我都向往</span>
+          </button>
+          <button type="button" data-feeling="uneasy">
+            <img src="./assets/chapter3/feeling_uneasy.png" alt="" />
+            <span>我都不安</span>
+          </button>
+        </div>
+
+        <img
+          class="standee standee-zhou"
+          id="zhouPanel"
+          src="./assets/zhou_yanchuan_waist_transparent_v1.png"
+          alt="周砚川立绘"
+        />
+        <img
+          class="standee standee-lin"
+          id="linPanel"
+          src="./assets/lin_xia_waist_transparent_v1.png"
+          alt="林夏立绘"
+        />
+
+        <article class="dialogue-panel">
+          <div class="dialogue-copy">
+            <div class="dialogue-nameplate" id="speaker">404</div>
+            <div class="dialogue-header">
+              <span id="node">ch03_001_after_case_conflict</span>
+              <span class="next-cue" id="nextCue">▼</span>
+            </div>
+            <p class="dialogue-text" id="dialogueText">第二次判断已归档。</p>
+          </div>
+        </article>
+      </section>
+
+      <section class="choice-stack" aria-label="选择按钮">
+        <div class="question-grid collapsed" id="questionGrid">
+          <p class="question-hint" id="questionHint">点击对白继续。</p>
+        </div>
+      </section>
+    </main>
+
+    <div class="evidence-modal" id="evidenceModal" aria-hidden="true">
+      <div class="evidence-sheet" role="dialog" aria-modal="true" aria-label="证据和推理">
+        <div class="sheet-top">
+          <div>
+            <span>证据</span>
+            <strong>时间对照</strong>
+          </div>
+          <button type="button" id="closeEvidence" aria-label="关闭证据面板">关闭</button>
+        </div>
+        <aside class="evidence-rail" aria-label="证物栏">
+          <div class="panel-title">
+            <span>证物</span>
+            <small id="evidenceCount">0/4</small>
+          </div>
+          <p class="evidence-empty" id="evidenceEmpty">尚未搜集到第三章证据。</p>
+          <button class="evidence-card locked" type="button" data-evidence="calendar">
+            <img class="evidence-thumb" src="./assets/chapter2/E006_card.png" alt="同一晚的两座城市日历" />
+            <span>
+              <strong>书架实体日历</strong>
+              <small>同一晚的两座城市</small>
+            </span>
+          </button>
+          <button class="evidence-card locked" type="button" data-evidence="stay">
+            <img class="evidence-thumb" src="./assets/chapter3/E007_card.png" alt="留下生活改造清单" />
+            <span>
+              <strong>留下生活改造清单</strong>
+              <small>周砚川回忆</small>
+            </span>
+          </button>
+          <button class="evidence-card locked" type="button" data-evidence="leave">
+            <img class="evidence-thumb" src="./assets/chapter3/E008_card.png" alt="新城旅居试住计划" />
+            <span>
+              <strong>新城旅居试住计划</strong>
+              <small>林夏回忆</small>
+            </span>
+          </button>
+          <button class="evidence-card locked" type="button" data-evidence="origin">
+            <img class="evidence-thumb" src="./assets/chapter3/E009_card.png" alt="选择前备忘" />
+            <span>
+              <strong>选择前备忘：留下 / 出发</strong>
+              <small>共同起点</small>
+            </span>
+          </button>
+        </aside>
+
+        <section class="deduction-board" aria-label="推理板">
+          <div class="panel-title">
+            <span>记录</span>
+            <small>第三次判断</small>
+          </div>
+          <ul class="clue-list" id="clueList">
+            <li class="empty">尚未获得第三章记录。</li>
+          </ul>
+          <div class="judgement-row locked" id="judgementRow" role="group" aria-label="阶段判断">
+            <button type="button" data-judge="city_choice">城市选择开始分开</button>
+            <button type="button" data-judge="relationship_start">关系起点开始分开</button>
+            <button type="button" data-judge="memory_tampering">有人篡改记忆</button>
+            <button type="button" data-judge="incomplete_stories">两个故事都不完整</button>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <div class="log-modal" id="logModal" aria-hidden="true">
+      <div class="log-sheet" role="dialog" aria-modal="true" aria-label="过往交互日志">
+        <div class="sheet-top">
+          <div>
+            <span>日志</span>
+            <strong>交互记录</strong>
+          </div>
+          <button type="button" id="closeLog" aria-label="关闭日志面板">关闭</button>
+        </div>
+        <div class="panel-title">
+          <span>已发生剧情</span>
+          <small id="logCount">0 条</small>
+        </div>
+        <p class="log-empty" id="logEmpty">还没有新的交互记录。</p>
+        <ol class="log-list" id="logList"></ol>
+      </div>
+    </div>
+
+    <div class="item-modal" id="itemModal" aria-hidden="true">
+      <div class="item-sheet" role="dialog" aria-modal="true" aria-label="获得证物">
+        <span class="item-kicker">获得证物</span>
+        <img class="item-image" id="itemImage" src="" alt="" />
+        <strong id="itemTitle">证物已贴进记录</strong>
+        <p id="itemDesc">新的证物已经加入证据页。</p>
+        <button type="button" id="closeItem">贴进记录</button>
+      </div>
+    </div>
+
+    <div class="phone-modal" id="phoneModal" aria-hidden="true">
+      <div class="phone chapter2-phone" role="dialog" aria-modal="true" aria-label="第三章手机">
+        <div class="phone-top">
+          <button type="button" id="closePhone" aria-label="关闭手机界面">‹</button>
+          <span>手机</span>
+          <span>•••</span>
+        </div>
+        <div class="phone-content">
+          <div class="phone-evidence-card">
+            <div class="phone-meta">
+              <span>第三章</span>
+              <strong>时间对照板入口</strong>
+              <small>回看两段生活起点。</small>
+            </div>
+            <button class="phone-investigate" type="button" data-phone-action="board">打开时间对照板</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="./chapter3_app.js"></script>
+  </body>
+</html>

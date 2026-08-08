@@ -1,0 +1,413 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>小头像框样张</title>
+    <style>
+      :root {
+        --paper: #fffdf8;
+        --wash: #f6f3ef;
+        --line: #d8d0c4;
+        --ink: #2e2e2e;
+        --muted: #7c776e;
+        --accent: #9ac5b0;
+        --label: #dec7ac;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        background:
+          radial-gradient(circle at 50% 18%, rgba(255, 253, 248, 0.92), rgba(230, 228, 220, 0.82) 66%),
+          #e9e8e2;
+        color: var(--ink);
+        font-family: "Microsoft YaHei", "PingFang SC", "Noto Sans SC", sans-serif;
+      }
+
+      .game-shell {
+        width: min(390px, calc(100vw - 24px));
+        min-height: 604px;
+        padding: 14px 14px 16px;
+        border-radius: 22px;
+        background: rgba(255, 253, 248, 0.92);
+        box-shadow: 0 18px 42px rgba(46, 46, 46, 0.12);
+      }
+
+      .topbar {
+        height: 70px;
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        align-items: center;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .nav-item {
+        display: grid;
+        justify-items: center;
+        gap: 4px;
+        color: var(--ink);
+        font-size: 11px;
+      }
+
+      .nav-icon {
+        width: 28px;
+        height: 28px;
+        position: relative;
+      }
+
+      .nav-icon.menu::before,
+      .nav-icon.menu::after,
+      .nav-icon.menu span {
+        content: "";
+        position: absolute;
+        left: 3px;
+        right: 3px;
+        height: 2px;
+        border-radius: 2px;
+        background: var(--ink);
+      }
+
+      .nav-icon.menu::before { top: 6px; }
+      .nav-icon.menu span { top: 13px; }
+      .nav-icon.menu::after { top: 20px; }
+
+      .nav-icon.phone,
+      .nav-icon.bag,
+      .nav-icon.note {
+        border: 2px solid var(--ink);
+        border-radius: 5px;
+      }
+
+      .nav-icon.phone::after {
+        content: "";
+        position: absolute;
+        left: 11px;
+        bottom: 3px;
+        width: 6px;
+        height: 2px;
+        border-radius: 2px;
+        background: var(--ink);
+      }
+
+      .nav-icon.bag::before {
+        content: "";
+        position: absolute;
+        left: 8px;
+        top: -6px;
+        width: 10px;
+        height: 8px;
+        border: 2px solid var(--ink);
+        border-bottom: 0;
+        border-radius: 5px 5px 0 0;
+      }
+
+      .nav-icon.note::before,
+      .nav-icon.note::after {
+        content: "";
+        position: absolute;
+        left: 7px;
+        right: 7px;
+        height: 2px;
+        background: var(--ink);
+      }
+
+      .nav-icon.note::before { top: 9px; }
+      .nav-icon.note::after { top: 16px; }
+
+      .nav-icon.eye {
+        border: 2px solid var(--ink);
+        border-radius: 50%;
+      }
+
+      .nav-icon.eye::after {
+        content: "";
+        position: absolute;
+        inset: 9px;
+        border-radius: 50%;
+        background: var(--ink);
+      }
+
+      .scene-card {
+        position: relative;
+        height: 438px;
+        margin-top: 14px;
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        overflow: hidden;
+        background: #ece7dd;
+      }
+
+      .scene-card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          linear-gradient(180deg, rgba(255, 253, 248, 0.06), rgba(255, 253, 248, 0.56) 78%),
+          url("./assets/player_room_reference_v1.png") center top / auto 100% no-repeat;
+        filter: saturate(0.94);
+      }
+
+      .chapter-bubble {
+        position: absolute;
+        z-index: 4;
+        left: 10px;
+        top: 10px;
+        display: grid;
+        gap: 3px;
+        max-width: 142px;
+        padding: 7px 10px;
+        border: 1px solid rgba(46, 46, 46, 0.1);
+        border-radius: 12px;
+        background: rgba(255, 253, 248, 0.88);
+        box-shadow: 0 8px 22px rgba(46, 46, 46, 0.08);
+      }
+
+      .chapter-bubble strong {
+        font-size: 12px;
+      }
+
+      .chapter-bubble span {
+        color: var(--muted);
+        font-size: 10px;
+      }
+
+      .standee {
+        position: absolute;
+        z-index: 2;
+        bottom: 32px;
+        width: auto;
+        max-height: 348px;
+        object-fit: contain;
+        filter: drop-shadow(0 18px 18px rgba(46, 46, 46, 0.14)) saturate(0.96);
+        pointer-events: none;
+      }
+
+      .standee.zhou {
+        left: 20px;
+        transform: translateX(-10px) scale(0.92);
+      }
+
+      .standee.lin {
+        right: 8px;
+        transform: translateX(8px) scale(0.9);
+      }
+
+      .mascot404 {
+        position: absolute;
+        z-index: 5;
+        right: 12px;
+        top: 12px;
+        display: grid;
+        place-items: center;
+        width: 42px;
+        height: 34px;
+        transform: rotate(5deg);
+        border: 1px solid rgba(46, 46, 46, 0.14);
+        border-radius: 11px;
+        color: #557062;
+        background: rgba(255, 253, 248, 0.9);
+        box-shadow: 0 8px 18px rgba(46, 46, 46, 0.1);
+        font-size: 12px;
+        font-weight: 900;
+      }
+
+      .dialogue-panel {
+        position: absolute;
+        z-index: 6;
+        left: 14px;
+        right: 14px;
+        bottom: 14px;
+        min-height: 112px;
+        display: grid;
+        grid-template-columns: 68px minmax(0, 1fr);
+        gap: 12px;
+        align-items: center;
+        padding: 13px 14px;
+        border: 1px solid rgba(46, 46, 46, 0.16);
+        border-radius: 14px;
+        background: rgba(255, 253, 248, 0.95);
+        box-shadow: 0 16px 36px rgba(46, 46, 46, 0.12);
+      }
+
+      .dialogue-panel::before {
+        content: "";
+        position: absolute;
+        right: 12px;
+        top: -10px;
+        width: 48px;
+        height: 16px;
+        transform: rotate(-8deg);
+        border: 1px solid rgba(46, 46, 46, 0.08);
+        background: rgba(219, 229, 200, 0.86);
+      }
+
+      .avatar-frame {
+        width: 66px;
+        height: 82px;
+        display: grid;
+        place-items: end center;
+        overflow: hidden;
+        border: 1px solid rgba(46, 46, 46, 0.13);
+        border-radius: 13px;
+        background:
+          linear-gradient(180deg, rgba(255, 253, 248, 0.96), rgba(236, 231, 221, 0.9));
+        box-shadow: 0 8px 18px rgba(46, 46, 46, 0.1);
+      }
+
+      .avatar-frame img {
+        width: 72px;
+        height: 82px;
+        object-fit: cover;
+        object-position: center bottom;
+      }
+
+      .dialogue-copy {
+        position: relative;
+        min-width: 0;
+      }
+
+      .nameplate {
+        display: inline-grid;
+        place-items: center;
+        min-width: 78px;
+        height: 28px;
+        margin-bottom: 8px;
+        padding: 0 14px;
+        border: 1px solid rgba(46, 46, 46, 0.15);
+        border-radius: 9px;
+        background: var(--label);
+        color: #5b5148;
+        font-weight: 800;
+      }
+
+      .node-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .dialogue-text {
+        margin: 8px 0 0;
+        min-height: 32px;
+        color: #2e2e2e;
+        font-size: 17px;
+        line-height: 1.65;
+      }
+
+      .sample-controls {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+        margin-top: 12px;
+      }
+
+      .sample-controls button {
+        min-height: 38px;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        background: rgba(255, 253, 248, 0.82);
+        color: var(--ink);
+        font: inherit;
+        cursor: pointer;
+      }
+
+      .sample-controls button.active {
+        border-color: rgba(114, 154, 132, 0.78);
+        background: rgba(236, 246, 240, 0.92);
+        color: #3f5f50;
+        font-weight: 800;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="game-shell" aria-label="小头像框样张">
+      <header class="topbar">
+        <div class="nav-item"><span class="nav-icon menu"><span></span></span><span>菜单</span></div>
+        <div class="nav-item"><span class="nav-icon phone"></span><span>手机</span></div>
+        <div class="nav-item"><span class="nav-icon bag"></span><span>证据</span></div>
+        <div class="nav-item"><span class="nav-icon note"></span><span>日志</span></div>
+        <div class="nav-item"><span class="nav-icon eye"></span><span>设置</span></div>
+      </header>
+
+      <section class="scene-card">
+        <div class="chapter-bubble">
+          <strong>第一章：两个对象？</strong>
+          <span>关系记录对不上</span>
+        </div>
+        <div class="mascot404">404</div>
+        <img class="standee zhou" src="./assets/zhou_yanchuan_waist_transparent_v1.png" alt="周砚川立绘" />
+        <img class="standee lin" src="./assets/lin_xia_waist_transparent_v1.png" alt="林夏立绘" />
+
+        <article class="dialogue-panel">
+          <div class="avatar-frame">
+            <img id="avatar" src="./assets/avatar_frame_sample/lin_teasing_avatar_v1.png" alt="角色头像" />
+          </div>
+          <div class="dialogue-copy">
+            <div class="nameplate" id="speaker">林夏</div>
+            <div class="node-row">
+              <span id="node">ch01_avatar_sample</span>
+              <span>▼</span>
+            </div>
+            <p class="dialogue-text" id="line">哇，还会眨眼，问题不大。</p>
+          </div>
+        </article>
+      </section>
+
+      <section class="sample-controls" aria-label="头像情绪切换">
+        <button type="button" class="active" data-sample="linTeasing">林夏 调侃</button>
+        <button type="button" data-sample="linSerious">林夏 认真</button>
+        <button type="button" data-sample="zhouFrown">周砚川 皱眉</button>
+      </section>
+    </main>
+
+    <script>
+      const samples = {
+        linTeasing: {
+          speaker: "林夏",
+          node: "ch01_002_double_claim",
+          text: "哇，还会眨眼，问题不大。",
+          avatar: "./assets/avatar_frame_sample/lin_teasing_avatar_v1.png",
+        },
+        linSerious: {
+          speaker: "林夏",
+          node: "ch01_007_ask_lin",
+          text: "先别急着选。你现在看谁都像线索。",
+          avatar: "./assets/avatar_frame_sample/lin_serious_avatar_v1.png",
+        },
+        zhouFrown: {
+          speaker: "周砚川",
+          node: "ch01_006_ask_zhou",
+          text: "不是拆台，是核对。",
+          avatar: "./assets/avatar_frame_sample/zhou_frown_avatar_v1.png",
+        },
+      };
+
+      const avatar = document.querySelector("#avatar");
+      const speaker = document.querySelector("#speaker");
+      const node = document.querySelector("#node");
+      const line = document.querySelector("#line");
+      const buttons = document.querySelectorAll(".sample-controls button");
+
+      buttons.forEach((button) => {
+        button.addEventListener("click", () => {
+          const sample = samples[button.dataset.sample];
+          avatar.src = sample.avatar;
+          avatar.alt = `${sample.speaker}头像`;
+          speaker.textContent = sample.speaker;
+          node.textContent = sample.node;
+          line.textContent = sample.text;
+          buttons.forEach((item) => item.classList.toggle("active", item === button));
+        });
+      });
+    </script>
+  </body>
+</html>

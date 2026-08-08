@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>谁是你的对象？ - UI Prototype</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="game-shell" aria-label="谁是你的对象第一章界面原型">
+      <header class="topbar" aria-label="顶部功能栏">
+        <button class="icon-btn" type="button" aria-label="菜单">
+          <span></span><span></span><span></span>
+          <small>菜单</small>
+        </button>
+        <button class="icon-btn" type="button" data-action="phone" aria-label="手机">
+          <span class="phone-icon"></span>
+          <small>手机</small>
+        </button>
+        <button class="icon-btn" type="button" data-action="evidence" aria-label="证据">
+          <span class="folder-icon"></span>
+          <small>证据</small>
+        </button>
+        <button class="icon-btn" type="button" data-action="log" aria-label="日志">
+          <span class="note-icon"></span>
+          <small>日志</small>
+        </button>
+        <button class="icon-btn" type="button" aria-label="设置">
+          <span class="gear-icon"></span>
+          <small>设置</small>
+        </button>
+      </header>
+
+      <section class="scene-card sleep-mode" aria-label="房间与角色">
+        <div class="chapter-bubble">
+          <strong>第一章：两个对象？</strong>
+          <span id="chapterGoal">关系记录对不上</span>
+        </div>
+        <div class="mascot404" id="mascot404" aria-label="404 引导">404</div>
+        <div class="room-layer" aria-hidden="true"></div>
+        <img
+          class="standee standee-zhou"
+          id="zhouPanel"
+          src="./assets/characters/game_ready/zhou_yanchuan_01_smile_waist_game_ready_v2.png"
+          alt="周砚川立绘"
+          role="button"
+          tabindex="0"
+          data-character="zhou"
+        />
+        <img
+          class="standee standee-lin"
+          id="linPanel"
+          src="./assets/characters/game_ready/lin_xia_01_smile_waist_game_ready_v2.png"
+          alt="林夏立绘"
+          role="button"
+          tabindex="0"
+          data-character="lin"
+        />
+
+        <article class="dialogue-panel">
+          <div class="dialogue-copy">
+            <div class="dialogue-nameplate" id="speaker">404</div>
+            <div class="dialogue-header">
+              <span id="node">ch01_001_wakeup</span>
+              <span class="next-cue" id="nextCue">▼</span>
+            </div>
+            <p class="dialogue-text" id="dialogueText">
+              加载记忆中。
+            </p>
+          </div>
+        </article>
+      </section>
+
+      <section class="choice-stack" aria-label="选择按钮">
+        <div class="question-grid collapsed" id="questionGrid">
+          <p class="question-hint" id="questionHint">点击对白继续。</p>
+        </div>
+      </section>
+    </main>
+
+    <div class="evidence-modal" id="evidenceModal" aria-hidden="true">
+      <div class="evidence-sheet" role="dialog" aria-modal="true" aria-label="证据和推理">
+        <div class="sheet-top">
+          <div>
+            <span>证据</span>
+            <strong>关系记录</strong>
+          </div>
+          <button type="button" id="closeEvidence" aria-label="关闭证据面板">关闭</button>
+        </div>
+        <aside class="evidence-rail" aria-label="证物栏">
+          <div class="panel-title">
+            <span>证物</span>
+            <small id="evidenceCount">0/3</small>
+          </div>
+          <p class="evidence-empty" id="evidenceEmpty">尚未搜集到证据。</p>
+          <button class="evidence-card locked" type="button" data-evidence="door">
+            <img
+              class="evidence-thumb"
+              src="./assets/evidence/evidence_door_lock_code_v1.png"
+              alt="门锁密码证据图"
+            />
+            <span>
+              <strong>门锁密码：0417</strong>
+              <small>周砚川证词</small>
+            </span>
+          </button>
+          <button class="evidence-card locked" type="button" data-evidence="photo">
+            <img
+              class="evidence-thumb"
+              src="./assets/evidence/evidence_polaroid_yogurt_v1.png"
+              alt="便利店拍立得证据图"
+            />
+            <span>
+              <strong>便利店拍立得</strong>
+              <small>林夏随身照片</small>
+            </span>
+          </button>
+          <button class="evidence-card locked" type="button" data-evidence="chat">
+            <img
+              class="evidence-thumb"
+              src="./assets/evidence/evidence_chat_snapshot_v1.png"
+              alt="聊天截图证据图"
+            />
+            <span>
+              <strong>聊天截图</strong>
+              <small>手机来源异常</small>
+            </span>
+          </button>
+        </aside>
+
+        <section class="deduction-board" aria-label="推理板">
+          <div class="panel-title">
+            <span>记录</span>
+            <small>第一次判断</small>
+          </div>
+          <ul class="clue-list" id="clueList">
+            <li class="empty">尚未获得证词。</li>
+          </ul>
+          <div class="judgement-row locked" id="judgementRow" role="group" aria-label="阶段判断">
+            <button type="button" data-judge="zhou">周砚川</button>
+            <button type="button" data-judge="lin">林夏</button>
+            <button type="button" data-judge="both">都有问题</button>
+            <button type="button" data-judge="hold">先保留</button>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <div class="log-modal" id="logModal" aria-hidden="true">
+      <div class="log-sheet" role="dialog" aria-modal="true" aria-label="过往交互日志">
+        <div class="sheet-top">
+          <div>
+            <span>日志</span>
+            <strong>交互记录</strong>
+          </div>
+          <button type="button" id="closeLog" aria-label="关闭日志面板">关闭</button>
+        </div>
+        <div class="panel-title">
+          <span>已发生剧情</span>
+          <small id="logCount">0 条</small>
+        </div>
+        <p class="log-empty" id="logEmpty">还没有新的交互记录。</p>
+        <ol class="log-list" id="logList"></ol>
+      </div>
+    </div>
+
+    <div class="item-modal" id="itemModal" aria-hidden="true">
+      <div class="item-sheet" role="dialog" aria-modal="true" aria-label="获得证物">
+        <span class="item-kicker">获得证物</span>
+        <img class="item-image" id="itemImage" src="" alt="" />
+        <strong id="itemTitle">证物已贴进记录</strong>
+        <p id="itemDesc">新的证物已经加入证据页。</p>
+        <button type="button" id="closeItem">贴进记录</button>
+      </div>
+    </div>
+
+    <div class="phone-modal" id="phoneModal" aria-hidden="true">
+      <div class="phone" role="dialog" aria-modal="true" aria-label="异常聊天截图">
+        <div class="phone-top">
+          <button type="button" id="closePhone" aria-label="关闭手机界面">‹</button>
+          <span>异常聊天截图</span>
+          <span>•••</span>
+        </div>
+        <div class="phone-content">
+          <div class="phone-evidence-card">
+            <div class="phone-meta">
+              <span>置顶聊天</span>
+              <strong>备注：对象</strong>
+              <small>昨天 21:17</small>
+            </div>
+            <div class="chat-row incoming">
+              <span class="avatar">对</span>
+              <p>今晚别忘了。你说过这次不许再临阵脱逃。</p>
+            </div>
+          </div>
+          <div class="phone-warning">
+            404：备注是“对象”，但我对不上是哪一个人。
+          </div>
+        </div>
+        <div class="phone-tabs" aria-hidden="true">
+          <span>聊天</span>
+          <span>相册</span>
+          <span>通话</span>
+        </div>
+      </div>
+    </div>
+
+    <script src="./app.js"></script>
+  </body>
+</html>

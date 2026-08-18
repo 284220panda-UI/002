@@ -215,6 +215,7 @@ button {
   content: "";
   position: absolute;
   inset: 0;
+  z-index: 0;
   background:
     linear-gradient(180deg, rgba(255, 253, 248, 0.05), rgba(255, 253, 248, 0.56) 78%),
     url("./assets/room_bg_ch1.webp") center top / cover no-repeat;

@@ -48,17 +48,17 @@ const evidenceItems = {
   door: {
     title: "门锁密码：0417",
     desc: "周砚川的证词已贴进关系记录。",
-    image: "./assets/evidence/evidence_door_lock_code_v1.png",
+    image: "./assets/evidence/evidence_door_lock_code_v1.webp",
   },
   photo: {
     title: "便利店拍立得",
     desc: "林夏随身照片已贴进关系记录。",
-    image: "./assets/evidence/evidence_polaroid_yogurt_v1.png",
+    image: "./assets/evidence/evidence_polaroid_yogurt_v1.webp",
   },
   chat: {
     title: "聊天截图",
     desc: "异常聊天截图已贴进矛盾记录。",
-    image: "./assets/evidence/evidence_chat_snapshot_v1.png",
+    image: "./assets/evidence/evidence_chat_snapshot_v1.webp",
   },
 };
 
@@ -844,6 +844,11 @@ function enterDeductionMode() {
 }
 
 function openEvidence() {
+  // 懒加载：证据缩略图在弹窗首次打开时才请求，避免首屏下载
+  document.querySelectorAll(".evidence-thumb[data-src]").forEach((img) => {
+    img.src = img.dataset.src;
+    img.removeAttribute("data-src");
+  });
   evidenceModal.classList.add("open");
   evidenceModal.setAttribute("aria-hidden", "false");
 }

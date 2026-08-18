@@ -83,25 +83,25 @@ const evidenceItems = {
   old: {
     title: "E010 老城生活一周记录",
     desc: "老城不是只有重复，但重复也不会消失。",
-    image: "./assets/chapter4/camping_complete_v5.png",
+    image: "./assets/chapter4/camping_complete_v5.webp",
   },
   new: {
     title: "E011 新城试住一周记录",
     desc: "我在哪里哪里就是家。但家不是自动出现的。",
-    image: "./assets/chapter4/map_complete.png",
+    image: "./assets/chapter4/map_complete.webp",
   },
   missing: {
     title: "E012 两种生活的缺页",
     desc: "两份生活记录都很完整。但每一份都少了最难熬的几页。",
-    image: "./assets/chapter4/home_complete_v12_from_final_cg.png",
+    image: "./assets/chapter4/home_complete_v12_from_final_cg.webp",
   },
 };
 
 const miniConfigs = {
   camping: {
     goal: "露营物品摆放",
-    board: "./assets/chapter4/camping_board_v5.png",
-    complete: "./assets/chapter4/camping_complete_v5.png",
+    board: "./assets/chapter4/camping_board_v5.webp",
+    complete: "./assets/chapter4/camping_complete_v5.webp",
     node: "ch04_003_camping_setup",
     prompt: "把露营物品拖到对应阴影处，让这次露营真的成形。",
     layeredReveal: true,
@@ -160,7 +160,7 @@ const miniConfigs = {
   home: {
     goal: "新城小公寓布置",
     board: "./assets/chapter4/home_board_v12_from_final_cg.png",
-    complete: "./assets/chapter4/home_complete_v12_from_final_cg.png",
+    complete: "./assets/chapter4/home_complete_v12_from_final_cg.webp",
     node: "ch04_006_new_home_setup",
     prompt: "把贴纸拖到对应阴影处，让空房间一点点变成能住的家。",
     layeredReveal: true,
@@ -217,8 +217,8 @@ const miniConfigs = {
   },
   map: {
     goal: "新城生活地图标记",
-    board: "./assets/chapter4/map_board.png",
-    complete: "./assets/chapter4/map_complete.png",
+    board: "./assets/chapter4/map_board.webp",
+    complete: "./assets/chapter4/map_complete.webp",
     node: "ch04_008_new_city_map",
     prompt: "标出至少四个生活点，把陌生街区拆成能处理的小事。",
     items: [

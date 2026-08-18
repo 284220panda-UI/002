@@ -451,6 +451,7 @@ function handleAction(action) {
   if (action === "phone") tryOpenPhone();
   if (action === "evidence") openEvidence();
   if (action === "restart") window.location.reload();
+  if (action === "goto_ch2" && window.P002ChapterMenu) window.P002ChapterMenu.gotoNext();
 }
 
 function advanceLine() {
@@ -900,7 +901,10 @@ function finishChapter() {
   state.mode = "complete";
   chapterGoal.textContent = "第一章完成";
   renderLine({ speaker: "404", node: "ch01_010_chapter_end", text: "第一章结束。第二章：交换证词。" });
-  setButtons([{ label: "重新开始第一章", action: "restart" }]);
+  setButtons([
+    { label: "进入第二章 ›", action: "goto_ch2" },
+    { label: "重新开始第一章", action: "restart" },
+  ]);
 }
 
 function unlockEvidence(id) {

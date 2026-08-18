@@ -623,6 +623,7 @@ questionGrid.addEventListener("click", (event) => {
   if (action.startsWith("cost_")) chooseCost(action.replace("cost_", ""));
   if (action === "open_evidence") openEvidence();
   if (action === "restart_ch04") window.location.reload();
+  if (action === "goto_ch5" && window.P002ChapterMenu) window.P002ChapterMenu.gotoNext();
 });
 
 document.querySelectorAll(".evidence-card").forEach((card) => {
@@ -942,6 +943,7 @@ function finishChapter() {
       text: "第四章完成。下一章：最后选择。",
     });
     setButtons([
+      { label: "进入第五章 ›", action: "goto_ch5" },
       { label: "打开证据", action: "open_evidence" },
       { label: "重新体验第四章", action: "restart_ch04" },
     ]);

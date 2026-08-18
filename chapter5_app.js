@@ -648,6 +648,7 @@ function finishEnding() {
   setButtons([
     { label: "重看最终选择", action: "restart_choice" },
     { label: "重新开始第五章", action: "restart_ch05" },
+    { label: "回到第一章", action: "goto_ch1" },
   ]);
 }
 
@@ -970,6 +971,10 @@ questionGrid.addEventListener("click", (event) => {
   }
   if (action === "restart_ch05") {
     window.location.reload();
+    return;
+  }
+  if (action === "goto_ch1" && window.P002ChapterMenu) {
+    window.P002ChapterMenu.gotoFirst();
     return;
   }
   openConfirm(action);

@@ -414,6 +414,7 @@ function handleAction(action) {
   if (action === "show_album_zhou") startLinear(albumToZhouLines, afterCrossLine);
   if (action === "deduction") openEvidence();
   if (action === "restart_ch02") window.location.reload();
+  if (action === "goto_ch3" && window.P002ChapterMenu) window.P002ChapterMenu.gotoNext();
 }
 
 function advanceLine() {
@@ -785,7 +786,10 @@ function finishChapter() {
   state.mode = "complete";
   chapterGoal.textContent = "第二章完成";
   renderLine({ speaker: "404", node: "chapter_02_complete", text: "第二章记录已归档。第三章已解锁。" });
-  setButtons([{ label: "重新开始第二章", action: "restart_ch02" }]);
+  setButtons([
+    { label: "进入第三章 ›", action: "goto_ch3" },
+    { label: "重新开始第二章", action: "restart_ch02" },
+  ]);
 }
 
 function openPhone() {

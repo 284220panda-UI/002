@@ -45,22 +45,22 @@ const evidenceItems = {
   chat: {
     title: "异常聊天截图",
     desc: "第一章矛盾记录，可分别展示给周砚川和林夏。",
-    image: "./assets/evidence/evidence_chat_snapshot_v1.png",
+    image: "./assets/evidence/evidence_chat_snapshot_v1.webp",
   },
   key: {
     title: "备用钥匙扣与维修便签",
     desc: "房间抽屉里的生活证据，和门锁故障后的处理有关。",
-    image: "./assets/chapter2/E004_detail.png",
+    image: "./assets/chapter2/E004_detail.webp",
   },
   album: {
     title: "墙上拍立得：约拍成片与生活抓拍",
     desc: "照片墙上混着约拍构图和生活抓拍，记录了一次拍摄后的关系变化。",
-    image: "./assets/chapter2/E005_detail.png",
+    image: "./assets/chapter2/E005_detail.webp",
   },
   calendar: {
     title: "书架实体日历",
     desc: "日历上同一天被分成“留下”和“新城”两组安排。",
-    image: "./assets/chapter2/E006_detail.png",
+    image: "./assets/chapter2/E006_detail.webp",
   },
 };
 
@@ -311,9 +311,16 @@ const roomGoalByView = {
 renderLine(currentLines[0]);
 setButtons([{ label: "点击继续", action: "continue" }]);
 
-dialoguePanel.addEventListener("click", () => {
-  if (state.mode === "linear") advanceLine();
-});
+// 整块场景都能点：点立绘、点空白、点背景都会推进对话（按钮/选项区/房间热点等交互除外）
+if (sceneCard) {
+  sceneCard.addEventListener("click", (event) => {
+    const interactive = event.target.closest(
+      "button, .question-grid, .evidence-card, .judgement-row, [data-action], [data-free-zone], [data-free-pan], [data-detail-action], .free-zones, .free-detail-zones, .p002-menu-modal"
+    );
+    if (interactive) return;
+    if (state.mode === "linear") advanceLine();
+  });
+}
 
 document.querySelectorAll(".standee").forEach((standee) => {
   standee.addEventListener("click", () => {

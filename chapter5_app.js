@@ -650,6 +650,7 @@ function finishEnding() {
     { label: "重新开始第五章", action: "restart_ch05" },
     { label: "回到第一章", action: "goto_ch1" },
   ]);
+  maybeShowSurvey();
 }
 
 function unlockEvidence(id) {
@@ -1024,3 +1025,66 @@ phoneModal.addEventListener("click", (event) => {
 });
 
 init();
+
+/* ===== 通关问卷邀请浮层 ===== */
+const SURVEY_URL = "https://0e11ac74e40d463496878e08e8ff8f17.app.workbuddy.link";
+const SURVEY_STORAGE_KEY = "project002_survey_asked";
+
+function showSurveyModal() {
+  const style = document.createElement("style");
+  style.textContent = [
+    "#surveyModal{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:rgba(40,20,30,.55);opacity:0;visibility:hidden;transition:opacity .25s ease,visibility .25s ease}",
+    "#surveyModal.open{opacity:1;visibility:visible}",
+    "#surveyModal .survey-sheet{max-width:320px;width:calc(100% - 48px);background:#fff;border-radius:20px;padding:26px 22px 20px;text-align:center;box-shadow:0 12px 40px rgba(0,0,0,.25);transform:translateY(12px) scale(.97);transition:transform .25s ease}",
+    "#surveyModal.open .survey-sheet{transform:none}",
+    "#surveyModal .survey-emoji{font-size:40px;line-height:1}",
+    "#surveyModal .survey-title{font-size:17px;font-weight:700;color:#3d2b34;margin:12px 0 8px}",
+    "#surveyModal .survey-desc{font-size:13px;color:#8a6a78;line-height:1.7;margin:0 0 18px}",
+    "#surveyModal .survey-actions{display:flex;flex-direction:column;gap:8px}",
+    "#surveyModal .survey-go{display:block;width:100%;padding:12px;border:none;border-radius:12px;background:linear-gradient(135deg,#e86a8a,#c95d8f);color:#fff;font-size:15px;font-weight:600;cursor:pointer}",
+    "#surveyModal .survey-skip{display:block;width:100%;padding:8px;border:none;background:none;color:#b39aa6;font-size:13px;cursor:pointer}"
+  ].join("\n");
+  document.head.appendChild(style);
+
+  const modal = document.createElement("div");
+  modal.id = "surveyModal";
+  modal.setAttribute("aria-hidden", "true");
+  modal.innerHTML =
+    '<div class="survey-sheet" role="dialog" aria-modal="true" aria-label="问卷邀请">' +
+      '<div class="survey-emoji">🎉</div>' +
+      '<div class="survey-title">玩完啦！</div>' +
+      '<p class="survey-desc">感谢你玩到结局！<br>愿意花 1 分钟帮我们填个问卷吗？<br>你的反馈会直接帮我们把游戏做得更好 ❤</p>' +
+      '<div class="survey-actions">' +
+        '<button type="button" class="survey-go">📝 填写问卷</button>' +
+        '<button type="button" class="survey-skip">跳过</button>' +
+      '</div>' +
+    '</div>';
+  document.body.appendChild(modal);
+
+  function dismiss() {
+    modal.classList.remove("open");
+    modal.setAttribute("aria-hidden", "true");
+    setTimeout(() => modal.remove(), 300);
+  }
+  modal.querySelector(".survey-go").addEventListener("click", () => {
+    try { localStorage.setItem(SURVEY_STORAGE_KEY, "1"); } catch (e) {}
+    window.open(SURVEY_URL, "_blank", "noopener");
+    dismiss();
+  });
+  modal.querySelector(".survey-skip").addEventListener("click", () => {
+    try { localStorage.setItem(SURVEY_STORAGE_KEY, "1"); } catch (e) {}
+    dismiss();
+  });
+
+  requestAnimationFrame(() => {
+    modal.classList.add("open");
+    modal.setAttribute("aria-hidden", "false");
+  });
+}
+
+function maybeShowSurvey() {
+  try {
+    if (localStorage.getItem(SURVEY_STORAGE_KEY)) return;
+    showSurveyModal();
+  } catch (e) { /* 隐私模式下跳过弹窗 */ }
+}

@@ -71,22 +71,22 @@ const evidenceItems = {
   calendar: {
     title: "书架实体日历",
     desc: "同一晚同时写着续租截止和买票截止。",
-    image: "./assets/chapter2/E006_detail.png",
+    image: "./assets/chapter2/E006_detail.webp",
   },
   stay: {
     title: "E007 留下生活改造清单",
     desc: "留下不是继续忍耐，而是把熟悉城市改成真的能生活的地方。",
-    image: "./assets/chapter3/E007_detail.png",
+    image: "./assets/chapter3/E007_detail.webp",
   },
   leave: {
     title: "E008 新城旅居试住计划",
     desc: "出发不是一走了之，而是先试住一个月，看陌生地方会不会长出生活。",
-    image: "./assets/chapter3/E008_detail.png",
+    image: "./assets/chapter3/E008_detail.webp",
   },
   origin: {
     title: "E009 选择前备忘：留下 / 出发",
     desc: "两段故事共同指向同一人生节点：我到底想在哪种生活里变成自己？",
-    image: "./assets/chapter3/E009_detail.png",
+    image: "./assets/chapter3/E009_detail.webp",
   },
 };
 
@@ -347,9 +347,16 @@ document.querySelector("#closeLog").addEventListener("click", closeLog);
 document.querySelector("#closePhone").addEventListener("click", closePhone);
 document.querySelector("#closeItem").addEventListener("click", closeItem);
 
-dialoguePanel.addEventListener("click", () => {
-  if (state.mode === "linear") advanceLine();
-});
+// 整块场景都能点：点空白、点背景都会推进对话（按钮/选项区/看板/情感按钮等交互除外）
+if (sceneCard) {
+  sceneCard.addEventListener("click", (event) => {
+    const interactive = event.target.closest(
+      "button, .question-grid, .evidence-card, .judgement-row, [data-action], [data-board-action], [data-feeling], [data-judge], .p002-menu-modal"
+    );
+    if (interactive) return;
+    if (state.mode === "linear") advanceLine();
+  });
+}
 
 questionGrid.addEventListener("click", (event) => {
   const button = event.target.closest("button[data-action]");

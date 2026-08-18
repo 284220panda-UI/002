@@ -217,7 +217,7 @@ button {
   inset: 0;
   background:
     linear-gradient(180deg, rgba(255, 253, 248, 0.05), rgba(255, 253, 248, 0.56) 78%),
-    url("./assets/room_bg_ch1.png") center top / cover no-repeat;
+    url("./assets/room_bg_ch1.webp") center top / cover no-repeat;
   filter: saturate(0.94);
 }
 
@@ -1359,63 +1359,63 @@ button {
 .chapter2-page .chapter2-scene::before {
   background:
     linear-gradient(180deg, rgba(255, 253, 248, 0.08), rgba(255, 253, 248, 0.52) 78%),
-    url("./assets/room_bg_ch1.png") center top / cover no-repeat;
+    url("./assets/room_bg_ch1.webp") center top / cover no-repeat;
 }
 
 .chapter2-page .chapter2-scene.chapter2-room-mode::before {
   background:
     linear-gradient(180deg, rgba(255, 253, 248, 0.05), rgba(255, 253, 248, 0.18) 72%, rgba(235, 226, 215, 0.34)),
-    url("./assets/chapter2/room_investigation.png") center center / cover no-repeat;
+    url("./assets/chapter2/room_investigation.webp") center center / cover no-repeat;
 }
 
 /* chapter2.html room mode uses free-room class from JS */
 .chapter2-page .chapter2-scene.free-room::before {
   background:
     linear-gradient(180deg, rgba(255, 253, 248, 0.05), rgba(255, 253, 248, 0.18) 72%, rgba(235, 226, 215, 0.34)),
-    url("./assets/chapter2/room_investigation.png") center center / cover no-repeat;
+    url("./assets/chapter2/room_investigation.webp") center center / cover no-repeat;
 }
 
 .chapter2-page .chapter2-scene.chapter2-detail-drawer::before {
   background:
     linear-gradient(180deg, rgba(255, 253, 248, 0.04), rgba(255, 253, 248, 0.14) 74%, rgba(235, 226, 215, 0.3)),
-    url("./assets/chapter2/desk_zoom.png") center center / cover no-repeat;
+    url("./assets/chapter2/desk_zoom.webp") center center / cover no-repeat;
 }
 
 .chapter2-page .chapter2-scene.chapter2-detail-album::before {
   background:
     linear-gradient(180deg, rgba(255, 253, 248, 0.04), rgba(255, 253, 248, 0.16) 74%, rgba(235, 226, 215, 0.3)),
-    url("./assets/chapter2/E005_detail.png") center center / cover no-repeat;
+    url("./assets/chapter2/E005_detail.webp") center center / cover no-repeat;
 }
 
 .chapter2-page .chapter2-scene.chapter2-detail-calendar::before {
   background:
     linear-gradient(180deg, rgba(255, 253, 248, 0.04), rgba(255, 253, 248, 0.16) 74%, rgba(235, 226, 215, 0.3)),
-    url("./assets/chapter2/E006_detail.png") center center / cover no-repeat;
+    url("./assets/chapter2/E006_detail.webp") center center / cover no-repeat;
 }
 
 /* chapter2.html detail mode uses free-detail-* classes from JS; mirror the backgrounds */
 .chapter2-page .chapter2-scene.free-detail-drawer::before {
   background:
     linear-gradient(180deg, rgba(255, 253, 248, 0.04), rgba(255, 253, 248, 0.14) 74%, rgba(235, 226, 215, 0.3)),
-    url("./assets/chapter2/desk_zoom.png") center center / cover no-repeat;
+    url("./assets/chapter2/desk_zoom.webp") center center / cover no-repeat;
 }
 
 .chapter2-page .chapter2-scene.free-detail-album::before {
   background:
     linear-gradient(180deg, rgba(255, 253, 248, 0.04), rgba(255, 253, 248, 0.16) 74%, rgba(235, 226, 215, 0.3)),
-    url("./assets/chapter2/E005_detail.png") center center / cover no-repeat;
+    url("./assets/chapter2/E005_detail.webp") center center / cover no-repeat;
 }
 
 .chapter2-page .chapter2-scene.free-detail-calendar::before {
   background:
     linear-gradient(180deg, rgba(255, 253, 248, 0.04), rgba(255, 253, 248, 0.16) 74%, rgba(235, 226, 215, 0.3)),
-    url("./assets/chapter2/E006_detail.png") center center / cover no-repeat;
+    url("./assets/chapter2/E006_detail.webp") center center / cover no-repeat;
 }
 
 .chapter2-page .chapter2-scene.chapter2-memory-zhou::before {
   background-image:
     linear-gradient(180deg, rgba(255, 253, 248, 0.06), rgba(255, 253, 248, 0.18) 70%, rgba(235, 226, 215, 0.32)),
-    url("./assets/chapter2/memory_zhou_doorway.png");
+    url("./assets/chapter2/memory_zhou_doorway.webp");
   background-position: center center, center 14%;
   background-size: 100% 100%, auto 108%;
   background-repeat: no-repeat;
@@ -1424,7 +1424,7 @@ button {
 .chapter2-page .chapter2-scene.chapter2-memory-lin::before {
   background:
     linear-gradient(180deg, rgba(255, 253, 248, 0.06), rgba(255, 253, 248, 0.18) 70%, rgba(235, 226, 215, 0.32)),
-    url("./assets/chapter2/memory_lin_street.png") center center / cover no-repeat;
+    url("./assets/chapter2/memory_lin_street.webp") center center / cover no-repeat;
 }
 
 .chapter2-page .chapter2-scene.chapter2-room-mode .standee,
@@ -1587,7 +1587,7 @@ button {
 .chapter3-page .chapter3-scene::before {
   background:
     linear-gradient(180deg, rgba(255, 253, 248, 0.1), rgba(255, 253, 248, 0.52) 78%),
-    url("./assets/room_bg_ch1.png") center top / cover no-repeat;
+    url("./assets/room_bg_ch1.webp") center top / cover no-repeat;
 }
 
 .chapter3-page .chapter3-scene {
@@ -1598,39 +1598,39 @@ button {
 .chapter3-page .chapter3-scene.chapter3-board-mode::before {
   background:
     linear-gradient(180deg, rgba(255, 253, 248, 0.02), rgba(255, 253, 248, 0.08)),
-    url("./assets/chapter3/timeline_board.png") center center / cover no-repeat;
+    url("./assets/chapter3/timeline_board.webp") center center / cover no-repeat;
 }
 
 .chapter3-page .chapter3-scene.chapter3-origin-mode::before {
   background:
     linear-gradient(180deg, rgba(255, 253, 248, 0.04), rgba(255, 253, 248, 0.14)),
-    url("./assets/chapter3/timeline_board.png") center center / cover no-repeat;
+    url("./assets/chapter3/timeline_board.webp") center center / cover no-repeat;
 }
 
 .chapter3-page .chapter3-scene.chapter3-feeling-mode::before,
 .chapter3-page .chapter3-scene.chapter3-deduction-mode::before {
   background:
     linear-gradient(180deg, rgba(255, 253, 248, 0.08), rgba(255, 253, 248, 0.24)),
-    url("./assets/chapter3/timeline_board.png") center center / cover no-repeat;
+    url("./assets/chapter3/timeline_board.webp") center center / cover no-repeat;
 }
 
 .chapter3-page .chapter3-scene.chapter3-memory-zhou {
-  --chapter-memory-image: url("./assets/chapter3/memory_zhou_stay.png");
+  --chapter-memory-image: url("./assets/chapter3/memory_zhou_stay.webp");
   --chapter-memory-position: center center;
 }
 
 .chapter3-page .chapter3-scene.chapter3-memory-zhou-collage {
-  --chapter-memory-image: url("./assets/chapter3/memory_zhou_collage.png");
+  --chapter-memory-image: url("./assets/chapter3/memory_zhou_collage.webp");
   --chapter-memory-position: center center;
 }
 
 .chapter3-page .chapter3-scene.chapter3-memory-lin {
-  --chapter-memory-image: url("./assets/chapter3/memory_lin_leave.png");
+  --chapter-memory-image: url("./assets/chapter3/memory_lin_leave.webp");
   --chapter-memory-position: center center;
 }
 
 .chapter3-page .chapter3-scene.chapter3-memory-lin-camera {
-  --chapter-memory-image: url("./assets/chapter3/memory_lin_camera.png");
+  --chapter-memory-image: url("./assets/chapter3/memory_lin_camera.webp");
   --chapter-memory-position: center center;
 }
 
@@ -1850,7 +1850,7 @@ button {
 .free-explore-page .free-explore-scene::before {
   background-image:
     linear-gradient(180deg, rgba(255, 253, 248, 0.04), rgba(255, 253, 248, 0.1) 76%, rgba(235, 226, 215, 0.26)),
-    url("./assets/chapter2/room_investigation.png");
+    url("./assets/chapter2/room_investigation.webp");
   background-position: center center, 43% center;
   background-size: 100% 100%, auto 100%;
   background-repeat: no-repeat;
@@ -1871,7 +1871,7 @@ button {
 .free-explore-page .free-detail-drawer::before {
   background-image:
     linear-gradient(180deg, rgba(255, 253, 248, 0.04), rgba(255, 253, 248, 0.1) 76%, rgba(235, 226, 215, 0.26)),
-    url("./assets/chapter2/desk_zoom.png");
+    url("./assets/chapter2/desk_zoom.webp");
   background-position: center center, 18% center;
   background-size: 100% 100%, cover;
   background-repeat: no-repeat;
@@ -1880,13 +1880,13 @@ button {
 .free-explore-page .free-detail-album::before {
   background:
     linear-gradient(180deg, rgba(255, 253, 248, 0.04), rgba(255, 253, 248, 0.12) 76%, rgba(235, 226, 215, 0.26)),
-    url("./assets/chapter2/E005_detail.png") center center / cover no-repeat;
+    url("./assets/chapter2/E005_detail.webp") center center / cover no-repeat;
 }
 
 .free-explore-page .free-detail-calendar::before {
   background:
     linear-gradient(180deg, rgba(255, 253, 248, 0.04), rgba(255, 253, 248, 0.12) 76%, rgba(235, 226, 215, 0.26)),
-    url("./assets/chapter2/E006_detail.png") center center / cover no-repeat;
+    url("./assets/chapter2/E006_detail.webp") center center / cover no-repeat;
 }
 
 .free-explore-page .free-zones,
@@ -1913,17 +1913,18 @@ button {
 
 .free-explore-page .free-pan-controls button {
   position: absolute;
-  top: 47%;
-  width: 40px;
-  height: 54px;
+  top: 44%;
+  width: 52px;
+  height: 64px;
   border: 1px solid rgba(46, 46, 46, 0.12);
   border-radius: 999px;
   color: #557062;
-  background: rgba(255, 253, 248, 0.72);
-  box-shadow: 0 10px 22px rgba(46, 46, 46, 0.12);
+  background: rgba(255, 253, 248, 0.82);
+  box-shadow: 0 10px 26px rgba(46, 46, 46, 0.16);
   font-size: 30px;
   line-height: 1;
   pointer-events: auto;
+  z-index: 10;
 }
 
 .free-explore-page .free-pan-controls [data-free-pan="left"] {
@@ -2163,7 +2164,7 @@ button {
 .chapter4-page .chapter4-scene::before {
   background:
     linear-gradient(180deg, rgba(255, 253, 248, 0.08), rgba(255, 253, 248, 0.22) 76%, rgba(245, 239, 230, 0.34)),
-    url("./assets/room_bg_ch1.png") center top / cover no-repeat;
+    url("./assets/room_bg_ch1.webp") center top / cover no-repeat;
 }
 
 .chapter4-page .chapter4-board-mode::before,
@@ -2171,23 +2172,23 @@ button {
 .chapter4-page .chapter4-mini-complete-mode::before {
   background:
     linear-gradient(180deg, rgba(255, 253, 248, 0.08), rgba(255, 253, 248, 0.28)),
-    var(--chapter4-complete-image, url("./assets/chapter4/map_board.png")) center center / cover no-repeat;
+    var(--chapter4-complete-image, url("./assets/chapter4/map_board.webp")) center center / cover no-repeat;
 }
 
 .chapter4-page .chapter4-memory-zhou-camping {
-  --chapter4-memory-image: url("./assets/chapter4/memory_zhou_camping.png");
+  --chapter4-memory-image: url("./assets/chapter4/memory_zhou_camping.webp");
 }
 
 .chapter4-page .chapter4-memory-zhou-cat {
-  --chapter4-memory-image: url("./assets/chapter4/memory_zhou_cat.png");
+  --chapter4-memory-image: url("./assets/chapter4/memory_zhou_cat.webp");
 }
 
 .chapter4-page .chapter4-memory-lin-home {
-  --chapter4-memory-image: url("./assets/chapter4/memory_lin_home_game.png");
+  --chapter4-memory-image: url("./assets/chapter4/memory_lin_home_game.webp");
 }
 
 .chapter4-page .chapter4-memory-lin-beach {
-  --chapter4-memory-image: url("./assets/chapter4/memory_lin_beach.png");
+  --chapter4-memory-image: url("./assets/chapter4/memory_lin_beach.webp");
 }
 
 .chapter4-page .chapter4-memory-mode::before,

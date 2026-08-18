@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>第一章立绘出场示例</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+    background: #1a1a1a;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+  }
+  .scene {
+    position: relative;
+    width: 960px;
+    height: 640px;
+    background: url("./assets/backgrounds/player_room_reference_v1.png") center center / cover no-repeat;
+    overflow: hidden;
+    border-radius: 8px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  }
+  /* 立绘：等宽显示，各占一半，脚底对齐 */
+  .standee {
+    position: absolute;
+    bottom: 28px;
+    height: auto;
+    max-height: none;
+    transition: opacity 600ms ease, transform 600ms cubic-bezier(0.22, 1, 0.36, 1);
+    opacity: 0;
+    transform: translateY(20px);
+    z-index: 2;
+  }
+  .standee.entered { opacity: 1; transform: translateY(0); }
+  .standee-zhou {
+    width: 44%;
+    left: 3%;
+  }
+  .standee-lin {
+    width: 46.5%;
+    right: 3%;
+  }
+  /* 对话框 */
+  .dialogue {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 24px;
+    width: 88%;
+    max-width: 840px;
+    background: rgba(0, 0, 0, 0.75);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 4px;
+    padding: 16px 24px;
+    color: #f5f5f5;
+    font-size: 17px;
+    line-height: 1.7;
+    z-index: 5;
+    backdrop-filter: blur(4px);
+  }
+  .dialogue .speaker {
+    font-size: 13px;
+    color: #9ca3af;
+    margin-bottom: 4px;
+    letter-spacing: 1px;
+  }
+  .dialogue .text {
+    min-height: 24px;
+  }
+  /* 章节标题气泡 */
+  .chapter-bubble {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0,0,0,0.6);
+    color: #e5e7eb;
+    padding: 6px 18px;
+    border-radius: 20px;
+    font-size: 13px;
+    z-index: 5;
+    letter-spacing: 1px;
+  }
+  /* 控制条 */
+  .controls {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    gap: 8px;
+    z-index: 10;
+  }
+  .controls button {
+    background: rgba(0,0,0,0.6);
+    color: #e5e7eb;
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 4px;
+    padding: 6px 14px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background 200ms;
+  }
+  .controls button:hover { background: rgba(0,0,0,0.85); }
+  .hint {
+    position: absolute;
+    bottom: 4px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: rgba(255,255,255,0.25);
+    font-size: 11px;
+    z-index: 10;
+  }
+</style>
+</head>
+<body>
+<div class="scene" id="scene">
+  <div class="chapter-bubble">第一章：两个对象？关系记录对不上</div>
+  <div class="controls">
+    <button onclick="toggleStandees()">切换立绘显示</button>
+    <button onclick="nextLine()">下一条 ▸</button>
+  </div>
+  <img class="standee standee-zhou" id="zhou" src="./assets/characters/v1/zhou_base.png" alt="周砚川" />
+  <img class="standee standee-lin" id="lin" src="./assets/characters/v1/lin_base.png" alt="林夏" />
+  <div class="dialogue">
+    <div class="speaker" id="speaker">回忆</div>
+    <div class="text" id="text">视线先对上天花板，又慢慢移到房间中央。</div>
+  </div>
+  <div class="hint">点击对话框或按空格继续</div>
+</div>
+
+<script>
+const lines = [
+  { speaker: "回忆", text: "白屏慢慢退下去。" },
+  { speaker: "回忆", text: "窗帘没有完全拉开，房间里是刚醒来时那种偏软的亮度。" },
+  { speaker: "回忆", text: "视线先对上天花板，又慢慢移到房间中央。" },
+  { speaker: "回忆", text: "床边站着一个陌生男人，手里还握着没拧开的水瓶。" },
+  { speaker: "回忆", text: "窗边靠着一个陌生女生，脖子上挂着相机，正低头看你。" },
+  { speaker: "玩家", text: "真是睡了一个好觉啊。" },
+  { speaker: "周砚川", text: "醒了？水温刚好，喝一口缓缓。" },
+  { speaker: "林夏", text: "早。你睡得挺沉的。" },
+];
+let idx = 0;
+let standeesShown = false;
+
+function showLine(i) {
+  if (i >= lines.length) i = 0;
+  idx = i;
+  const line = lines[i];
+  document.getElementById("speaker").textContent = line.speaker;
+  document.getElementById("text").textContent = line.text;
+}
+
+function nextLine() {
+  // 第3条之后显示立绘
+  if (idx >= 2 && !standeesShown) {
+    standeesShown = true;
+    document.getElementById("zhou").classList.add("entered");
+    document.getElementById("lin").classList.add("entered");
+  }
+  showLine(idx + 1);
+}
+
+function toggleStandees() {
+  standeesShown = !standeesShown;
+  document.getElementById("zhou").classList.toggle("entered", standeesShown);
+  document.getElementById("lin").classList.toggle("entered", standeesShown);
+}
+
+// 点击对话框或按空格继续
+document.querySelector(".dialogue").addEventListener("click", nextLine);
+document.addEventListener("keydown", (e) => {
+  if (e.key === " " || e.key === "Enter") { e.preventDefault(); nextLine(); }
+});
+
+// 初始
+showLine(0);
+</script>
+</body>
+</html>

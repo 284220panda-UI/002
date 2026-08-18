@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>谁是你的对象？ - Chapter 04 Prototype</title>
-    <link rel="stylesheet" href="./styles.css?v=20260807-chapter4-cgreveal" />
+    <link rel="stylesheet" href="./styles.css?v=20260818-narration" />
   </head>
   <body class="chapter2-page chapter3-page chapter4-page">
     <main class="game-shell" aria-label="谁是你的对象第四章界面原型">
@@ -68,21 +68,21 @@
         <img
           class="standee standee-zhou"
           id="zhouPanel"
-          src="./assets/zhou_yanchuan_waist_transparent_v1.png"
+          src="./assets/characters/v1_full/zhou_base.png"
           alt="周砚川立绘"
         />
         <img
           class="standee standee-lin"
           id="linPanel"
-          src="./assets/lin_xia_waist_transparent_v1.png"
+          src="./assets/characters/v1_full/lin_base.png"
           alt="林夏立绘"
         />
 
         <article class="dialogue-panel">
           <div class="dialogue-copy">
-            <div class="dialogue-nameplate" id="speaker">404</div>
+            <div class="dialogue-nameplate" id="speaker">叙述</div>
             <div class="dialogue-header">
-              <span id="node">ch04_001_life_board_open</span>
+              <span id="node"></span>
               <span class="next-cue" id="nextCue">▼</span>
             </div>
             <p class="dialogue-text" id="dialogueText">第三章记录已贴入生活体验板。</p>
@@ -113,7 +113,7 @@
           </div>
           <p class="evidence-empty" id="evidenceEmpty">尚未获得第四章证据。</p>
           <button class="evidence-card locked" type="button" data-evidence="old">
-            <img class="evidence-thumb" src="./assets/chapter4/camping_complete.png" alt="老城生活记录" />
+            <img class="evidence-thumb" src="./assets/chapter4/camping_complete_v5.png" alt="老城生活记录" />
             <span>
               <strong>E010 老城生活一周记录</strong>
               <small>露营 / 流浪猫 / 重复感</small>
@@ -127,7 +127,7 @@
             </span>
           </button>
           <button class="evidence-card locked" type="button" data-evidence="missing">
-            <img class="evidence-thumb" src="./assets/chapter4/home_complete.png" alt="两种生活的缺页" />
+            <img class="evidence-thumb" src="./assets/chapter4/home_complete_v12_from_final_cg.png" alt="两种生活的缺页" />
             <span>
               <strong>E012 两种生活的缺页</strong>
               <small>两份记录都少了最难熬的页</small>
@@ -195,6 +195,7 @@
       </div>
     </div>
 
-    <script src="./chapter4_app.js?v=20260807-chapter4-cgreveal"></script>
+    <script src="./chapter4_app.js?v=20260818-narration"></script>
+    <script src="./editor.js?v=3"></script>
   </body>
 </html>

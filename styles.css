@@ -217,7 +217,7 @@ button {
   inset: 0;
   background:
     linear-gradient(180deg, rgba(255, 253, 248, 0.05), rgba(255, 253, 248, 0.56) 78%),
-    url("./assets/player_room_reference_v1.png") center top / auto 100% no-repeat;
+    url("./assets/room_bg_ch1.png") center top / cover no-repeat;
   filter: saturate(0.94);
 }
 
@@ -252,11 +252,11 @@ button {
 }
 
 .mascot404 {
+  display: none;
   position: absolute;
   z-index: 5;
   right: 12px;
   top: 12px;
-  display: grid;
   place-items: center;
   width: 42px;
   height: 34px;
@@ -439,8 +439,13 @@ button {
   font-size: 11px;
 }
 
+.dialogue-header #node {
+  display: none;
+}
+
 .next-cue {
   color: #837564;
+  margin-left: auto;
 }
 
 .next-cue.hidden {
@@ -457,6 +462,47 @@ button {
   display: grid;
   gap: 8px;
 }
+
+.scene-card > .choice-stack[hidden] {
+  display: none;
+}
+
+.scene-card > .choice-stack:not([hidden]) {
+  position: absolute;
+  z-index: 8;
+  left: 14px;
+  right: 14px;
+  bottom: 12px;
+  display: block;
+  pointer-events: none;
+}
+
+.scene-card > .choice-stack:not([hidden]) .question-grid {
+  display: grid;
+  gap: 6px;
+  max-width: 100%;
+  padding: 8px;
+  border: 1px solid rgba(46, 46, 46, 0.12);
+  border-radius: 14px;
+  background: rgba(255, 253, 248, 0.78);
+  box-shadow: 0 10px 24px rgba(46, 46, 46, 0.12);
+  backdrop-filter: blur(5px);
+  pointer-events: auto;
+}
+
+.scene-card > .choice-stack:not([hidden]) .question-grid button {
+  min-height: 34px;
+  padding: 6px 10px;
+  border-radius: 10px;
+  background: rgba(255, 253, 248, 0.9);
+  box-shadow: 0 3px 10px rgba(46, 46, 46, 0.05);
+  font-size: 13px;
+  line-height: 1.28;
+  overflow-wrap: anywhere;
+}
+
+/* REMOVED: global override that forced dialogue to bottom:142px regardless of choice count.
+   Per-chapter :has() rules now handle choice-aware floating (see ~line 2700). */
 
 .question-grid,
 .judgement-row {
@@ -656,7 +702,8 @@ button {
 .phone-modal,
 .evidence-modal,
 .log-modal,
-.item-modal {
+.item-modal,
+.confirm-modal {
   position: fixed;
   inset: 0;
   z-index: 20;
@@ -669,12 +716,17 @@ button {
 .phone-modal.open,
 .evidence-modal.open,
 .log-modal.open,
-.item-modal.open {
+.item-modal.open,
+.confirm-modal.open {
   display: grid;
 }
 
 .item-modal {
   z-index: 30;
+}
+
+.confirm-modal {
+  z-index: 32;
 }
 
 .item-sheet {
@@ -803,7 +855,7 @@ button {
 
 .log-list {
   display: grid;
-  gap: 8px;
+  gap: 0;
   max-height: min(540px, calc(100vh - 220px));
   margin: 0;
   padding: 0 4px 0 0;
@@ -813,16 +865,17 @@ button {
 
 .log-entry {
   display: grid;
-  gap: 5px;
-  padding: 9px 10px;
-  border: 1px solid rgba(46, 46, 46, 0.12);
-  border-radius: 10px;
-  background: rgba(255, 253, 248, 0.74);
+  gap: 6px;
+  padding: 12px 2px 13px;
+  border-bottom: 1px solid rgba(46, 46, 46, 0.08);
+  background: transparent;
 }
 
 .log-entry.choice {
-  border-style: dashed;
-  background: rgba(238, 245, 239, 0.82);
+  padding: 10px 12px;
+  border: 1px dashed rgba(126, 156, 137, 0.42);
+  border-radius: 12px;
+  background: rgba(238, 245, 239, 0.68);
 }
 
 .log-entry div {
@@ -832,8 +885,34 @@ button {
   gap: 10px;
 }
 
+.log-entry .log-lines {
+  display: grid;
+  gap: 10px;
+  align-items: stretch;
+  justify-content: stretch;
+}
+
 .log-entry strong {
   font-size: 12px;
+}
+
+.log-speaker {
+  width: fit-content;
+  padding: 2px 8px;
+  border-radius: 8px;
+  color: #5e5146;
+  background: rgba(217, 193, 167, 0.74);
+  font-size: 12px;
+  font-weight: 900;
+  line-height: 1.4;
+}
+
+.log-entry.log-narration .log-speaker {
+  padding: 0 0 0 10px;
+  border-left: 3px solid rgba(126, 111, 92, 0.32);
+  border-radius: 0;
+  color: rgba(94, 81, 70, 0.74);
+  background: transparent;
 }
 
 .log-entry small {
@@ -844,8 +923,12 @@ button {
 .log-entry p,
 .log-empty {
   margin: 0;
-  font-size: 13px;
-  line-height: 1.55;
+  font-size: 14px;
+  line-height: 1.72;
+}
+
+.log-entry.log-narration p {
+  color: rgba(46, 46, 46, 0.82);
 }
 
 .log-empty {
@@ -865,7 +948,9 @@ button {
   display: grid;
   grid-template-rows: auto minmax(0, 1fr) auto;
   width: min(340px, 100%);
-  min-height: 640px;
+  height: min(640px, calc(100vh - 36px));
+  min-height: 0;
+  max-height: calc(100vh - 36px);
   padding: 14px;
   border: 8px solid #2f3334;
   border-radius: 30px;
@@ -873,6 +958,12 @@ button {
     linear-gradient(180deg, rgba(237, 242, 239, 0.84), rgba(246, 243, 239, 0.96)),
     #f6f3ef;
   box-shadow: 0 24px 80px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+}
+
+.phone,
+.phone * {
+  box-sizing: border-box;
 }
 
 .phone-top,
@@ -901,11 +992,16 @@ button {
   align-content: start;
   gap: 12px;
   padding: 28px 4px 18px;
+  min-width: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 .phone-evidence-card {
   display: grid;
   gap: 14px;
+  min-width: 0;
+  max-width: 100%;
   padding: 14px;
   border: 1px solid rgba(46, 46, 46, 0.12);
   border-radius: 16px;
@@ -935,6 +1031,246 @@ button {
 .phone-meta small {
   color: var(--muted);
   font-size: 12px;
+}
+
+.phone-actions {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+.phone-actions .phone-investigate[hidden] {
+  display: none;
+}
+
+.phone-achievements {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+  max-width: 100%;
+  padding: 12px;
+  border: 1px solid rgba(46, 46, 46, 0.1);
+  border-radius: 16px;
+  background: rgba(255, 253, 248, 0.64);
+}
+
+.phone-achievements[hidden] {
+  display: none;
+}
+
+.phone-achievement-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 7px;
+}
+
+.phone-achievement {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 62px;
+  max-width: 100%;
+  padding: 10px 12px;
+  border: 1px solid rgba(46, 46, 46, 0.12);
+  border-radius: 12px;
+  background: rgba(255, 253, 248, 0.88);
+  color: var(--ink);
+  text-align: left;
+  cursor: pointer;
+}
+
+.phone-achievement.selected {
+  border-color: rgba(126, 156, 137, 0.72);
+  box-shadow: 0 0 0 2px rgba(126, 156, 137, 0.14);
+}
+
+.phone-achievement.locked {
+  color: rgba(46, 46, 46, 0.48);
+  cursor: default;
+}
+
+.phone-achievement span {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+
+.phone-achievement strong {
+  font-size: 14px;
+  line-height: 1.35;
+}
+
+.phone-achievement small {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.phone-achievement em {
+  color: rgba(85, 112, 98, 0.82);
+  font-size: 11px;
+  font-style: normal;
+}
+
+.phone-achievement.locked em {
+  color: rgba(46, 46, 46, 0.42);
+}
+
+.phone-achievement b {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  min-width: 44px;
+  height: 30px;
+  padding: 0 8px;
+  border-radius: 999px;
+  color: #557062;
+  background: rgba(219, 229, 200, 0.92);
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.phone-achievement.locked b {
+  color: rgba(46, 46, 46, 0.34);
+  background: rgba(238, 232, 221, 0.82);
+}
+
+.phone-achievements.detail-open .panel-title,
+.phone-achievements.detail-open .phone-achievement-grid {
+  display: none;
+}
+
+.phone-achievement-preview {
+  display: grid;
+  gap: 9px;
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  padding: 11px;
+  border-radius: 13px;
+  background: rgba(238, 245, 239, 0.74);
+}
+
+.phone-achievement-preview[hidden] {
+  display: none;
+}
+
+.phone-achievement-preview img {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: min(250px, 36vh);
+  max-height: 250px;
+  border-radius: 10px;
+  object-fit: contain;
+  background: rgba(255, 253, 248, 0.62);
+}
+
+.phone-achievement-preview strong {
+  font-size: 18px;
+}
+
+.phone-achievement-preview p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.phone-achievement-back {
+  justify-self: start;
+  min-height: 30px;
+  padding: 4px 9px;
+  border: 1px solid rgba(46, 46, 46, 0.12);
+  border-radius: 999px;
+  color: #557062;
+  background: rgba(255, 253, 248, 0.82);
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.phone-contact-entry {
+  position: relative;
+}
+
+.phone-contact-entry.has-dot {
+  border-color: rgba(218, 82, 82, 0.24);
+  box-shadow: 0 10px 26px rgba(46, 46, 46, 0.08), 0 0 0 3px rgba(218, 82, 82, 0.08);
+}
+
+.phone-contact-entry .phone-meta strong {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.phone-red-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #d94f4f;
+  box-shadow: 0 0 0 3px rgba(217, 79, 79, 0.12);
+}
+
+.phone-contact-toggle {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+}
+
+.phone-contact-toggle:not(.has-dot) .phone-red-dot,
+.phone-contact-entry:not(.has-dot) .phone-meta .phone-red-dot {
+  display: none;
+}
+
+.phone-contacts {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+  max-width: 100%;
+  padding: 12px;
+  border: 1px solid rgba(46, 46, 46, 0.1);
+  border-radius: 16px;
+  background: rgba(255, 253, 248, 0.64);
+}
+
+.phone-contacts[hidden] {
+  display: none;
+}
+
+.contact-request-list {
+  display: grid;
+  gap: 8px;
+}
+
+.contact-request {
+  display: grid;
+  grid-template-columns: 42px 1fr;
+  align-items: center;
+  gap: 10px;
+  min-height: 58px;
+  padding: 9px 10px;
+  border: 1px solid rgba(46, 46, 46, 0.1);
+  border-radius: 12px;
+  background: rgba(255, 253, 248, 0.86);
+}
+
+.contact-avatar {
+  display: block;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: rgba(238, 232, 221, 0.88);
+}
+
+.contact-request strong {
+  font-size: 15px;
+  line-height: 1.35;
 }
 
 .chat-row {
@@ -1015,13 +1351,25 @@ button {
 
 }
 
+.chapter2-page .chapter2-scene {
+  height: 100%;
+  min-height: 0;
+}
+
 .chapter2-page .chapter2-scene::before {
   background:
     linear-gradient(180deg, rgba(255, 253, 248, 0.08), rgba(255, 253, 248, 0.52) 78%),
-    url("./assets/player_room_reference_v1.png") center top / auto 100% no-repeat;
+    url("./assets/room_bg_ch1.png") center top / cover no-repeat;
 }
 
 .chapter2-page .chapter2-scene.chapter2-room-mode::before {
+  background:
+    linear-gradient(180deg, rgba(255, 253, 248, 0.05), rgba(255, 253, 248, 0.18) 72%, rgba(235, 226, 215, 0.34)),
+    url("./assets/chapter2/room_investigation.png") center center / cover no-repeat;
+}
+
+/* chapter2.html room mode uses free-room class from JS */
+.chapter2-page .chapter2-scene.free-room::before {
   background:
     linear-gradient(180deg, rgba(255, 253, 248, 0.05), rgba(255, 253, 248, 0.18) 72%, rgba(235, 226, 215, 0.34)),
     url("./assets/chapter2/room_investigation.png") center center / cover no-repeat;
@@ -1040,6 +1388,25 @@ button {
 }
 
 .chapter2-page .chapter2-scene.chapter2-detail-calendar::before {
+  background:
+    linear-gradient(180deg, rgba(255, 253, 248, 0.04), rgba(255, 253, 248, 0.16) 74%, rgba(235, 226, 215, 0.3)),
+    url("./assets/chapter2/E006_detail.png") center center / cover no-repeat;
+}
+
+/* chapter2.html detail mode uses free-detail-* classes from JS; mirror the backgrounds */
+.chapter2-page .chapter2-scene.free-detail-drawer::before {
+  background:
+    linear-gradient(180deg, rgba(255, 253, 248, 0.04), rgba(255, 253, 248, 0.14) 74%, rgba(235, 226, 215, 0.3)),
+    url("./assets/chapter2/desk_zoom.png") center center / cover no-repeat;
+}
+
+.chapter2-page .chapter2-scene.free-detail-album::before {
+  background:
+    linear-gradient(180deg, rgba(255, 253, 248, 0.04), rgba(255, 253, 248, 0.16) 74%, rgba(235, 226, 215, 0.3)),
+    url("./assets/chapter2/E005_detail.png") center center / cover no-repeat;
+}
+
+.chapter2-page .chapter2-scene.free-detail-calendar::before {
   background:
     linear-gradient(180deg, rgba(255, 253, 248, 0.04), rgba(255, 253, 248, 0.16) 74%, rgba(235, 226, 215, 0.3)),
     url("./assets/chapter2/E006_detail.png") center center / cover no-repeat;
@@ -1220,30 +1587,31 @@ button {
 .chapter3-page .chapter3-scene::before {
   background:
     linear-gradient(180deg, rgba(255, 253, 248, 0.1), rgba(255, 253, 248, 0.52) 78%),
-    url("./assets/player_room_reference_v1.png") center top / auto 100% no-repeat;
+    url("./assets/room_bg_ch1.png") center top / cover no-repeat;
 }
 
 .chapter3-page .chapter3-scene {
-  background: #f5efe6;
+  height: 100%;
+  min-height: 0;
 }
 
 .chapter3-page .chapter3-scene.chapter3-board-mode::before {
   background:
     linear-gradient(180deg, rgba(255, 253, 248, 0.02), rgba(255, 253, 248, 0.08)),
-    url("./assets/chapter3/timeline_board.png") center center / contain no-repeat;
+    url("./assets/chapter3/timeline_board.png") center center / cover no-repeat;
 }
 
 .chapter3-page .chapter3-scene.chapter3-origin-mode::before {
   background:
     linear-gradient(180deg, rgba(255, 253, 248, 0.04), rgba(255, 253, 248, 0.14)),
-    url("./assets/chapter3/timeline_board.png") center center / contain no-repeat;
+    url("./assets/chapter3/timeline_board.png") center center / cover no-repeat;
 }
 
 .chapter3-page .chapter3-scene.chapter3-feeling-mode::before,
 .chapter3-page .chapter3-scene.chapter3-deduction-mode::before {
   background:
     linear-gradient(180deg, rgba(255, 253, 248, 0.08), rgba(255, 253, 248, 0.24)),
-    url("./assets/chapter3/timeline_board.png") center center / contain no-repeat;
+    url("./assets/chapter3/timeline_board.png") center center / cover no-repeat;
 }
 
 .chapter3-page .chapter3-scene.chapter3-memory-zhou {
@@ -1304,7 +1672,7 @@ button {
 .chapter3-page .chapter3-memory-mode .dialogue-panel,
 .chapter3-page .chapter3-memory-zhou-collage .dialogue-panel,
 .chapter3-page .chapter3-memory-lin-camera .dialogue-panel {
-  min-height: 96px;
+  min-height: auto;
   padding: 12px 13px 11px;
   background: rgba(255, 253, 248, 0.9);
 }
@@ -1740,10 +2108,44 @@ button {
   display: none;
 }
 
+.chapter4-page .chapter4-scene .choice-stack:not([hidden]) {
+  position: absolute;
+  z-index: 8;
+  left: 14px;
+  right: 14px;
+  bottom: 12px;
+  display: block;
+  pointer-events: none;
+}
+
+.chapter4-page .chapter4-scene .choice-stack:not([hidden]) .question-grid {
+  display: grid;
+  gap: 6px;
+  padding: 8px;
+  border: 1px solid rgba(46, 46, 46, 0.12);
+  border-radius: 14px;
+  background: rgba(255, 253, 248, 0.78);
+  box-shadow: 0 10px 24px rgba(46, 46, 46, 0.12);
+  backdrop-filter: blur(5px);
+  pointer-events: auto;
+}
+
+.chapter4-page .chapter4-scene .choice-stack:not([hidden]) .question-grid button {
+  min-height: 34px;
+  padding: 6px 10px;
+  border-radius: 10px;
+  background: rgba(255, 253, 248, 0.9);
+  box-shadow: 0 3px 10px rgba(46, 46, 46, 0.05);
+  font-size: 13px;
+  line-height: 1.28;
+  overflow-wrap: anywhere;
+}
+
 .chapter4-page .chapter4-scene::before {
   background:
     linear-gradient(180deg, rgba(255, 253, 248, 0.08), rgba(255, 253, 248, 0.22) 76%, rgba(245, 239, 230, 0.34)),
-    url("./assets/chapter4/home_board.png") center center / cover no-repeat;
+    url("./assets/room_bg_ch1.png") center top / cover no-repeat;
+}
 }
 
 .chapter4-page .chapter4-board-mode::before,
@@ -1780,7 +2182,7 @@ button {
     linear-gradient(180deg, rgba(255, 253, 248, 0.02), rgba(255, 253, 248, 0.08)),
     var(--chapter4-memory-image);
   background-position: center center, center center;
-  background-size: 100% 100%, auto 100%;
+  background-size: 100% 100%, cover;
   background-repeat: no-repeat;
 }
 
@@ -1790,9 +2192,17 @@ button {
 .chapter4-page .chapter4-memory-lin-home .standee,
 .chapter4-page .chapter4-memory-lin-beach .standee,
 .chapter4-page .chapter4-mini-mode .standee,
+.chapter4-page .chapter4-mini-complete-mode .standee,
 .chapter4-page .chapter4-board-mode .standee,
-.chapter4-page .chapter4-review-mode .standee {
+.chapter4-page .chapter4-review-mode .standee,
+.chapter4-page .chapter4-solo-zhou .standee,
+.chapter4-page .chapter4-solo-lin .standee {
   display: none;
+}
+
+.chapter4-page .chapter4-solo-zhou .standee-zhou,
+.chapter4-page .chapter4-solo-lin .standee-lin {
+  display: block;
 }
 
 .chapter4-page .chapter4-memory-mode .chapter-bubble,
@@ -1806,7 +2216,13 @@ button {
 .chapter4-page .chapter4-memory-lin-beach .chapter-bubble,
 .chapter4-page .chapter4-memory-lin-beach .mascot404,
 .chapter4-page .chapter4-mini-mode .chapter-bubble,
-.chapter4-page .chapter4-mini-mode .mascot404 {
+.chapter4-page .chapter4-mini-mode .mascot404,
+.chapter4-page .chapter4-mini-complete-mode .chapter-bubble,
+.chapter4-page .chapter4-mini-complete-mode .mascot404,
+.chapter4-page .chapter4-solo-zhou .chapter-bubble,
+.chapter4-page .chapter4-solo-zhou .mascot404,
+.chapter4-page .chapter4-solo-lin .chapter-bubble,
+.chapter4-page .chapter4-solo-lin .mascot404 {
   display: none;
 }
 
@@ -1926,11 +2342,12 @@ button {
   box-shadow: none;
 }
 
-.mini-stage img {
+#miniBoardImage {
   display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
+  background: #efe8dd;
 }
 
 .mini-zones {
@@ -1939,14 +2356,90 @@ button {
   z-index: 2;
 }
 
+.mini-hint-layer,
+.mini-reveal-layer {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+.mini-hint-layer {
+  z-index: 1;
+  opacity: 0.3;
+  transition: opacity 0.16s ease, filter 0.16s ease;
+}
+
+.mini-hint-layer.focused {
+  opacity: 0.68;
+  filter: drop-shadow(0 6px 10px rgba(46, 46, 46, 0.18));
+}
+
+.mini-camping .mini-hint-layer {
+  opacity: 0.12;
+  filter:
+    drop-shadow(0 2px 3px rgba(255, 253, 248, 0.16))
+    drop-shadow(0 8px 12px rgba(24, 33, 28, 0.08));
+}
+
+.mini-camping .mini-hint-layer.focused {
+  opacity: 0.88;
+  filter:
+    drop-shadow(0 0 2px rgba(255, 253, 248, 0.58))
+    drop-shadow(0 8px 12px rgba(24, 33, 28, 0.2));
+}
+
+.mini-reveal-layer {
+  z-index: 2;
+}
+
 .mini-zones button {
   position: absolute;
+  z-index: 3;
   padding: 0;
-  border: 0;
+  border: 1px dashed rgba(85, 112, 98, 0.36);
   border-radius: 12px;
-  background: transparent;
+  background: rgba(255, 253, 248, 0.04);
   cursor: pointer;
-  overflow: hidden;
+  overflow: visible;
+}
+
+.mini-layered-reveal .mini-zones button {
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.mini-layered-reveal .mini-zones button.targeted {
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.mini-zone-label {
+  position: absolute;
+  left: 50%;
+  bottom: 6px;
+  max-width: calc(100% - 12px);
+  padding: 3px 7px;
+  border-radius: 999px;
+  color: rgba(49, 72, 60, 0.82);
+  background: rgba(255, 253, 248, 0.72);
+  box-shadow: 0 2px 8px rgba(46, 46, 46, 0.08);
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.mini-layered-reveal .mini-zones button.targeted .mini-zone-label {
+  opacity: 0;
 }
 
 .chapter4-page .chapter4-mini-mode:not(.mini-prompt-hidden) .mini-zones button {
@@ -1957,14 +2450,15 @@ button {
 .mini-zones button:hover,
 .mini-zones button:focus-visible {
   outline: 0;
-  background: rgba(255, 253, 248, 0.06);
-  box-shadow: inset 0 0 0 1px rgba(85, 112, 98, 0.22);
+  background: rgba(255, 253, 248, 0.1);
+  box-shadow: inset 0 0 0 1px rgba(85, 112, 98, 0.18);
 }
 
 .mini-zones button.filled {
   border: 0;
   background: transparent;
   box-shadow: none;
+  overflow: hidden;
   pointer-events: none;
 }
 
@@ -1976,13 +2470,14 @@ button {
 
 .mini-zone-hint {
   position: absolute;
-  inset: 6%;
+  inset: 0;
   display: block;
-  width: 88%;
-  height: 88%;
+  width: 100%;
+  height: 100%;
   object-fit: contain;
-  opacity: 0.56;
-  filter: blur(0.2px);
+  opacity: 0.68;
+  filter: none;
+  mix-blend-mode: multiply;
 }
 
 .mini-reveal-cg {
@@ -1997,18 +2492,42 @@ button {
 .mini-tray {
   position: absolute;
   z-index: 8;
-  left: 8px;
-  right: 8px;
-  bottom: 10px;
+  left: 10px;
+  right: 10px;
+  bottom: 12px;
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   align-items: center;
-  min-height: 174px;
-  gap: 6px;
-  padding: 10px 8px;
+  min-height: 124px;
+  gap: 4px;
+  padding: 8px 7px;
   border-radius: 16px;
   background: linear-gradient(180deg, rgba(255, 253, 248, 0.24), rgba(255, 253, 248, 0.52));
   backdrop-filter: blur(3px);
+  overflow: visible;
+}
+
+.mini-layered-reveal .mini-tray {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  min-height: 132px;
+  padding: 10px 8px;
+}
+
+.mini-layered-reveal.mini-camping .mini-tray {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  min-height: 116px;
+  bottom: 8px;
+  gap: 4px;
+  padding: 8px 7px;
+}
+
+.mini-layered-reveal.mini-camping .mini-tray button {
+  min-height: 96px;
+}
+
+.mini-layered-reveal.mini-camping .mini-item-art {
+  max-width: 124px;
+  max-height: 96px;
 }
 
 .chapter4-page .chapter4-mini-mode:not(.mini-prompt-hidden) .mini-tray,
@@ -2020,21 +2539,22 @@ button {
   position: relative;
   display: grid;
   place-items: center;
-  min-height: 74px;
+  min-height: 104px;
   padding: 0;
   border: 0;
   border-radius: 8px;
   background: transparent;
   cursor: pointer;
-  overflow: hidden;
+  overflow: visible;
   touch-action: none;
   user-select: none;
 }
 
 .mini-item-art {
   display: block;
-  max-width: 92%;
-  max-height: 76px;
+  width: 100%;
+  max-width: 136px;
+  max-height: 112px;
   object-fit: contain;
   filter: drop-shadow(0 6px 7px rgba(46, 46, 46, 0.2));
   transition: transform 0.16s ease, filter 0.16s ease, opacity 0.16s ease;
@@ -2070,8 +2590,8 @@ button {
 .mini-drag-ghost {
   position: fixed;
   z-index: 10000;
-  width: min(112px, 28vw);
-  max-height: 118px;
+  width: min(138px, 34vw);
+  max-height: 138px;
   object-fit: contain;
   pointer-events: none;
   transform: translate(-50%, -58%);
@@ -2102,7 +2622,536 @@ button {
   font-weight: 900;
 }
 
+.chapter5-page .chapter5-scene {
+  height: 100%;
+  min-height: 0;
+  background: #eee8dd;
+  overflow: hidden;
+}
+
+.chapter5-page .chapter5-scene::before {
+  content: "";
+  position: absolute;
+  inset: -14px;
+  z-index: 0;
+  display: block;
+  opacity: 0;
+  background: var(--chapter5-current-cg, none) center center / cover no-repeat;
+  filter: blur(12px) saturate(0.88);
+  transform: scale(1.04);
+  pointer-events: none;
+  transition: opacity 420ms ease;
+}
+
+.chapter5-page .chapter5-scene::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  opacity: 0;
+  background:
+    linear-gradient(180deg, rgba(24, 30, 34, 0.14) 0%, rgba(24, 30, 34, 0.02) 38%, rgba(20, 24, 26, 0.74) 100%),
+    radial-gradient(circle at 50% 42%, rgba(255, 255, 255, 0.08), rgba(20, 24, 26, 0.28) 70%);
+  pointer-events: none;
+  transition: opacity 420ms ease;
+}
+
+.chapter5-page .chapter5-cg {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  filter: saturate(0.98);
+}
+
+.chapter5-page .chapter5-scene.cg-swapping .chapter5-cg {
+  animation: chapter5CgFade 560ms ease both;
+}
+
+.chapter5-page .chapter5-scene.is-ending-sequence::before {
+  opacity: 0.74;
+}
+
+/* ---------- Chapter 1 overrides (align with Chapter 5) ---------- */
+.chapter1-page .chapter1-scene {
+  height: 100%;
+  min-height: 0;
+}
+
+.chapter1-page .dialogue-panel {
+  z-index: 5;
+  min-height: auto;
+  padding: 11px 13px 10px;
+  background: rgba(255, 253, 248, 0.91);
+}
+
+.chapter1-page .dialogue-text {
+  font-size: 13px;
+  line-height: 1.62;
+}
+
+.chapter1-page .dialogue-panel.is-narration {
+  min-height: auto;
+  padding: 15px 16px 15px 22px;
+}
+
+.chapter1-page .dialogue-header,
+.chapter1-page .dialogue-panel.is-narration .dialogue-nameplate {
+  display: none;
+}
+
+.chapter1-page .dialogue-panel.is-narration .dialogue-copy::before {
+  content: "";
+  position: absolute;
+  left: -10px;
+  top: 2px;
+  bottom: 2px;
+  width: 3px;
+  border-radius: 99px;
+  background: rgba(126, 111, 92, 0.34);
+}
+
+.chapter1-page .dialogue-panel.line-enter {
+  animation: chapter5TextFloat 360ms ease both;
+}
+
+/* Chapter 1: dialogue floats above choices, height adapts to text */
+.chapter1-page .scene-card.has-floating-choices .dialogue-panel {
+  min-height: auto;
+}
+
+/* Choice-count aware bottom positioning for Chapter 1 */
+.chapter1-page .scene-card.has-floating-choices:has(.question-grid button:nth-of-type(1):last-of-type) .dialogue-panel {
+  bottom: 76px;
+}
+.chapter1-page .scene-card.has-floating-choices:has(.question-grid button:nth-of-type(2):last-of-type) .dialogue-panel {
+  bottom: 116px;
+}
+.chapter1-page .scene-card.has-floating-choices:has(.question-grid button:nth-of-type(3):last-of-type) .dialogue-panel {
+  bottom: 154px;
+}
+.chapter1-page .scene-card.has-floating-choices:has(.question-grid button:nth-of-type(4):last-of-type) .dialogue-panel {
+  bottom: 192px;
+}
+
+/* Chapters 2–4: same adaptive dialogue height + choice-count aware floating */
+.chapter2-page .dialogue-panel,
+.chapter3-page .dialogue-panel,
+.chapter4-page .dialogue-panel {
+  min-height: auto;
+}
+
+/* Hide narration nameplate and header in chapters 2-4 */
+.chapter2-page .dialogue-panel.is-narration .dialogue-nameplate,
+.chapter3-page .dialogue-panel.is-narration .dialogue-nameplate,
+.chapter4-page .dialogue-panel.is-narration .dialogue-nameplate {
+  display: none;
+}
+
+.chapter2-page .dialogue-panel.is-narration .dialogue-header,
+.chapter3-page .dialogue-panel.is-narration .dialogue-header,
+.chapter4-page .dialogue-panel.is-narration .dialogue-header {
+  display: none;
+}
+
+.chapter2-page .scene-card.has-floating-choices .dialogue-panel,
+.chapter3-page .scene-card.has-floating-choices .dialogue-panel,
+.chapter4-page .scene-card.has-floating-choices .dialogue-panel {
+  min-height: auto;
+}
+
+.chapter2-page .scene-card.has-floating-choices:has(.question-grid button:nth-of-type(1):last-of-type) .dialogue-panel,
+.chapter3-page .scene-card.has-floating-choices:has(.question-grid button:nth-of-type(1):last-of-type) .dialogue-panel,
+.chapter4-page .scene-card.has-floating-choices:has(.question-grid button:nth-of-type(1):last-of-type) .dialogue-panel {
+  bottom: 76px;
+}
+.chapter2-page .scene-card.has-floating-choices:has(.question-grid button:nth-of-type(2):last-of-type) .dialogue-panel,
+.chapter3-page .scene-card.has-floating-choices:has(.question-grid button:nth-of-type(2):last-of-type) .dialogue-panel,
+.chapter4-page .scene-card.has-floating-choices:has(.question-grid button:nth-of-type(2):last-of-type) .dialogue-panel {
+  bottom: 116px;
+}
+.chapter2-page .scene-card.has-floating-choices:has(.question-grid button:nth-of-type(3):last-of-type) .dialogue-panel,
+.chapter3-page .scene-card.has-floating-choices:has(.question-grid button:nth-of-type(3):last-of-type) .dialogue-panel,
+.chapter4-page .scene-card.has-floating-choices:has(.question-grid button:nth-of-type(3):last-of-type) .dialogue-panel {
+  bottom: 154px;
+}
+.chapter2-page .scene-card.has-floating-choices:has(.question-grid button:nth-of-type(4):last-of-type) .dialogue-panel,
+.chapter3-page .scene-card.has-floating-choices:has(.question-grid button:nth-of-type(4):last-of-type) .dialogue-panel,
+.chapter4-page .scene-card.has-floating-choices:has(.question-grid button:nth-of-type(4):last-of-type) .dialogue-panel {
+  bottom: 192px;
+}
+
+/* Chapter 1 v1 full-body standees: cropped to upper body, bottom at waist */
+.chapter1-page .standee {
+  bottom: 0;
+  width: 48%;
+  height: auto;
+  max-height: none;
+}
+
+.chapter1-page .standee-zhou {
+  left: 2%;
+}
+
+.chapter1-page .standee-lin {
+  right: 2%;
+}
+
+/* Unified standee sizing for Chapters 2–4: same upper-body crop, same positioning */
+.chapter2-page .standee,
+.chapter3-page .standee,
+.chapter4-page .standee {
+  bottom: 0;
+  width: 48%;
+  height: auto;
+  max-height: none;
+}
+
+.chapter2-page .standee-zhou,
+.chapter3-page .standee-zhou,
+.chapter4-page .standee-zhou {
+  left: 2%;
+}
+
+.chapter2-page .standee-lin,
+.chapter3-page .standee-lin,
+.chapter4-page .standee-lin {
+  right: 2%;
+}
+
+/* Single-character standee: centered, slightly larger */
+.chapter2-page .standee.standee-solo,
+.chapter3-page .standee.standee-solo,
+.chapter4-page .standee.standee-solo {
+  left: 50%;
+  transform: translateX(-50%);
+  width: 58%;
+}
+
+/* Chapter 1 standee entrance: rise + fade in, once, on first real appearance.
+   Keyframe endpoints match each standee's resting transform to avoid a jump. */
+@keyframes chapter1StandeeRiseZhou {
+  from { opacity: 0; transform: translateX(-10px) translateY(26px) scale(0.9); }
+  to { opacity: 1; transform: translateX(-10px) translateY(0) scale(0.9); }
+}
+@keyframes chapter1StandeeRiseLin {
+  from { opacity: 0; transform: translateX(10px) translateY(26px) scale(0.89); }
+  to { opacity: 1; transform: translateX(10px) translateY(0) scale(0.89); }
+}
+.chapter1-page .standee-zhou.standee-enter {
+  animation: chapter1StandeeRiseZhou 520ms ease-out both;
+}
+.chapter1-page .standee-lin.standee-enter {
+  animation: chapter1StandeeRiseLin 520ms ease-out both;
+}
+
+/* ---------- Chapter 5 ---------- */
+.chapter5-page .chapter5-scene.is-ending-sequence .chapter5-cg {
+  top: 22px;
+  left: 0;
+  width: 100%;
+  height: calc(100% - 22px);
+  max-height: none;
+  object-fit: cover;
+  object-position: center top;
+}
+
+.chapter5-page .dialogue-panel {
+  z-index: 5;
+  min-height: 88px;
+  padding: 11px 13px 10px;
+  background: rgba(255, 253, 248, 0.91);
+}
+
+.chapter5-page .dialogue-nameplate {
+  min-width: 54px;
+  padding: 3px 12px;
+  font-size: 11px;
+}
+
+.chapter5-page .dialogue-header,
+.chapter5-page .dialogue-panel.is-narration .dialogue-nameplate {
+  display: none;
+}
+
+.chapter5-page .chapter5-scene .dialogue-panel.is-narration .dialogue-nameplate {
+  display: none;
+}
+
+.chapter5-page .dialogue-panel.is-narration {
+  min-height: 76px;
+  padding: 15px 16px 15px 22px;
+}
+
+.chapter5-page .dialogue-panel.is-narration .dialogue-copy::before {
+  content: "";
+  position: absolute;
+  left: -10px;
+  top: 2px;
+  bottom: 2px;
+  width: 3px;
+  border-radius: 99px;
+  background: rgba(126, 111, 92, 0.34);
+}
+
+.chapter5-page .dialogue-text {
+  font-size: 13px;
+  line-height: 1.62;
+}
+
+.chapter5-page .dialogue-panel.line-enter {
+  animation: chapter5TextFloat 360ms ease both;
+}
+
+.chapter5-page .chapter5-scene.is-ending-sequence::after {
+  opacity: 1;
+}
+
+.chapter5-page .chapter5-scene.is-ending-sequence .dialogue-panel {
+  left: 24px;
+  right: 24px;
+  bottom: 34px;
+  min-height: 0;
+  padding: 0 0 24px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  color: #fffaf1;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.62), 0 1px 2px rgba(0, 0, 0, 0.55);
+}
+
+.chapter5-page .chapter5-scene.is-ending-sequence .dialogue-copy {
+  width: min(100%, 640px);
+}
+
+.chapter5-page .chapter5-scene.is-ending-sequence .dialogue-nameplate {
+  display: inline-block;
+  margin-bottom: 8px;
+  padding: 0 0 0 10px;
+  border-left: 2px solid rgba(255, 250, 241, 0.72);
+  border-radius: 0;
+  background: transparent;
+  color: rgba(255, 250, 241, 0.88);
+  font-size: 13px;
+  letter-spacing: 0;
+}
+
+.chapter5-page .chapter5-scene.is-ending-sequence .dialogue-header {
+  display: none;
+}
+
+.chapter5-page .chapter5-scene.is-ending-sequence .dialogue-text {
+  max-width: 30em;
+  margin: 0;
+  color: #fffaf1;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.72;
+}
+
+.chapter5-page .chapter5-scene.is-ending-sequence .dialogue-panel::after {
+  content: "点击继续";
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  color: rgba(255, 250, 241, 0.72);
+  font-size: 12px;
+  font-weight: 700;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.58);
+}
+
+.chapter5-page .chapter5-scene.is-ending-complete .dialogue-panel::after {
+  content: "";
+}
+
+.ending-achievement {
+  position: absolute;
+  z-index: 9;
+  top: 74px;
+  left: 24px;
+  right: 24px;
+  display: grid;
+  gap: 5px;
+  max-width: 420px;
+  padding: 13px 14px 14px;
+  border: 1px solid rgba(255, 250, 241, 0.42);
+  border-left: 4px solid rgba(255, 237, 177, 0.92);
+  background: rgba(35, 38, 39, 0.54);
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.24);
+  color: #fffaf1;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-8px);
+  transition: opacity 360ms ease, transform 360ms ease;
+  backdrop-filter: blur(8px);
+}
+
+.ending-achievement.open {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.ending-achievement span {
+  color: rgba(255, 237, 177, 0.92);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.ending-achievement strong {
+  font-size: 19px;
+  line-height: 1.25;
+}
+
+.ending-achievement p {
+  margin: 0;
+  color: rgba(255, 250, 241, 0.86);
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.chapter5-page .chapter5-scene .choice-stack:not([hidden]) {
+  position: absolute;
+  z-index: 8;
+  left: 14px;
+  right: 14px;
+  bottom: 12px;
+  display: block;
+  pointer-events: none;
+}
+
+.chapter5-page .chapter5-scene .choice-stack:not([hidden]) .question-grid {
+  display: grid;
+  gap: 6px;
+  padding: 8px;
+  border: 1px solid rgba(46, 46, 46, 0.12);
+  border-radius: 14px;
+  background: rgba(255, 253, 248, 0.78);
+  box-shadow: 0 10px 24px rgba(46, 46, 46, 0.12);
+  backdrop-filter: blur(5px);
+  pointer-events: auto;
+}
+
+.chapter5-page .chapter5-scene .choice-stack:not([hidden]) .question-grid button {
+  min-height: 34px;
+  padding: 6px 10px;
+  border-radius: 10px;
+  background: rgba(255, 253, 248, 0.9);
+  box-shadow: 0 3px 10px rgba(46, 46, 46, 0.05);
+  font-size: 13px;
+  line-height: 1.28;
+  overflow-wrap: anywhere;
+}
+
+.chapter5-page .chapter5-scene.has-floating-choices .dialogue-panel {
+  bottom: 154px;
+  min-height: 86px;
+  padding: 10px 13px 9px;
+}
+
+.chapter5-page .chapter5-scene.has-floating-choices:has(.question-grid button:nth-of-type(4)) .dialogue-panel {
+  bottom: 194px;
+}
+
+@keyframes chapter5CgFade {
+  0% {
+    opacity: 0.26;
+    filter: blur(5px) saturate(0.82);
+    transform: scale(1.012);
+  }
+  100% {
+    opacity: 1;
+    filter: blur(0) saturate(0.98);
+    transform: scale(1);
+  }
+}
+
+@keyframes chapter5TextFloat {
+  0% {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.confirm-sheet {
+  display: grid;
+  gap: 12px;
+  width: min(320px, calc(100vw - 52px));
+  padding: 18px;
+  border: 1px solid rgba(46, 46, 46, 0.16);
+  border-radius: 16px;
+  background: rgba(255, 253, 248, 0.96);
+  box-shadow: 0 24px 70px rgba(46, 46, 46, 0.22);
+}
+
+.confirm-sheet strong {
+  font-size: 18px;
+}
+
+.confirm-sheet p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.confirm-sheet p:empty {
+  display: none;
+}
+
+.confirm-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.confirm-actions button {
+  min-height: 38px;
+  border: 1px solid rgba(46, 46, 46, 0.18);
+  border-radius: 10px;
+  background: rgba(255, 253, 248, 0.88);
+  cursor: pointer;
+}
+
+.confirm-actions #confirmOk {
+  border-color: rgba(126, 156, 137, 0.62);
+  background: #eef5ef;
+  font-weight: 800;
+}
+
 @media (max-width: 440px) {
+  .chapter5-page .chapter5-scene.is-ending-sequence .dialogue-panel {
+    left: 18px;
+    right: 18px;
+    bottom: 28px;
+    padding-bottom: 22px;
+  }
+
+  .chapter5-page .chapter5-scene.is-ending-sequence .dialogue-text {
+    max-width: 24em;
+    font-size: 16px;
+    line-height: 1.68;
+  }
+
+  .ending-achievement {
+    top: 66px;
+    left: 18px;
+    right: 18px;
+    padding: 12px 13px;
+  }
+
+  .ending-achievement strong {
+    font-size: 17px;
+  }
+
   .life-board {
     left: 14px;
     right: 14px;
@@ -2121,18 +3170,18 @@ button {
     left: 7px;
     right: 7px;
     bottom: 8px;
-    min-height: 166px;
-    gap: 5px;
-    padding: 9px 7px;
+    min-height: 128px;
+    gap: 3px;
+    padding: 7px 6px;
   }
 
   .mini-tray button {
-    min-height: 70px;
+    min-height: 98px;
   }
 
   .mini-item-art {
-    max-height: 72px;
-    max-width: 92%;
+    max-height: 108px;
+    max-width: 124px;
   }
 }
 

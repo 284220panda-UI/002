@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>谁是你的对象？ - 五章试玩</title>
+    <style>
+      :root {
+        --ink: #2e2e2e;
+        --muted: #7b7a72;
+        --paper: #f6f3ef;
+        --paper-strong: #fffdf8;
+        --line: #d7cec2;
+        --sage: #a9c5b0;
+        --sage-deep: #7e9c89;
+        --mist: #edf2ef;
+        --blue: #aecadd;
+        --rose: #e9aaa8;
+        --sand: #ead5b9;
+        --tape: #dbe5c8;
+        --shadow: 0 24px 80px rgba(46, 46, 46, 0.13);
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        min-height: 100dvh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 28px;
+        padding: 32px 20px;
+        background: var(--paper);
+        color: var(--ink);
+        font-family: "PingFang SC", "Microsoft YaHei", "Noto Sans SC", system-ui, sans-serif;
+      }
+      .hub {
+        width: min(720px, 100%);
+        background: var(--paper-strong);
+        border: 1px solid var(--line);
+        border-radius: 20px;
+        padding: 36px clamp(20px, 6vw, 48px);
+        box-shadow: var(--shadow);
+      }
+      .kicker {
+        display: inline-block;
+        font-size: 13px;
+        letter-spacing: 0.16em;
+        color: var(--sage-deep);
+        background: var(--mist);
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        padding: 5px 12px;
+        margin-bottom: 16px;
+      }
+      h1 {
+        font-size: clamp(26px, 6vw, 34px);
+        font-weight: 700;
+        letter-spacing: 0.02em;
+        margin-bottom: 8px;
+      }
+      .sub {
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.7;
+        margin-bottom: 28px;
+      }
+      .chapters {
+        display: grid;
+        gap: 14px;
+      }
+      .chapter {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        text-decoration: none;
+        color: var(--ink);
+        background: var(--paper-strong);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 16px 18px;
+        transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+      }
+      .chapter:hover,
+      .chapter:focus-visible {
+        transform: translateY(-2px);
+        border-color: var(--sage);
+        box-shadow: 0 10px 28px rgba(126, 156, 137, 0.18);
+        outline: none;
+      }
+      .no {
+        flex: none;
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+        display: grid;
+        place-items: center;
+        font-weight: 700;
+        font-size: 16px;
+        color: #fff;
+        background: var(--sage-deep);
+      }
+      .chapter:nth-child(2) .no { background: var(--blue); color: var(--ink); }
+      .chapter:nth-child(3) .no { background: var(--rose); color: var(--ink); }
+      .chapter:nth-child(4) .no { background: var(--sand); color: var(--ink); }
+      .chapter:nth-child(5) .no { background: var(--tape); color: var(--ink); }
+      .chapter strong {
+        font-size: 16px;
+        display: block;
+        margin-bottom: 3px;
+      }
+      .chapter small {
+        color: var(--muted);
+        font-size: 12.5px;
+        line-height: 1.6;
+        display: block;
+      }
+      .go {
+        flex: none;
+        margin-left: auto;
+        font-size: 18px;
+        color: var(--sage-deep);
+      }
+      .note {
+        margin-top: 22px;
+        font-size: 12.5px;
+        color: var(--muted);
+        line-height: 1.8;
+        background: var(--mist);
+        border-left: 3px solid var(--sage);
+        border-radius: 0 10px 10px 0;
+        padding: 10px 14px;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="hub" aria-label="谁是你的对象五章试玩入口">
+      <span class="kicker">五章试玩 · 都市情感推理</span>
+      <h1>谁是你的对象？</h1>
+      <p class="sub">
+        你在两个完全不同的“对象”之间调查真相：一个稳定克制的工程师，一个自由随性的摄影师。<br />
+        证据、记忆与选择，会带你走向不同的结局。
+      </p>
+      <nav class="chapters" aria-label="章节列表">
+        <a class="chapter" href="./index.html">
+          <span class="no">一</span>
+          <span>
+            <strong>第一章：两个对象？</strong>
+            <small>关系记录对不上，先从不寻常的门锁密码开始。</small>
+          </span>
+          <span class="go">›</span>
+        </a>
+        <a class="chapter" href="./chapter2.html">
+          <span class="no">二</span>
+          <span>
+            <strong>第二章：交换证词</strong>
+            <small>把两张照片分别摊开，听他们怎么说。</small>
+          </span>
+          <span class="go">›</span>
+        </a>
+        <a class="chapter" href="./chapter3.html">
+          <span class="no">三</span>
+          <span>
+            <strong>第三章：两个故事的起点</strong>
+            <small>两段过去开始显影，选择你更相信哪一种。</small>
+          </span>
+          <span class="go">›</span>
+        </a>
+        <a class="chapter" href="./chapter4.html">
+          <span class="no">四</span>
+          <span>
+            <strong>第四章：两种生活</strong>
+            <small>老城的重复与新城的陌生，代价都被摊在桌上。</small>
+          </span>
+          <span class="go">›</span>
+        </a>
+        <a class="chapter" href="./chapter5.html">
+          <span class="no">五</span>
+          <span>
+            <strong>第五章：最后选择</strong>
+            <small>两份生活记录都摊开了，选择终于回到你手里。</small>
+          </span>
+          <span class="go">›</span>
+        </a>
+      </nav>
+      <p class="note">
+        推荐按章节顺序游玩。进度与证据会保存在本机浏览器（localStorage），中途关闭页面不会丢失，可随时回到本页继续。
+      </p>
+    </main>
+  </body>
+</html>

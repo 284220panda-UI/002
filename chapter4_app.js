@@ -1,4 +1,4 @@
-const state = {
+﻿const state = {
   mode: "linear",
   lineIndex: 0,
   evidence: new Set(),
@@ -52,6 +52,10 @@ const logEmpty = document.querySelector("#logEmpty");
 const zhouPanel = document.querySelector("#zhouPanel");
 const linPanel = document.querySelector("#linPanel");
 
+if (sceneCard && choiceStack && choiceStack.parentElement !== sceneCard) {
+  sceneCard.appendChild(choiceStack);
+}
+
 let currentLines = [];
 let afterLinear = null;
 let afterItemClose = null;
@@ -63,14 +67,15 @@ let suppressMiniClick = false;
 
 const standeeAssets = {
   zhou: {
-    neutral: "./assets/zhou_yanchuan_waist_transparent_v1.png",
-    frown: "./assets/characters/zhou_frown_waist_standee_v1.png",
-    embarrassed: "./assets/characters/zhou_embarrassed_waist_standee_v1.png",
+    neutral: "./assets/characters/v1_full/zhou_base.png",
+    frown: "./assets/characters/game_ready_v3_unified_b/zhou_frown.png",
+    embarrassed: "./assets/characters/game_ready_v3_unified_b/zhou_embarrassed.png",
   },
   lin: {
-    teasing: "./assets/lin_xia_waist_transparent_v1.png",
-    serious: "./assets/characters/lin_serious_waist_standee_v1.png",
-    offended: "./assets/characters/lin_offended_waist_standee_v1.png",
+    neutral: "./assets/characters/v1_full/lin_base.png",
+    teasing: "./assets/characters/game_ready_v3_unified_b/lin_teasing.png",
+    serious: "./assets/characters/game_ready_v3_unified_b/lin_serious.png",
+    offended: "./assets/characters/game_ready_v3_unified_b/lin_speechless.png",
   },
 };
 
@@ -78,62 +83,135 @@ const evidenceItems = {
   old: {
     title: "E010 老城生活一周记录",
     desc: "老城不是只有重复，但重复也不会消失。",
-    image: "./assets/chapter4/camping_complete.png",
+    image: "./assets/chapter4/camping_complete_v5.png",
   },
   new: {
     title: "E011 新城试住一周记录",
-    desc: "我在哪里哪里就是家，但家也要一点一点补上。",
+    desc: "我在哪里哪里就是家。但家不是自动出现的。",
     image: "./assets/chapter4/map_complete.png",
   },
   missing: {
     title: "E012 两种生活的缺页",
-    desc: "两份生活记录都很完整，也都少了最难熬的几页。",
-    image: "./assets/chapter4/home_complete.png",
+    desc: "两份生活记录都很完整。但每一份都少了最难熬的几页。",
+    image: "./assets/chapter4/home_complete_v12_from_final_cg.png",
   },
 };
 
 const miniConfigs = {
   camping: {
-    goal: "露营物品拼贴",
-    board: "./assets/chapter4/camping_board.png",
-    complete: "./assets/chapter4/camping_complete.png",
+    goal: "露营物品摆放",
+    board: "./assets/chapter4/camping_board_v5.png",
+    complete: "./assets/chapter4/camping_complete_v5.png",
     node: "ch04_003_camping_setup",
-    prompt: "把至少四件物品放进营地，让这次露营真的成形。",
+    prompt: "把露营物品拖到对应阴影处，让这次露营真的成形。",
+    layeredReveal: true,
+    layerOrder: ["tent", "mat", "boardgame", "food"],
+    requiredCount: 4,
     items: [
-      { id: "mat", label: "野餐垫", asset: "./assets/chapter4/items/camping_mat.png", zone: "mat" },
-      { id: "lamp", label: "营地灯", asset: "./assets/chapter4/items/camping_lamp.png", zone: "lamp" },
-      { id: "food", label: "食物袋", asset: "./assets/chapter4/items/camping_food.png", zone: "food" },
-      { id: "camera", label: "相机", asset: "./assets/chapter4/items/camping_camera.png", zone: "camera" },
-      { id: "jacket", label: "外套", asset: "./assets/chapter4/items/camping_jacket.png", zone: "jacket" },
+      { id: "tent", label: "帐篷", asset: "./assets/chapter4/items/tent_sticker.png", zone: "tent" },
+      { id: "mat", label: "野餐垫", asset: "./assets/chapter4/items/mat_sticker.png", zone: "mat" },
+      { id: "boardgame", label: "桌游", asset: "./assets/chapter4/items/boardgame_sticker.png", zone: "boardgame" },
+      { id: "food", label: "食物", asset: "./assets/chapter4/items/food_sticker.png", zone: "food" },
     ],
     zones: [
-      { id: "mat", label: "铺在草地中间", left: 26, top: 58, width: 34, height: 16 },
-      { id: "lamp", label: "压住垫角", left: 56, top: 42, width: 20, height: 15 },
-      { id: "food", label: "放在野餐布旁", left: 62, top: 62, width: 22, height: 15 },
-      { id: "camera", label: "放在随手能拿的位置", left: 17, top: 45, width: 20, height: 15 },
-      { id: "jacket", label: "放进包边，晚上会冷", left: 37, top: 36, width: 22, height: 14 },
+      {
+        id: "tent",
+        label: "支在草地后侧",
+        left: 44.92,
+        top: 12.08,
+        width: 55.08,
+        height: 33.33,
+        hintLayer: "./assets/chapter4/hints/tent_hint.png",
+        revealLayer: "./assets/chapter4/reveals/tent_reveal.png",
+      },
+      {
+        id: "mat",
+        label: "铺在草地前侧",
+        left: 0,
+        top: 37.08,
+        width: 100,
+        height: 50.63,
+        hintLayer: "./assets/chapter4/hints/mat_hint.png",
+        revealLayer: "./assets/chapter4/reveals/mat_reveal.png",
+      },
+      {
+        id: "boardgame",
+        label: "放在垫子左侧",
+        left: 9.38,
+        top: 50.63,
+        width: 43.49,
+        height: 24.48,
+        hintLayer: "./assets/chapter4/hints/boardgame_hint.png",
+        revealLayer: "./assets/chapter4/reveals/boardgame_reveal.png",
+      },
+      {
+        id: "food",
+        label: "放在垫子右侧",
+        left: 53.39,
+        top: 44.79,
+        width: 46.61,
+        height: 36.56,
+        hintLayer: "./assets/chapter4/hints/food_hint.png",
+        revealLayer: "./assets/chapter4/reveals/food_reveal.png",
+      },
     ],
     completeText: "露营地收拾好了。",
   },
   home: {
     goal: "新城小公寓布置",
-    board: "./assets/chapter4/home_board.png",
-    complete: "./assets/chapter4/home_complete.png",
+    board: "./assets/chapter4/home_board_v12_from_final_cg.png",
+    complete: "./assets/chapter4/home_complete_v12_from_final_cg.png",
     node: "ch04_006_new_home_setup",
-    prompt: "把生活小物放进房间，让小公寓从能住变成像家。",
+    prompt: "把贴纸拖到对应阴影处，让空房间一点点变成能住的家。",
+    layeredReveal: true,
+    layerOrder: ["fridge_notes", "bookcase_life_corner", "controller_pair", "dinner_pair"],
     items: [
-      { id: "lamp", label: "小夜灯", asset: "./assets/chapter4/items/home_lamp.png", zone: "lamp" },
-      { id: "magnet", label: "冰箱贴", asset: "./assets/chapter4/items/home_magnet.png", zone: "magnet" },
-      { id: "rug", label: "地垫", asset: "./assets/chapter4/items/home_rug.png", zone: "rug" },
-      { id: "dishes", label: "便宜餐具", asset: "./assets/chapter4/items/home_dishes.png", zone: "dishes" },
-      { id: "controller", label: "游戏手柄", asset: "./assets/chapter4/items/home_controller.png", zone: "controller" },
+      { id: "fridge_notes", label: "冰箱便签", asset: "./assets/chapter4/items/home_fridge_notes_v11_retry2.png", zone: "fridge_notes" },
+      { id: "bookcase_life_corner", label: "生活角", asset: "./assets/chapter4/items/home_bookcase_life_corner_v11_retry2.png", zone: "bookcase_life_corner" },
+      { id: "controller_pair", label: "双人手柄", asset: "./assets/chapter4/items/home_controller_pair_v11_retry2.png", zone: "controller_pair" },
+      { id: "dinner_pair", label: "外卖袋", asset: "./assets/chapter4/items/home_takeout_bag_v11_retry2.png", zone: "dinner_pair" },
     ],
     zones: [
-      { id: "lamp", label: "放在窗边低桌", left: 54, top: 36, width: 21, height: 15 },
-      { id: "magnet", label: "贴在冰箱门上", left: 18, top: 28, width: 19, height: 22 },
-      { id: "rug", label: "铺在沙发前", left: 34, top: 64, width: 31, height: 15 },
-      { id: "dishes", label: "放到小桌旁", left: 58, top: 58, width: 22, height: 15 },
-      { id: "controller", label: "扔到地垫边", left: 31, top: 48, width: 25, height: 14 },
+      {
+        id: "fridge_notes",
+        label: "贴到冰箱上门",
+        left: 8.46,
+        top: 11.46,
+        width: 27.34,
+        height: 23.96,
+        hintLayer: "./assets/chapter4/hints/home_fridge_notes_hint_v12_from_final_cg.png",
+        revealLayer: "./assets/chapter4/reveals/home_fridge_notes_reveal_v12_masked.png",
+      },
+      {
+        id: "bookcase_life_corner",
+        label: "放到书柜生活角",
+        left: 37.11,
+        top: 31.25,
+        width: 35.16,
+        height: 29.69,
+        hintLayer: "./assets/chapter4/hints/home_bookcase_life_corner_hint_v12_from_final_cg.png",
+        revealLayer: "./assets/chapter4/reveals/home_bookcase_life_corner_reveal_v12_masked.png",
+      },
+      {
+        id: "controller_pair",
+        label: "放到茶几左侧",
+        left: 29.3,
+        top: 59.38,
+        width: 28.65,
+        height: 16.67,
+        hintLayer: "./assets/chapter4/hints/home_controller_pair_hint_v12_from_final_cg.png",
+        revealLayer: "./assets/chapter4/reveals/home_controller_pair_reveal_v12_masked.png",
+      },
+      {
+        id: "dinner_pair",
+        label: "放到茶几右侧",
+        left: 53.39,
+        top: 53.13,
+        width: 42.32,
+        height: 29.69,
+        hintLayer: "./assets/chapter4/hints/home_dinner_pair_hint_v12_from_final_cg.png",
+        revealLayer: "./assets/chapter4/reveals/home_dinner_pair_reveal_v12_masked.png",
+      },
     ],
     completeText: "小公寓终于有了生活的痕迹。",
   },
@@ -162,63 +240,131 @@ const miniConfigs = {
 };
 
 const introLines = [
-  { speaker: "404", node: "ch04_001_life_board_open", text: "第三章记录已贴入生活体验板。" },
-  { speaker: "404", node: "ch04_001_life_board_open", text: "本章不再判断谁更真实，而是进入两种生活。" },
-  { speaker: "玩家", node: "ch04_001_life_board_open", text: "所以这次不是问我更喜欢谁。" },
-  { speaker: "周砚川", character: "zhou", expression: "neutral", node: "ch04_001_life_board_open", text: "是看你能不能在那种生活里继续过下去。" },
-  { speaker: "林夏", character: "lin", expression: "teasing", node: "ch04_001_life_board_open", text: "听起来像恋爱游戏突然开始检查生活能力。" },
-  { speaker: "404", node: "ch04_002_choose_life_order", text: "两种生活都已开放。请选择先体验哪一种。" },
+  { speaker: "404", node: "ch04_001_life_board_open", text: "第三章记录的感受没有消失。" },
+  { speaker: "404", node: "ch04_001_life_board_open", text: "它像一张贴纸，被贴在推理板角落。" },
+  ...buildLifeBoardEchoLines(),
 ];
+
+function buildLifeBoardEchoLines() {
+  const feeling =
+    localStorage.getItem("project002_life_preference_feeling") ||
+    localStorage.getItem("life_preference_feeling") ||
+    "";
+  const echo = {
+    stay: "你曾经被“留下来的生活”打动。",
+    leave: "你曾经被“出发后的生活”打动。",
+    both: "你承认两种生活都像真的。",
+    uneasy: "你开始害怕它们太像真的。",
+  }[feeling];
+  if (!echo) return [];
+  return [{ speaker: "404", node: "ch04_001_life_board_open", text: echo }];
+}
 
 const zhouCampingIntro = [
   { speaker: "回忆", node: "ch04_003_zhou_weekend_camping", text: "朋友群的露营邀约真的成行了。", background: "chapter4-memory-zhou-camping" },
-  { speaker: "回忆", node: "ch04_003_zhou_weekend_camping", text: "有人带炉子，有人忘了打火机，有人一路吐槽导航。", background: "chapter4-memory-zhou-camping" },
-  { speaker: "周砚川", character: "zhou", expression: "neutral", node: "ch04_003_zhou_weekend_camping", text: "防潮垫、湿巾、充电宝，都在包里。", background: "chapter4-memory-zhou-camping" },
-  { speaker: "玩家", node: "ch04_003_zhou_weekend_camping", text: "你怎么比我还清楚？", background: "chapter4-memory-zhou-camping" },
-  { speaker: "周砚川", character: "zhou", expression: "embarrassed", node: "ch04_003_zhou_weekend_camping", text: "因为你昨天把清单发给我确认了三次。", background: "chapter4-memory-zhou-camping" },
+  { speaker: "回忆", node: "ch04_003_zhou_weekend_camping", text: "有人带炉子，有人忘了带打火机，有人一路吐槽导航。", background: "chapter4-memory-zhou-camping" },
+  { speaker: "回忆", node: "ch04_003_zhou_weekend_camping", text: "周砚川没有抢着表现，只是把你随口说过的薄外套放进包里。", background: "chapter4-memory-zhou-camping" },
+  { speaker: "朋友", node: "ch04_003_zhou_weekend_camping", text: "你们俩终于舍得从小区出来了。", background: "chapter4-memory-zhou-camping" },
+  { speaker: "玩家", node: "ch04_003_zhou_weekend_camping", text: "这话听起来像我平时只在楼下便利店活动。", background: "chapter4-memory-zhou-camping" },
+  { speaker: "朋友", node: "ch04_003_zhou_weekend_camping", text: "也差不多。你平时最远的远门就是楼下取快递。", background: "chapter4-memory-zhou-camping" },
+  { speaker: "玩家", node: "ch04_003_zhou_weekend_camping", text: "不要在户外攻击我的活动半径。", background: "chapter4-memory-zhou-camping" },
+  { speaker: "周砚川", character: "zhou", node: "ch04_003_zhou_weekend_camping", text: "她这次是真的想来。", background: "chapter4-memory-zhou-camping" },
+  { speaker: "玩家", node: "ch04_003_zhou_weekend_camping", text: "你怎么知道？", background: "chapter4-memory-zhou-camping" },
+  { speaker: "周砚川", character: "zhou", node: "ch04_003_zhou_weekend_camping", text: "她今天把防潮垫、湿巾和充电宝都带了。", background: "chapter4-memory-zhou-camping" },
+  { speaker: "朋友", node: "ch04_003_zhou_weekend_camping", text: "这已经是认真过日子的程度了。", background: "chapter4-memory-zhou-camping" },
+  { speaker: "玩家", node: "ch04_003_zhou_weekend_camping", text: "我只是怕来了以后什么都不会。", background: "chapter4-memory-zhou-camping" },
+  { speaker: "周砚川", character: "zhou", node: "ch04_003_zhou_weekend_camping", text: "不会也没关系。有人会生火，有人会搭帐篷，你也带了很多。", background: "chapter4-memory-zhou-camping" },
   { speaker: "404", node: "ch04_003_camping_setup", text: "轻互动：把露营物品放到合适位置。" },
 ];
 
-const zhouCampingAfter = [
-  { speaker: "朋友", node: "ch04_003_zhou_weekend_camping", text: "可以啊，你们俩有点默契。", background: "chapter4-memory-zhou-camping" },
-  { speaker: "玩家", node: "ch04_003_zhou_weekend_camping", text: "我只是怕来了以后什么都不会。", background: "chapter4-memory-zhou-camping" },
-  { speaker: "周砚川", character: "zhou", expression: "neutral", node: "ch04_003_zhou_weekend_camping", text: "不会也没关系。有人会生火，有人会搭帐篷，你也带了很多。", background: "chapter4-memory-zhou-camping" },
+const zhouCampingChoices = [
+  { label: "帮朋友铺野餐垫", action: "camp_help_picnic_mat" },
+  { label: "和周砚川去车上拿食物", action: "camp_fetch_food" },
+  { label: "偷偷拍一张朋友们围在一起的照片", action: "camp_sneak_photo" },
 ];
 
+const zhouCampingFeedback = {
+  help_picnic_mat: [
+    { speaker: "回忆", node: "ch04_003_zhou_weekend_camping", text: "你和朋友把野餐垫压在草地上，风一吹又翘起来。", background: "chapter4-memory-zhou-camping" },
+    { speaker: "回忆", node: "ch04_003_zhou_weekend_camping", text: "周砚川把营地灯放在垫角，刚好压住。", background: "chapter4-memory-zhou-camping" },
+    { speaker: "朋友", node: "ch04_003_zhou_weekend_camping", text: "可以啊，你们俩有点默契。", background: "chapter4-memory-zhou-camping" },
+  ],
+  fetch_food: [
+    { speaker: "回忆", node: "ch04_003_zhou_weekend_camping", text: "车后备箱里塞着食物、水和一袋被遗忘的纸杯。", background: "chapter4-memory-zhou-camping" },
+    { speaker: "回忆", node: "ch04_003_zhou_weekend_camping", text: "周砚川把重的那袋拎走，只把轻一点的零食袋递给你。", background: "chapter4-memory-zhou-camping" },
+    { speaker: "玩家", node: "ch04_003_zhou_weekend_camping", text: "你是不是又在分配重量？", background: "chapter4-memory-zhou-camping" },
+    { speaker: "周砚川", character: "zhou", node: "ch04_003_zhou_weekend_camping", text: "这叫合理运用资源。", background: "chapter4-memory-zhou-camping" },
+  ],
+  sneak_photo: [
+    { speaker: "回忆", node: "ch04_003_zhou_weekend_camping", text: "你举起手机，拍到朋友们围着炉子争论先烤什么。", background: "chapter4-memory-zhou-camping" },
+    { speaker: "回忆", node: "ch04_003_zhou_weekend_camping", text: "周砚川没有看镜头，只伸手替你挡了一下风。", background: "chapter4-memory-zhou-camping" },
+    { speaker: "回忆", node: "ch04_003_zhou_weekend_camping", text: "照片有点糊，但每个人都在笑。", background: "chapter4-memory-zhou-camping" },
+  ],
+};
+
 const zhouCatIntro = [
-  { speaker: "回忆", node: "ch04_004_zhou_stray_cat", text: "露营回来那天晚上，小区楼下花坛里传来很细的叫声。", background: "chapter4-memory-zhou-cat" },
+  { speaker: "回忆", node: "ch04_004_zhou_stray_cat", text: "画面一转，又到了傍晚，是你家楼下。", background: "chapter4-memory-zhou-cat" },
+  { speaker: "回忆", node: "ch04_004_zhou_stray_cat", text: "你们晚上出门散步，回家时听见楼下花坛里传来很细的叫声。", background: "chapter4-memory-zhou-cat" },
   { speaker: "回忆", node: "ch04_004_zhou_stray_cat", text: "一只灰白色的小猫缩在纸箱后面，耳朵尖湿了一点。", background: "chapter4-memory-zhou-cat" },
   { speaker: "玩家", node: "ch04_004_zhou_stray_cat", text: "它怎么在这？", background: "chapter4-memory-zhou-cat" },
-  { speaker: "周砚川", character: "zhou", expression: "frown", node: "ch04_004_zhou_stray_cat", text: "先确认它有没有受伤。其他事回头再想。", background: "chapter4-memory-zhou-cat" },
+  { speaker: "周砚川", character: "zhou", node: "ch04_004_zhou_stray_cat", text: "可能被人临时放在这。还是被人……？", background: "chapter4-memory-zhou-cat" },
+  { speaker: "玩家", node: "ch04_004_zhou_stray_cat", text: "你有些紧张哦。", background: "chapter4-memory-zhou-cat" },
+  { speaker: "周砚川", character: "zhou", node: "ch04_004_zhou_stray_cat", text: "面对生命还是需要重视的。", background: "chapter4-memory-zhou-cat" },
+  { speaker: "回忆", node: "ch04_004_zhou_stray_cat", text: "周砚川蹲下来，把外套脱下来小心翼翼包住猫，放在箱子里。", background: "chapter4-memory-zhou-cat" },
+  { speaker: "回忆", node: "ch04_004_zhou_stray_cat", text: "他抬头看你，声音比刚才轻了一点。", background: "chapter4-memory-zhou-cat" },
+  { speaker: "周砚川", character: "zhou", node: "ch04_004_zhou_stray_cat", text: "我们先处理一下？", background: "chapter4-memory-zhou-cat" },
 ];
 
 const zhouCatFeedback = {
   vet: [
     { speaker: "回忆", node: "ch04_004_zhou_stray_cat", text: "周砚川立刻查附近还开着的宠物医院。", background: "chapter4-memory-zhou-cat" },
+    { speaker: "回忆", node: "ch04_004_zhou_stray_cat", text: "玩家抱着纸箱坐在后座，小猫在里面很小声地叫。", background: "chapter4-memory-zhou-cat" },
+    { speaker: "周砚川", character: "zhou", node: "ch04_004_zhou_stray_cat", text: "先确认它有没有受伤，其他事回头再想。", background: "chapter4-memory-zhou-cat" },
     { speaker: "404", node: "ch04_004_zhou_stray_cat", text: "记录：你先选择确认小猫安全。" },
   ],
   group: [
     { speaker: "回忆", node: "ch04_004_zhou_stray_cat", text: "你在业主群发了照片，很快有人问猫在哪里。", background: "chapter4-memory-zhou-cat" },
-    { speaker: "周砚川", character: "zhou", expression: "neutral", node: "ch04_004_zhou_stray_cat", text: "喜欢它是一回事，确认它该去哪是另一回事。", background: "chapter4-memory-zhou-cat" },
+    { speaker: "回忆", node: "ch04_004_zhou_stray_cat", text: "周砚川没有急着把猫交出去，只让对方描述特征。", background: "chapter4-memory-zhou-cat" },
+    { speaker: "周砚川", character: "zhou", node: "ch04_004_zhou_stray_cat", text: "喜欢它是一回事，确认它该去哪是另一回事。", background: "chapter4-memory-zhou-cat" },
+    { speaker: "404", node: "ch04_004_zhou_stray_cat", text: "记录：你先确认它该去哪。" },
   ],
   care: [
     { speaker: "回忆", node: "ch04_004_zhou_stray_cat", text: "你们买了猫粮、纸箱和一条旧毛巾。", background: "chapter4-memory-zhou-cat" },
-    { speaker: "周砚川", character: "zhou", expression: "neutral", node: "ch04_004_zhou_stray_cat", text: "信任也不是喂一次饭就有。", background: "chapter4-memory-zhou-cat" },
+    { speaker: "回忆", node: "ch04_004_zhou_stray_cat", text: "小猫吃得很急，吃完又缩回角落。", background: "chapter4-memory-zhou-cat" },
+    { speaker: "玩家", node: "ch04_004_zhou_stray_cat", text: "它好像不太相信我们。", background: "chapter4-memory-zhou-cat" },
+    { speaker: "周砚川", character: "zhou", node: "ch04_004_zhou_stray_cat", text: "正常。信任也不是喂一次饭就有。", background: "chapter4-memory-zhou-cat" },
+    { speaker: "404", node: "ch04_004_zhou_stray_cat", text: "记录：你先照顾一晚。" },
   ],
 };
+
+const zhouCatFollowUp = [
+  { speaker: "玩家", node: "ch04_004_zhou_stray_cat", text: "如果真的没人要呢？", background: "chapter4-memory-zhou-cat" },
+  { speaker: "周砚川", character: "zhou", node: "ch04_004_zhou_stray_cat", text: "那就认真算一下。", background: "chapter4-memory-zhou-cat" },
+  { speaker: "玩家", node: "ch04_004_zhou_stray_cat", text: "算什么？", background: "chapter4-memory-zhou-cat" },
+  { speaker: "周砚川", character: "zhou", node: "ch04_004_zhou_stray_cat", text: "时间、钱、房东同不同意，还有我们是不是真的想养。", background: "chapter4-memory-zhou-cat" },
+  { speaker: "玩家", node: "ch04_004_zhou_stray_cat", text: "你不觉得这种时候应该冲动一点？", background: "chapter4-memory-zhou-cat" },
+  { speaker: "周砚川", character: "zhou", node: "ch04_004_zhou_stray_cat", text: "我可以冲动地喜欢它，但不能冲动负责。", background: "chapter4-memory-zhou-cat" },
+];
 
 const zhouCostIntro = [
   { speaker: "回忆", node: "ch04_005_zhou_repetition_cost", text: "周一早上，闹钟响了很久。" },
   { speaker: "回忆", node: "ch04_005_zhou_repetition_cost", text: "地铁站还是一样的人流，早餐店还是排队，消息列表里还是工作。" },
+  { speaker: "回忆", node: "ch04_005_zhou_repetition_cost", text: "露营照片和小猫照片都在相册里，但你还是站在同一条通勤线上。" },
   { speaker: "玩家", node: "ch04_005_zhou_repetition_cost", text: "我以为生活变好了，就不会这么烦。" },
-  { speaker: "周砚川", character: "zhou", expression: "neutral", node: "ch04_005_zhou_repetition_cost", text: "不会。变好不是变成另一种人生。" },
-  { speaker: "周砚川", character: "zhou", expression: "neutral", node: "ch04_005_zhou_repetition_cost", text: "它只是让你在同一种人生里，多一点能喘气的地方。" },
+  { speaker: "周砚川", character: "zhou", node: "ch04_005_zhou_repetition_cost", text: "不会。" },
+  { speaker: "玩家", node: "ch04_005_zhou_repetition_cost", text: "你倒是很诚实。" },
+  { speaker: "周砚川", character: "zhou", node: "ch04_005_zhou_repetition_cost", text: "变好不是变成另一种人生。" },
+  { speaker: "周砚川", character: "zhou", node: "ch04_005_zhou_repetition_cost", text: "它只是让你在同一种人生里，多一点能喘气的地方。" },
+  { speaker: "玩家", node: "ch04_005_zhou_repetition_cost", text: "那如果我还是受不了重复呢？" },
+  { speaker: "周砚川", character: "zhou", node: "ch04_005_zhou_repetition_cost", text: "那就承认受不了。" },
+  { speaker: "周砚川", character: "zhou", node: "ch04_005_zhou_repetition_cost", text: "我们可以继续改。" },
+  { speaker: "周砚川", character: "zhou", node: "ch04_005_zhou_repetition_cost", text: "改不了，也可以走。" },
 ];
 
 const zhouCostFeedback = {
   accept: [
     { speaker: "404", node: "ch04_005_zhou_repetition_cost", text: "界面记录：当前可以接受老城的重复，但需要持续改造。" },
-    { speaker: "周砚川", character: "zhou", expression: "neutral", node: "ch04_005_zhou_repetition_cost", text: "那我们就继续把重复的地方改小一点。" },
+    { speaker: "周砚川", character: "zhou", node: "ch04_005_zhou_repetition_cost", text: "那我们就继续把重复的地方改小一点。" },
   ],
   fear: [
     { speaker: "404", node: "ch04_005_zhou_repetition_cost", text: "界面记录：当前仍然害怕老城重复感。" },
@@ -226,68 +372,144 @@ const zhouCostFeedback = {
   ],
   unsure: [
     { speaker: "404", node: "ch04_005_zhou_repetition_cost", text: "界面记录：当前对安稳也感到难过。" },
-    { speaker: "周砚川", character: "zhou", expression: "neutral", node: "ch04_005_zhou_repetition_cost", text: "安稳不是所有人的答案，也不是每一天都能救人。" },
+    { speaker: "周砚川", character: "zhou", node: "ch04_005_zhou_repetition_cost", text: "安稳不是所有人的答案，也不是每一天都能救人。" },
   ],
 };
 
 const linHomeIntro = [
   { speaker: "回忆", node: "ch04_006_lin_home_setup", text: "新城小公寓比照片里小一点，窗帘有折痕，地板角落还有一点灰。" },
+  { speaker: "回忆", node: "ch04_006_lin_home_setup", text: "林夏把行李箱往墙边一推，拍了拍手。" },
   { speaker: "林夏", character: "lin", expression: "teasing", node: "ch04_006_lin_home_setup", text: "好了，宣布这里暂时归我们管。" },
   { speaker: "玩家", node: "ch04_006_lin_home_setup", text: "你是不是太快进入状态了？" },
-  { speaker: "林夏", character: "lin", expression: "serious", node: "ch04_006_lin_home_setup", text: "我在哪里，哪里就是家。家可以乱，但不能脏。" },
+  { speaker: "林夏", character: "lin", expression: "serious", node: "ch04_006_lin_home_setup", text: "我在哪里，哪里就是家。" },
+  { speaker: "玩家", node: "ch04_006_lin_home_setup", text: "家里还是收拾一下吧。" },
+  { speaker: "林夏", character: "lin", node: "ch04_006_lin_home_setup", text: "有道理。家可以乱，但不能脏。你先休息一下，我先来大展身手收拾一下。" },
+  { speaker: "回忆", node: "ch04_006_lin_home_setup", text: "你们去楼下小店买了小夜灯、冰箱贴、地垫、便宜餐具和一卷很难撕开的垃圾袋。" },
+  { speaker: "回忆", node: "ch04_006_lin_home_setup", text: "林夏认真把冰箱贴贴歪，又认真说：“有点灵魂了。”" },
   { speaker: "404", node: "ch04_006_new_home_setup", text: "轻互动：把生活小物放进新城小公寓。" },
 ];
 
+/* REMOVED: linHomeChoices — user asked to delete the "kitchen/mat_light/balcony" choice */
+/*
+const linHomeChoices = [
+  { label: "先收拾厨房", action: "home_kitchen" },
+  { label: "先铺地垫和小夜灯", action: "home_mat_light" },
+  { label: "先整理阳台", action: "home_balcony" },
+];
+*/
+
+const linHomeFeedback = {
+  kitchen: [
+    { speaker: "回忆", node: "ch04_006_lin_home_setup", text: "你把便宜餐具拆出来，发现碗底贴纸撕不干净。" },
+    { speaker: "回忆", node: "ch04_006_lin_home_setup", text: "林夏蹲在旁边研究半天，最后认真宣布：“这只碗有新城户口了。”" },
+    { speaker: "回忆", node: "ch04_006_lin_home_setup", text: "厨房还是很小，但水槽边多了一块擦干净的地方。" },
+  ],
+  mat_light: [
+    { speaker: "回忆", node: "ch04_006_lin_home_setup", text: "地垫铺了两次才摆正，小夜灯插上电以后，把墙角照出一小圈暖光。" },
+    { speaker: "回忆", node: "ch04_006_lin_home_setup", text: "林夏把冰箱贴贴在灯旁边，说这样晚上找开关比较有仪式感。" },
+    { speaker: "玩家", node: "ch04_006_lin_home_setup", text: "你对仪式感的定义很灵活。" },
+    { speaker: "林夏", character: "lin", node: "ch04_006_lin_home_setup", text: "能用就行。" },
+  ],
+  balcony: [
+    { speaker: "回忆", node: "ch04_006_lin_home_setup", text: "阳台门推开时有一点卡，你们一起把纸箱挪到墙边。" },
+    { speaker: "回忆", node: "ch04_006_lin_home_setup", text: "风吹进来，窗帘皱巴巴地贴到林夏手臂上。" },
+    { speaker: "林夏", character: "lin", expression: "teasing", node: "ch04_006_lin_home_setup", text: "看，阳台正式上线。" },
+    { speaker: "玩家", node: "ch04_006_lin_home_setup", text: "它刚才只是灰尘收纳区。" },
+    { speaker: "林夏", character: "lin", node: "ch04_006_lin_home_setup", text: "现在是未来早餐区。" },
+  ],
+};
+
 const linHomeAfter = [
   { speaker: "回忆", node: "ch04_006_lin_home_setup", text: "房间终于像能住人。", background: "chapter4-memory-lin-home" },
-  { speaker: "回忆", node: "ch04_006_lin_home_setup", text: "为了庆祝收拾好，你们点了外卖，坐在地上打游戏。", background: "chapter4-memory-lin-home" },
-  { speaker: "林夏", character: "lin", expression: "teasing", node: "ch04_006_lin_home_setup", text: "赢的人不用收拾外卖盒。", background: "chapter4-memory-lin-home" },
+  { speaker: "回忆", node: "ch04_006_lin_home_setup", text: "为了庆祝收拾好，你们点了外卖，坐在地上，开开心心打游戏。", background: "chapter4-memory-lin-home" },
+  { speaker: "林夏", character: "lin", node: "ch04_006_lin_home_setup", text: "赢的人不用收拾外卖盒。", background: "chapter4-memory-lin-home" },
   { speaker: "玩家", node: "ch04_006_lin_home_setup", text: "那你刚才说这里是家。", background: "chapter4-memory-lin-home" },
-  { speaker: "林夏", character: "lin", expression: "teasing", node: "ch04_006_lin_home_setup", text: "家也需要公平竞争。", background: "chapter4-memory-lin-home" },
+  { speaker: "林夏", character: "lin", node: "ch04_006_lin_home_setup", text: "家也需要公平竞争。", background: "chapter4-memory-lin-home" },
 ];
 
 const linBeachIntro = [
   { speaker: "回忆", node: "ch04_007_lin_beach_icecream_photo", text: "周末，林夏拉你去海边。", background: "chapter4-memory-lin-beach" },
+  { speaker: "回忆", node: "ch04_007_lin_beach_icecream_photo", text: "她说只是看看海，结果鞋子第一个被她踢到沙滩边。", background: "chapter4-memory-lin-beach" },
   { speaker: "林夏", character: "lin", expression: "teasing", node: "ch04_007_lin_beach_icecream_photo", text: "来都来了，不玩水很浪费。", background: "chapter4-memory-lin-beach" },
   { speaker: "玩家", node: "ch04_007_lin_beach_icecream_photo", text: "你这个人对“计划”两个字是不是有误解？", background: "chapter4-memory-lin-beach" },
-  { speaker: "林夏", character: "lin", expression: "teasing", node: "ch04_007_lin_beach_icecream_photo", text: "计划就是为了让意外有地方发生。", background: "chapter4-memory-lin-beach" },
-  { speaker: "林夏", character: "lin", expression: "serious", node: "ch04_007_lin_beach_icecream_photo", text: "相机给你。摄影师也需要被拍一下。", background: "chapter4-memory-lin-beach" },
+  { speaker: "林夏", character: "lin", node: "ch04_007_lin_beach_icecream_photo", text: "计划就是为了让意外有地方发生。", background: "chapter4-memory-lin-beach" },
+  { speaker: "回忆", node: "ch04_007_lin_beach_icecream_photo", text: "你们买了冰淇淋，沿着海边走。", background: "chapter4-memory-lin-beach" },
+  { speaker: "回忆", node: "ch04_007_lin_beach_icecream_photo", text: "林夏把相机塞给你。", background: "chapter4-memory-lin-beach" },
+  { speaker: "玩家", node: "ch04_007_lin_beach_icecream_photo", text: "你让我拍？", background: "chapter4-memory-lin-beach" },
+  { speaker: "林夏", character: "lin", node: "ch04_007_lin_beach_icecream_photo", text: "对。", background: "chapter4-memory-lin-beach" },
+  { speaker: "玩家", node: "ch04_007_lin_beach_icecream_photo", text: "你不是摄影师吗？", background: "chapter4-memory-lin-beach" },
+  { speaker: "林夏", character: "lin", expression: "serious", node: "ch04_007_lin_beach_icecream_photo", text: "摄影师也需要被拍一下，证明我不是新城本地刷新出来的 NPC。", background: "chapter4-memory-lin-beach" },
+  { speaker: "回忆", node: "ch04_007_lin_beach_icecream_photo", text: "她踩进浅水里，回头冲你笑。", background: "chapter4-memory-lin-beach" },
+  { speaker: "回忆", node: "ch04_007_lin_beach_icecream_photo", text: "冰淇淋快要化到手指上，你按下快门。", background: "chapter4-memory-lin-beach" },
 ];
 
 const linBeachFeedback = {
   water: [
-    { speaker: "回忆", node: "ch04_007_lin_beach_icecream_photo", text: "你拍下她踩进浅水、回头笑的瞬间。", background: "chapter4-memory-lin-beach" },
-    { speaker: "404", node: "ch04_007_lin_beach_icecream_photo", text: "记录：玩家主动拍下林夏的新城瞬间。" },
+    { speaker: "回忆", node: "ch04_007_lin_beach_icecream_photo", text: "她回头时，海水刚好没过脚踝。", background: "chapter4-memory-lin-beach" },
+    { speaker: "回忆", node: "ch04_007_lin_beach_icecream_photo", text: "照片里她笑得很亮，远处的人群和海风都被压成柔软的背景。", background: "chapter4-memory-lin-beach" },
+    { speaker: "回忆", node: "ch04_007_lin_beach_icecream_photo", text: "林夏凑过来看，安静了一秒。", background: "chapter4-memory-lin-beach" },
+    { speaker: "林夏", character: "lin", expression: "teasing", node: "ch04_007_lin_beach_icecream_photo", text: "可以啊，你有点会。", background: "chapter4-memory-lin-beach" },
   ],
   icecream: [
-    { speaker: "回忆", node: "ch04_007_lin_beach_icecream_photo", text: "冰淇淋快要化到她手指上，你按下快门。", background: "chapter4-memory-lin-beach" },
-    { speaker: "林夏", character: "lin", expression: "teasing", node: "ch04_007_lin_beach_icecream_photo", text: "这张能证明我不是新城本地刷新出来的 NPC。", background: "chapter4-memory-lin-beach" },
+    { speaker: "回忆", node: "ch04_007_lin_beach_icecream_photo", text: "冰淇淋已经化到手指上，她还坚持把它举高一点。", background: "chapter4-memory-lin-beach" },
+    { speaker: "回忆", node: "ch04_007_lin_beach_icecream_photo", text: "你按下快门时，她正皱着脸躲开滴下来的奶油。", background: "chapter4-memory-lin-beach" },
+    { speaker: "回忆", node: "ch04_007_lin_beach_icecream_photo", text: "林夏第一次有些尴尬地想偷偷按删除。", background: "chapter4-memory-lin-beach" },
+    { speaker: "玩家", node: "ch04_007_lin_beach_icecream_photo", text: "这张不许删。", background: "chapter4-memory-lin-beach" },
+    { speaker: "林夏", character: "lin", node: "ch04_007_lin_beach_icecream_photo", text: "你确定？", background: "chapter4-memory-lin-beach" },
+    { speaker: "玩家", node: "ch04_007_lin_beach_icecream_photo", text: "要支持新手摄影师，这很像你。", background: "chapter4-memory-lin-beach" },
   ],
   blur: [
-    { speaker: "回忆", node: "ch04_007_lin_beach_icecream_photo", text: "你故意拍了一张她没站稳的糊照。", background: "chapter4-memory-lin-beach" },
-    { speaker: "林夏", character: "lin", expression: "offended", node: "ch04_007_lin_beach_icecream_photo", text: "很好，这张可以放进我们的黑历史相册。", background: "chapter4-memory-lin-beach" },
+    { speaker: "回忆", node: "ch04_007_lin_beach_icecream_photo", text: "她踩到一小块湿沙，身体歪了一下，照片糊得很彻底。", background: "chapter4-memory-lin-beach" },
+    { speaker: "回忆", node: "ch04_007_lin_beach_icecream_photo", text: "林夏抢过来看，先沉默两秒，然后笑出声。", background: "chapter4-memory-lin-beach" },
+    { speaker: "林夏", character: "lin", expression: "teasing", node: "ch04_007_lin_beach_icecream_photo", text: "很好，摄影师的尊严今日暂停营业。", background: "chapter4-memory-lin-beach" },
+    { speaker: "玩家", node: "ch04_007_lin_beach_icecream_photo", text: "你不是说拍糊也行？", background: "chapter4-memory-lin-beach" },
+    { speaker: "林夏", character: "lin", node: "ch04_007_lin_beach_icecream_photo", text: "我说的是你拍糊也行，不是我摔糊也行。", background: "chapter4-memory-lin-beach" },
   ],
 };
 
 const linMapIntro = [
   { speaker: "回忆", node: "ch04_008_lin_unfamiliar_cost", text: "林夏那天有拍摄，要到晚上才回来。" },
-  { speaker: "回忆", node: "ch04_008_lin_unfamiliar_cost", text: "外卖送错了楼，附近店的味道不太习惯，楼下施工声一直到傍晚。" },
-  { speaker: "回忆", node: "ch04_008_lin_unfamiliar_cost", text: "这些都不是大事。但在老城，它们甚至不会被你注意到。" },
-  { speaker: "玩家", node: "ch04_008_lin_unfamiliar_cost", text: "新城不只是海边、冰淇淋和照片。" },
-  { speaker: "404", node: "ch04_008_new_city_map", text: "轻互动：整理新城临时生活地图。" },
+  { speaker: "回忆", node: "ch04_008_lin_unfamiliar_cost", text: "你一个人留在新城。" },
+  { speaker: "回忆", node: "ch04_008_lin_unfamiliar_cost", text: "外卖送错了楼，你只能下楼随便买了一点晚饭，新城菜系的味道不太习惯，楼下施工声一直到傍晚。" },
+  { speaker: "回忆", node: "ch04_008_lin_unfamiliar_cost", text: "这些都不是大事。" },
+  { speaker: "回忆", node: "ch04_008_lin_unfamiliar_cost", text: "但在老城，它们甚至不会被你注意到。" },
+  { speaker: "回忆", node: "ch04_008_lin_unfamiliar_cost", text: "你站在门口，突然意识到：新城不只是海边、冰淇淋和照片。" },
+  { speaker: "回忆", node: "ch04_008_lin_unfamiliar_cost", text: "它也包括每一件都要重新认识的小事。" },
+  { speaker: "回忆", node: "ch04_008_lin_unfamiliar_cost", text: "你没有慌，也没有等林夏回来处理。" },
+  { speaker: "回忆", node: "ch04_008_lin_unfamiliar_cost", text: "你只是把手机地图、外卖地址、便利店小票和房间门牌号摆在桌上，开始给这个地方做第一版生活标记。" },
 ];
 
 const linMapAfter = [
-  { speaker: "林夏", character: "lin", expression: "serious", node: "ch04_008_lin_unfamiliar_cost", text: "今天不顺？" },
+  { speaker: "回忆", node: "ch04_008_lin_unfamiliar_cost", text: "门口传来钥匙声。" },
+  { speaker: "回忆", node: "ch04_008_lin_unfamiliar_cost", text: "林夏回来时，手里拎着一袋楼下小店买的热饮，袋子上还贴着新店开业的贴纸。" },
+  { speaker: "林夏", character: "lin", node: "ch04_008_lin_unfamiliar_cost", text: "我回来了。今天一个人开荒怎么样？" },
   { speaker: "玩家", node: "ch04_008_lin_unfamiliar_cost", text: "外卖难吃，路也不认识。但我标了一张地图。" },
-  { speaker: "林夏", character: "lin", expression: "serious", node: "ch04_008_lin_unfamiliar_cost", text: "这些不是你不适合这里的证据。只是这里还没被你用熟。" },
-  { speaker: "林夏", character: "lin", expression: "teasing", node: "ch04_008_lin_unfamiliar_cost", text: "但你已经开始了。家不是一句话说出来的，是这么一点一点补上的。" },
+  { speaker: "回忆", node: "ch04_008_lin_unfamiliar_cost", text: "林夏把袋子放到桌边，凑过来看你画到一半的生活地图。" },
+  { speaker: "林夏", character: "lin", node: "ch04_008_lin_unfamiliar_cost", text: "可以啊，已经有新手村地图了。" },
+  { speaker: "玩家", node: "ch04_008_lin_unfamiliar_cost", text: "这个新手村体验不太友好。" },
+  { speaker: "林夏", character: "lin", node: "ch04_008_lin_unfamiliar_cost", text: "那我们给它打差评，然后继续探索。" },
+  { speaker: "玩家", node: "ch04_008_lin_unfamiliar_cost", text: "你这算安慰吗？" },
+  { speaker: "林夏", character: "lin", node: "ch04_008_lin_unfamiliar_cost", text: "算鼓励。" },
+  { speaker: "林夏", character: "lin", expression: "serious", node: "ch04_008_lin_unfamiliar_cost", text: "外卖难吃，不代表你不适合新城。" },
+  { speaker: "林夏", character: "lin", node: "ch04_008_lin_unfamiliar_cost", text: "路不认识，也不代表这里不欢迎你。" },
+  { speaker: "林夏", character: "lin", node: "ch04_008_lin_unfamiliar_cost", text: "只是它还没被我们用熟。" },
+  { speaker: "玩家", node: "ch04_008_lin_unfamiliar_cost", text: "那要用多久？" },
+  { speaker: "林夏", character: "lin", node: "ch04_008_lin_unfamiliar_cost", text: "不知道。可能要几顿难吃的饭，几条走错的路，还有几家意外好喝的店。" },
+  { speaker: "玩家", node: "ch04_008_lin_unfamiliar_cost", text: "听起来成本很高。" },
+  { speaker: "林夏", character: "lin", node: "ch04_008_lin_unfamiliar_cost", text: "但也很有趣。" },
+  { speaker: "回忆", node: "ch04_008_lin_unfamiliar_cost", text: "林夏把新店贴纸撕下来，贴在地图空白处。" },
+  { speaker: "林夏", character: "lin", node: "ch04_008_lin_unfamiliar_cost", text: "你看，今天至少新增一个待验证地点。" },
+  { speaker: "玩家", node: "ch04_008_lin_unfamiliar_cost", text: "如果不好喝呢？" },
+  { speaker: "林夏", character: "lin", node: "ch04_008_lin_unfamiliar_cost", text: "那就标成“下次避雷”。这也是熟悉。" },
+  { speaker: "林夏", character: "lin", node: "ch04_008_lin_unfamiliar_cost", text: "我们可以一起把好吃的店、难走的路、晚上会吵的地方都标出来。" },
+  { speaker: "林夏", character: "lin", expression: "serious", node: "ch04_008_lin_unfamiliar_cost", text: "家不是一句话说出来的，是我们这样一点一点认出来的。" },
 ];
 
 const costReviewIntro = [
-  { speaker: "404", node: "ch04_009_cost_review", text: "两种生活体验完成。" },
-  { speaker: "404", node: "ch04_009_cost_review", text: "老城：朋友、社区、熟悉路线、稳定关系都在。重复、无趣、旧压力也在。" },
-  { speaker: "404", node: "ch04_009_cost_review", text: "新城：海边、小公寓、重新开始、林夏的活力都在。陌生、不确定、很多事要一个人处理也在。" },
+  { speaker: "404", node: "ch04_009_cost_review", text: "两种生活都不是奖励。" },
+  { speaker: "404", node: "ch04_009_cost_review", text: "它们都有幸福，也都有必须忍耐的部分。" },
+  { speaker: "404", node: "ch04_009_cost_review", text: "老城：朋友、社区、熟悉路线、稳定关系都在。但重复、无趣、旧压力也在。" },
+  { speaker: "404", node: "ch04_009_cost_review", text: "新城：海边、新城小公寓、重新开始、林夏的活力都在。但陌生、食物不习惯、路线不熟、很多事要一个人处理也在。" },
   { speaker: "玩家", node: "ch04_009_cost_review", text: "所以现在要问的不是我更喜欢哪边。" },
   { speaker: "玩家", node: "ch04_009_cost_review", text: "是我更能接受哪一种生活的代价。" },
 ];
@@ -295,35 +517,40 @@ const costReviewIntro = [
 const costFeedback = {
   old_city: [
     { speaker: "404", node: "ch04_009_cost_review", text: "界面记录：当前更能接受老城生活的代价。" },
-    { speaker: "周砚川", character: "zhou", expression: "neutral", node: "ch04_009_cost_review", text: "重复不是失败，但它确实需要耐心。" },
-    { speaker: "林夏", character: "lin", expression: "teasing", node: "ch04_009_cost_review", text: "那我暂时输给小猫和露营。" },
+    { speaker: "周砚川", character: "zhou", node: "ch04_009_cost_review", text: "重复不是失败，但它确实需要耐心。" },
+    { speaker: "林夏", character: "lin", node: "ch04_009_cost_review", text: "那我暂时输给小猫和露营。" },
   ],
   new_city: [
     { speaker: "404", node: "ch04_009_cost_review", text: "界面记录：当前更能接受新城生活的代价。" },
     { speaker: "林夏", character: "lin", expression: "serious", node: "ch04_009_cost_review", text: "陌生可以慢慢标地图。" },
-    { speaker: "周砚川", character: "zhou", expression: "neutral", node: "ch04_009_cost_review", text: "不确定也需要耐心。" },
+    { speaker: "周砚川", character: "zhou", node: "ch04_009_cost_review", text: "不确定也需要耐心。" },
   ],
   neither: [
     { speaker: "404", node: "ch04_009_cost_review", text: "界面记录：当前还不能承受任何一种完整生活。" },
-    { speaker: "周砚川", character: "zhou", expression: "neutral", node: "ch04_009_cost_review", text: "这也是答案。" },
-    { speaker: "林夏", character: "lin", expression: "serious", node: "ch04_009_cost_review", text: "至少不是随便选一个好看的。" },
+    { speaker: "周砚川", character: "zhou", node: "ch04_009_cost_review", text: "这也是答案。" },
+    { speaker: "林夏", character: "lin", node: "ch04_009_cost_review", text: "至少不是随便选一个好看的。" },
   ],
   suspicious: [
     { speaker: "404", node: "ch04_009_cost_review", text: "界面记录：当前怀疑两种生活都被筛选过。" },
-    { speaker: "林夏", character: "lin", expression: "serious", node: "ch04_009_cost_review", text: "你终于开始怀疑甜的东西了。" },
     { speaker: "周砚川", character: "zhou", expression: "frown", node: "ch04_009_cost_review", text: "太完整的生活，反而像被整理过。" },
   ],
 };
 
 const missingPagesLines = [
   { speaker: "404", node: "ch04_010_missing_pages", text: "已发现关键证据：两种生活的缺页。" },
-  { speaker: "404", node: "ch04_010_missing_pages", text: "老城缺少重复到麻木的日子。新城缺少独自迷路、吃不惯、联系不上熟人的时刻。" },
-  { speaker: "玩家", node: "ch04_010_missing_pages", text: "世界给我的不是答案，是最能动摇我的两个版本。" },
+  { speaker: "404", node: "ch04_010_missing_pages", text: "两份生活记录都很完整。" },
+  { speaker: "404", node: "ch04_010_missing_pages", text: "但每一份都少了最难熬的几页。" },
+  { speaker: "404", node: "ch04_010_missing_pages", text: "老城缺少：日复一日重复到麻木的日子。" },
+  { speaker: "404", node: "ch04_010_missing_pages", text: "明明被爱着，却还是觉得生活没有变化的时刻。" },
+  { speaker: "404", node: "ch04_010_missing_pages", text: "新城缺少：一个人迷路、吃不惯、联系不上熟人的时刻。" },
+  { speaker: "404", node: "ch04_010_missing_pages", text: "明明很自由，却不知道自己是否真的落地的时刻。" },
+  { speaker: "404", node: "ch04_010_missing_pages", text: "世界给我的不是答案，是最能动摇我的两个版本。" },
 ];
 
 const chapterEndLines = [
   { speaker: "回忆", node: "ch04_011_chapter_end", text: "两份生活记录被并排放在桌上。" },
-  { speaker: "回忆", node: "ch04_011_chapter_end", text: "它们都太真实了，真实到你开始舍不得。" },
+  { speaker: "回忆", node: "ch04_011_chapter_end", text: "它们都太真实了。" },
+  { speaker: "回忆", node: "ch04_011_chapter_end", text: "真实到你开始舍不得。" },
   { speaker: "回忆", node: "ch04_011_chapter_end", text: "也真实到你开始怀疑。" },
   { speaker: "404", node: "chapter_04_complete", text: "Chapter 05 已解锁：最后选择。" },
 ];
@@ -355,9 +582,7 @@ miniTray.addEventListener("click", (event) => {
   const button = event.target.closest("[data-mini-item]");
   if (!button || button.disabled) return;
   dismissMiniPrompt();
-  selectedMiniItem = button.dataset.miniItem;
-  sceneCard.classList.add("mini-item-selected");
-  miniTray.querySelectorAll("[data-mini-item]").forEach((item) => item.classList.toggle("selected", item === button));
+  selectMiniItem(button);
 });
 
 miniTray.addEventListener("pointerdown", (event) => {
@@ -389,6 +614,9 @@ questionGrid.addEventListener("click", (event) => {
   const action = button.dataset.action;
   recordChoice(button.textContent);
 
+  if (action.startsWith("camp_")) chooseCamping(action.replace("camp_", ""));
+  // REMOVED: home_ choices deleted
+  // if (action.startsWith("home_")) chooseHome(action.replace("home_", ""));
   if (action.startsWith("cat_")) chooseCat(action.replace("cat_", ""));
   if (action.startsWith("zhou_cost_")) chooseZhouCost(action.replace("zhou_cost_", ""));
   if (action.startsWith("beach_")) chooseBeach(action.replace("beach_", ""));
@@ -473,19 +701,26 @@ function advanceLine() {
 }
 
 function renderLine(line) {
-  speaker.textContent = line.speaker;
-  nodeLabel.textContent = line.node;
+  speaker.textContent = displaySpeakerName(line.speaker);
+  dialoguePanel.classList.toggle("is-narration", !line.character && displaySpeakerName(line.speaker) === "叙述");
+  nodeLabel.textContent = "";
   dialogueText.textContent = line.text;
-  if (line.character && line.expression) setActiveCharacter(line.character, line.expression);
+  if (line.character) setActiveCharacter(line.character, line.expression);
   else setActiveCharacter(null);
   recordDialogueLine();
+}
+
+function displaySpeakerName(name) {
+  if (name === "玩家") return "我";
+  if (name === "回忆" || name === "404") return "叙述";
+  return name;
 }
 
 function setActiveCharacter(character, expression = "neutral") {
   zhouPanel.classList.toggle("active", character === "zhou");
   linPanel.classList.toggle("active", character === "lin");
   if (character === "zhou") zhouPanel.src = standeeAssets.zhou[expression] || standeeAssets.zhou.neutral;
-  if (character === "lin") linPanel.src = standeeAssets.lin[expression] || standeeAssets.lin.teasing;
+  if (character === "lin") linPanel.src = standeeAssets.lin[expression] || standeeAssets.lin.neutral;
 }
 
 function setSceneMode(mode) {
@@ -499,16 +734,24 @@ function setSceneMode(mode) {
     "chapter4-memory-zhou-cat",
     "chapter4-memory-lin-home",
     "chapter4-memory-lin-beach",
+    "chapter4-solo-zhou",
+    "chapter4-solo-lin",
     "chapter4-mini-mode",
     "chapter4-mini-complete-mode",
     "chapter4-review-mode",
+    "chapter4-owner-zhou",
+    "chapter4-owner-lin",
     "mini-prompt-hidden",
     "mini-item-selected",
     "mini-cg-ready"
   );
   lifeBoard.classList.remove("active");
   miniGame.classList.remove("active");
-  if (mode) mode.split(/\s+/).filter(Boolean).forEach((name) => sceneCard.classList.add(name));
+  if (mode) {
+    mode.split(/\s+/).filter(Boolean).forEach((name) => sceneCard.classList.add(name));
+    sceneCard.classList.toggle("chapter4-owner-zhou", mode.includes("chapter4-memory-zhou"));
+    sceneCard.classList.toggle("chapter4-owner-lin", mode.includes("chapter4-memory-lin"));
+  }
 }
 
 function enterLifeBoard() {
@@ -548,9 +791,15 @@ function startZhouLife() {
     startMiniGame("camping", () => {
       state.completedCampingSetup = true;
       addClue("轻互动：完成老城露营物品拼贴。");
-      startLinear(zhouCampingAfter, startZhouCat);
+      setButtons(zhouCampingChoices);
     });
   });
+}
+
+function chooseCamping(choice) {
+  state.zhouLifeDetailChoice = choice;
+  addClue(`露营：${campingChoiceText(choice)}`);
+  startLinear(zhouCampingFeedback[choice], startZhouCat);
 }
 
 function startZhouCat() {
@@ -568,11 +817,13 @@ function startZhouCat() {
 function chooseCat(choice) {
   state.zhouLifeDetailChoice = choice;
   addClue(`老城细节：${catChoiceText(choice)}`);
-  startLinear(zhouCatFeedback[choice], startZhouCost);
+  startLinear(zhouCatFeedback[choice], () => {
+    startLinear(zhouCatFollowUp, startZhouCost);
+  });
 }
 
 function startZhouCost() {
-  setSceneMode("");
+  setSceneMode("chapter4-solo-zhou");
   chapterGoal.textContent = "老城代价";
   startLinear(zhouCostIntro, () => {
     setButtons([
@@ -597,16 +848,28 @@ function startLinLife() {
     enterLifeBoard();
     return;
   }
-  setSceneMode("");
+  setSceneMode("chapter4-solo-lin");
   chapterGoal.textContent = "新城一周";
   startLinear(linHomeIntro, () => {
     startMiniGame("home", () => {
       state.completedNewHomeSetup = true;
       addClue("轻互动：完成新城小公寓布置。");
+      // 删除选择，直接继续剧情
       startLinear(linHomeAfter, startLinBeach);
     });
   });
 }
+
+/* REMOVED: chooseHome — choices deleted, now auto-continues after mini-game */
+/*
+function chooseHome(choice) {
+  state.linLifeDetailChoice = choice;
+  addClue(`收拾新家：${homeChoiceText(choice)}`);
+  startLinear(linHomeFeedback[choice], () => {
+    startLinear(linHomeAfter, startLinBeach);
+  });
+}
+*/
 
 function startLinBeach() {
   setSceneMode("chapter4-memory-mode chapter4-memory-lin-beach");
@@ -627,17 +890,15 @@ function chooseBeach(choice) {
 }
 
 function startLinMap() {
-  setSceneMode("");
+  setSceneMode("chapter4-solo-lin");
   chapterGoal.textContent = "陌生生活";
   startLinear(linMapIntro, () => {
-    startMiniGame("map", () => {
-      state.completedNewCityMap = true;
-      addClue("轻互动：完成新城生活地图标记。");
-      startLinear(linMapAfter, () => {
-        state.viewedLinLifeWeek = true;
-        state.knownE011 = true;
-        unlockEvidence("new", enterLifeBoard);
-      });
+    state.completedNewCityMap = true;
+    addClue("新城生活地图：记录住处、晚饭、药店和避开施工的路线。");
+    startLinear(linMapAfter, () => {
+      state.viewedLinLifeWeek = true;
+      state.knownE011 = true;
+      unlockEvidence("new", enterLifeBoard);
     });
   });
 }
@@ -658,9 +919,13 @@ function startCostReview() {
 
 function chooseCost(value) {
   state.lifeCostPreference = value;
+  localStorage.setItem("life_cost_preference", value);
+  localStorage.setItem("project002_life_cost_preference", value);
   addClue(`代价复核：${costChoiceText(value)}`);
   startLinear(costFeedback[value], () => {
     state.knownE012 = true;
+    localStorage.setItem("known_E012_missing_life_pages", "true");
+    localStorage.setItem("project002_known_E012", "true");
     unlockEvidence("missing", () => {
       startLinear(missingPagesLines, finishChapter);
     });
@@ -690,6 +955,8 @@ function startMiniGame(id, afterComplete) {
   miniPromptDismissed = false;
   state.mode = "mini";
   setSceneMode("chapter4-mini-mode");
+  sceneCard.classList.add(`mini-${id}`);
+  sceneCard.classList.toggle("mini-layered-reveal", Boolean(config.layeredReveal));
   sceneCard.style.removeProperty("--chapter4-complete-image");
   chapterGoal.textContent = config.goal;
   renderLine({ speaker: "404", node: config.node, text: config.prompt });
@@ -700,6 +967,18 @@ function startMiniGame(id, afterComplete) {
   miniComplete.textContent = config.completeText;
   miniTray.innerHTML = "";
   miniZones.innerHTML = "";
+
+  if (config.layeredReveal) {
+    config.zones.forEach((zone) => {
+      if (!zone.hintLayer) return;
+      const hint = document.createElement("img");
+      hint.className = "mini-hint-layer";
+      hint.dataset.hintZone = zone.id;
+      hint.src = zone.hintLayer;
+      hint.alt = "";
+      miniZones.appendChild(hint);
+    });
+  }
 
   config.items.forEach((item) => {
     const button = document.createElement("button");
@@ -722,8 +1001,10 @@ function startMiniGame(id, afterComplete) {
     button.style.width = `${zone.width}%`;
     button.style.height = `${zone.height}%`;
     button.setAttribute("aria-label", zone.label);
-    if (zoneItem) {
-      button.innerHTML = `<img class="mini-zone-hint" src="${getMiniHintAsset(zoneItem.asset)}" alt="" />`;
+    if (config.layeredReveal) {
+      button.innerHTML = "";
+    } else if (zoneItem) {
+      button.innerHTML = `<img class="mini-zone-hint" src="${getMiniHintAsset(id, zone.id)}" alt="" />`;
     }
     miniZones.appendChild(button);
   });
@@ -744,13 +1025,27 @@ function placeMiniItem(itemId, zoneId) {
   miniTray.querySelector(`[data-mini-item="${itemId}"]`).disabled = true;
   miniTray.querySelector(`[data-mini-item="${itemId}"]`).classList.remove("selected");
   sceneCard.classList.remove("mini-item-selected");
+  updateMiniHintFocus(null);
   const zoneButton = miniZones.querySelector(`[data-mini-zone="${zoneId}"]`);
   const zone = config.zones.find((entry) => entry.id === zoneId);
   zoneButton.classList.add("filled");
-  zoneButton.innerHTML = buildMiniRevealCrop(config.complete, zone);
-  renderLine({ speaker: "404", node: config.node, text: `${item.label}放好了。${placed.size}/4` });
-  if (placed.size >= 4) {
+  zoneButton.innerHTML = "";
+  if (zone?.skipPlacementReveal) {
+    zoneButton.innerHTML = "";
+  } else if (config.layeredReveal && zone?.revealLayer) {
+    addMiniRevealLayer(zone.id, zone.revealLayer, getMiniLayerOrder(config, zone.id, placed.size));
+  } else {
+    zoneButton.innerHTML = buildMiniRevealCrop(config.complete, zone);
+  }
+  miniZones.querySelector(`[data-hint-zone="${zoneId}"]`)?.remove();
+  const requiredCount = config.requiredCount || Math.min(4, config.items.length);
+  renderLine({ speaker: "404", node: config.node, text: `${item.label}放好了。${placed.size}/${requiredCount}` });
+  if (placed.size >= requiredCount) {
     miniBoardImage.src = config.complete;
+    if (config.layeredReveal) {
+      miniZones.querySelectorAll(".mini-reveal-layer").forEach((layer) => layer.remove());
+      miniZones.querySelectorAll(".mini-hint-layer").forEach((hint) => hint.remove());
+    }
     miniZones.querySelectorAll("button").forEach((button) => {
       button.disabled = true;
     });
@@ -765,9 +1060,7 @@ function placeMiniItem(itemId, zoneId) {
 function startMiniDrag(event, button) {
   event.preventDefault();
   dismissMiniPrompt();
-  selectedMiniItem = button.dataset.miniItem;
-  sceneCard.classList.add("mini-item-selected");
-  miniTray.querySelectorAll("[data-mini-item]").forEach((item) => item.classList.toggle("selected", item === button));
+  selectMiniItem(button);
 
   const rect = button.getBoundingClientRect();
   const image = button.querySelector("img");
@@ -794,6 +1087,38 @@ function startMiniDrag(event, button) {
   button.addEventListener("pointermove", moveMiniDrag);
   button.addEventListener("pointerup", endMiniDrag);
   button.addEventListener("pointercancel", cancelMiniDrag);
+}
+
+function selectMiniItem(button) {
+  selectedMiniItem = button.dataset.miniItem;
+  sceneCard.classList.add("mini-item-selected");
+  miniTray.querySelectorAll("[data-mini-item]").forEach((item) => item.classList.toggle("selected", item === button));
+  const item = activeInteraction?.config.items.find((entry) => entry.id === selectedMiniItem);
+  updateMiniHintFocus(item?.zone);
+}
+
+function updateMiniHintFocus(zoneId) {
+  miniZones.querySelectorAll(".mini-hint-layer").forEach((hint) => {
+    hint.classList.toggle("focused", hint.dataset.hintZone === zoneId);
+  });
+  miniZones.querySelectorAll("[data-mini-zone]").forEach((zone) => {
+    zone.classList.toggle("targeted", zone.dataset.miniZone === zoneId);
+  });
+}
+
+function addMiniRevealLayer(zoneId, revealLayer, order = 1) {
+  const reveal = document.createElement("img");
+  reveal.className = "mini-reveal-layer";
+  reveal.dataset.revealZone = zoneId;
+  reveal.src = revealLayer;
+  reveal.alt = "";
+  reveal.style.zIndex = `${10 + order}`;
+  miniZones.insertBefore(reveal, miniZones.firstChild);
+}
+
+function getMiniLayerOrder(config, zoneId, fallbackOrder = 1) {
+  const index = config.layerOrder?.indexOf(zoneId);
+  return index === undefined || index < 0 ? fallbackOrder : index + 1;
 }
 
 function moveMiniDrag(event) {
@@ -843,8 +1168,13 @@ function updateMiniDragGhost(clientX, clientY) {
   dragState.ghost.style.top = `${clientY}px`;
 }
 
-function getMiniHintAsset(assetPath) {
-  return assetPath.replace("/items/", "/hints/").replace(".png", "_hint.png");
+function getMiniHintAsset(miniId, zoneId) {
+  const config = miniConfigs[miniId];
+  const zone = config?.zones?.find((z) => z.id === zoneId);
+  if (zone?.hintLayer) return zone.hintLayer;
+  const item = config?.items?.find((i) => i.zone === zoneId);
+  if (item?.asset) return item.asset;
+  return `./assets/chapter4/hints/${miniId}_${zoneId}_hint.png`;
 }
 
 function buildMiniRevealCrop(completeImage, zone) {
@@ -878,6 +1208,8 @@ function finishMiniGame() {
 function closeMiniGame() {
   miniGame.classList.remove("active");
   sceneCard.classList.remove("mini-prompt-hidden", "mini-item-selected");
+  sceneCard.classList.remove("mini-layered-reveal");
+  sceneCard.classList.remove("mini-camping", "mini-home", "mini-map");
   miniTray.hidden = false;
   activeInteraction = null;
   selectedMiniItem = null;
@@ -995,18 +1327,20 @@ function renderClues() {
 }
 
 function setButtons(buttons, options = {}) {
+  const visibleButtons = buttons.filter((item) => item.action !== "continue");
+  sceneCard?.classList.toggle("has-floating-choices", visibleButtons.length > 0);
   questionGrid.hidden = false;
   if (choiceStack) choiceStack.hidden = false;
   questionGrid.classList.remove("collapsed");
   questionGrid.innerHTML = "";
-  if (!buttons.length) {
+  if (!visibleButtons.length) {
     questionGrid.classList.add("collapsed");
     questionGrid.hidden = true;
     if (choiceStack) choiceStack.hidden = true;
     if (options.showHint !== false) questionGrid.appendChild(questionHint);
     return;
   }
-  buttons.forEach((item) => {
+  visibleButtons.forEach((item) => {
     const button = document.createElement("button");
     button.type = "button";
     button.dataset.action = item.action;
@@ -1028,7 +1362,7 @@ function recordDialogueLine() {
 function recordChoice(label) {
   appendLogEntry({
     kind: "choice",
-    speaker: "玩家选择",
+    speaker: "我选择",
     node: nodeLabel.textContent,
     text: label,
   });
@@ -1036,36 +1370,42 @@ function recordChoice(label) {
 
 function appendLogEntry(entry) {
   const last = state.log[state.log.length - 1];
-  if (
-    last &&
-    last.kind === entry.kind &&
-    last.speaker === entry.speaker &&
-    last.node === entry.node &&
-    last.text === entry.text
-  ) {
+  if (last && last.kind === entry.kind && last.speaker === entry.speaker && last.node === entry.node && last.text === entry.text) {
     return;
   }
+  if (last && last.kind === entry.kind && last.speaker === entry.speaker) {
+    last.node = entry.node;
+    last.texts = Array.isArray(last.texts) ? last.texts : [last.text].filter(Boolean);
+    last.texts.push(entry.text);
+    last.text = last.texts.join("\n\n");
+    renderLog();
+    return;
+  }
+  entry.texts = [entry.text];
   state.log.push(entry);
   renderLog();
 }
 
 function renderLog() {
   logList.innerHTML = "";
-  state.log.forEach((entry) => {
+  state.log.slice(-80).forEach((entry) => {
     const item = document.createElement("li");
-    const head = document.createElement("div");
-    const speakerName = document.createElement("strong");
-    const nodeName = document.createElement("small");
-    const text = document.createElement("p");
+    const speakerName = document.createElement("span");
+    const lines = document.createElement("div");
+    item.className = `log-entry ${entry.kind === "choice" ? "choice" : "log-dialogue"} ${entry.speaker === "叙述" ? "log-narration" : ""}`;
+    speakerName.className = "log-speaker";
     speakerName.textContent = entry.speaker;
-    nodeName.textContent = entry.node;
-    text.textContent = entry.text;
-    head.append(speakerName, nodeName);
-    item.className = `log-entry ${entry.kind}`;
-    item.append(head, text);
+    lines.className = "log-lines";
+    (Array.isArray(entry.texts) ? entry.texts : [entry.text]).forEach((line) => {
+      const paragraph = document.createElement("p");
+      paragraph.textContent = line;
+      lines.appendChild(paragraph);
+    });
+    item.append(speakerName, lines);
     logList.appendChild(item);
   });
-  logCount.textContent = `${state.log.length} 条`;
+  const lineCount = state.log.reduce((count, entry) => count + (Array.isArray(entry.texts) ? entry.texts.length : 1), 0);
+  logCount.textContent = `${lineCount} 条`;
   logEmpty.classList.toggle("hidden", state.log.length > 0);
 }
 
@@ -1074,6 +1414,22 @@ function catChoiceText(choice) {
     vet: "先确认小猫安全",
     group: "先确认它该去哪",
     care: "先照顾一晚",
+  }[choice];
+}
+
+function campingChoiceText(choice) {
+  return {
+    help_picnic_mat: "帮朋友铺野餐垫",
+    fetch_food: "和周砚川去车上拿食物",
+    sneak_photo: "偷偷拍一张朋友们围在一起的照片",
+  }[choice];
+}
+
+function homeChoiceText(choice) {
+  return {
+    kitchen: "先收拾厨房",
+    mat_light: "先铺地垫和小夜灯",
+    balcony: "先整理阳台",
   }[choice];
 }
 
@@ -1104,3 +1460,4 @@ function costChoiceText(value) {
 
 renderEvidence();
 startLinear(introLines, enterLifeBoard);
+

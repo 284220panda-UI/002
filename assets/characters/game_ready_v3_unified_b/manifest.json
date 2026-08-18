@@ -1,0 +1,145 @@
+{
+  "version": "v3_unified_b",
+  "source_set": "ART/characters/game_ready_v3_unified",
+  "purpose": "Review-ready fixed-canvas waist standees with reduced silhouette jumping.",
+  "characters": {
+    "lin": {
+      "canvas": [
+        340,
+        480
+      ],
+      "assets": {
+        "base": {
+          "file": "ART/characters/game_ready_v3_unified_b/lin_base.png",
+          "bbox": [
+            82,
+            16,
+            285,
+            464
+          ]
+        },
+        "smile": {
+          "file": "ART/characters/game_ready_v3_unified_b/lin_smile.png",
+          "bbox": [
+            82,
+            16,
+            285,
+            464
+          ]
+        },
+        "teasing": {
+          "file": "ART/characters/game_ready_v3_unified_b/lin_teasing.png",
+          "bbox": [
+            75,
+            16,
+            293,
+            464
+          ]
+        },
+        "speechless": {
+          "file": "ART/characters/game_ready_v3_unified_b/lin_speechless.png",
+          "bbox": [
+            98,
+            16,
+            270,
+            464
+          ]
+        },
+        "serious": {
+          "file": "ART/characters/game_ready_v3_unified_b/lin_serious.png",
+          "bbox": [
+            96,
+            16,
+            273,
+            464
+          ]
+        },
+        "shy": {
+          "file": "ART/characters/game_ready_v3_unified_b/lin_shy.png",
+          "bbox": [
+            105,
+            16,
+            263,
+            464
+          ]
+        },
+        "surprised": {
+          "file": "ART/characters/game_ready_v3_unified_b/lin_surprised.png",
+          "bbox": [
+            63,
+            16,
+            305,
+            464
+          ]
+        }
+      }
+    },
+    "zhou": {
+      "canvas": [
+        320,
+        504
+      ],
+      "assets": {
+        "base": {
+          "file": "ART/characters/game_ready_v3_unified_b/zhou_base.png",
+          "bbox": [
+            60,
+            14,
+            255,
+            489
+          ]
+        },
+        "smile": {
+          "file": "ART/characters/game_ready_v3_unified_b/zhou_smile.png",
+          "bbox": [
+            58,
+            14,
+            257,
+            489
+          ]
+        },
+        "serious": {
+          "file": "ART/characters/game_ready_v3_unified_b/zhou_serious.png",
+          "bbox": [
+            60,
+            14,
+            255,
+            489
+          ]
+        },
+        "embarrassed": {
+          "file": "ART/characters/game_ready_v3_unified_b/zhou_embarrassed.png",
+          "bbox": [
+            48,
+            14,
+            269,
+            489
+          ]
+        },
+        "frown": {
+          "file": "ART/characters/game_ready_v3_unified_b/zhou_frown.png",
+          "bbox": [
+            70,
+            14,
+            246,
+            489
+          ]
+        },
+        "listening": {
+          "file": "ART/characters/game_ready_v3_unified_b/zhou_listening.png",
+          "bbox": [
+            66,
+            14,
+            250,
+            489
+          ]
+        }
+      }
+    }
+  },
+  "contact_sheets": {
+    "zhou": "ART/previews/zhou_game_ready_v3b_unified_contact.png",
+    "lin": "ART/previews/lin_game_ready_v3b_unified_contact.png",
+    "combined": "ART/previews/character_game_ready_v3b_unified_contact_sheet.png"
+  }
+}

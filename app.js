@@ -28,18 +28,15 @@ const state = {
 
 const standeeAssets = {
   zhou: {
-    select: "./assets/characters/game_ready/zhou_yanchuan_01_smile_waist_game_ready_v2.png",
-    neutral: "./assets/characters/game_ready/zhou_yanchuan_01_smile_waist_game_ready_v2.png",
-    frown: "./assets/characters/game_ready/zhou_yanchuan_05_jealous_waist_game_ready_v2.png",
-    embarrassed: "./assets/characters/game_ready/zhou_yanchuan_03_embarrassed_waist_game_ready_v2.png",
+    base: "./assets/characters/v1_full/zhou_base.png",
   },
   lin: {
-    select: "./assets/characters/game_ready/lin_xia_01_smile_waist_game_ready_v2.png",
-    teasing: "./assets/characters/game_ready/lin_xia_02_teasing_waist_game_ready_v2.png",
-    offended: "./assets/characters/game_ready/lin_xia_03_speechless_waist_game_ready_v2.png",
-    serious: "./assets/characters/game_ready/lin_xia_04_focused_camera_waist_game_ready_v2.png",
+    base: "./assets/characters/v1_full/lin_base.png",
   },
 };
+
+// 立绘出场标记：必须在脚本顶部声明（TDZ），否则页面加载时 renderLine() 提前访问会抛 ReferenceError
+let standeesEntered = false;
 
 const evidenceClues = {
   door: "周砚川知道门锁密码 0417，也知道备用钥匙位置。",
@@ -66,7 +63,15 @@ const evidenceItems = {
 };
 
 const introLines = [
+  { speaker: "回忆", node: "ch01_001_wakeup", text: "白屏慢慢退下去。", scene: "sleep" },
+  { speaker: "回忆", node: "ch01_001_wakeup", text: "窗帘没有完全拉开，房间里是刚醒来时那种偏软的亮度。", scene: "sleep" },
+  { speaker: "回忆", node: "ch01_001_wakeup", text: "被子一角滑到地上，床头手机屏幕黑着，像什么都没发生过。", scene: "sleep" },
   { speaker: "404", node: "ch01_001_wakeup", text: "加载记忆中。", scene: "sleep" },
+  { speaker: "回忆", node: "ch01_001_wakeup", text: "房间边缘轻轻错位了一下，又恢复正常。", scene: "sleep" },
+  { speaker: "回忆", node: "ch01_002_double_claim", text: "（睁眼）" },
+  { speaker: "回忆", node: "ch01_002_double_claim", text: "视线先对上天花板，又慢慢移到房间中央。" },
+  { speaker: "回忆", node: "ch01_002_double_claim", text: "床边站着一个陌生男人，手里还握着没拧开的水瓶。" },
+  { speaker: "回忆", node: "ch01_002_double_claim", text: "窗边靠着一个陌生女生，脖子上挂着相机，正低头看你。" },
   { speaker: "玩家", node: "ch01_002_double_claim", text: "真是睡了一个好觉啊。" },
   {
     speaker: "周砚川",
@@ -95,7 +100,7 @@ const introLines = [
     character: "lin",
     expression: "teasing",
     node: "ch01_002_double_claim",
-    text: "他说得很冷静，其实刚才水杯都差点捏爆。",
+    text: "他说得很冷静，其实刚才水瓶都差点捏爆。",
   },
   {
     speaker: "周砚川",
@@ -111,6 +116,7 @@ const introLines = [
     node: "ch01_002_double_claim",
     text: "有。我听见塑料瓶响了。",
   },
+  { speaker: "回忆", node: "ch01_002_double_claim", text: "周砚川把水瓶往身后收了一点。" },
   { speaker: "玩家", node: "ch01_002_double_claim", text: "……你们是谁？" },
   {
     speaker: "周砚川",
@@ -167,16 +173,36 @@ const falseChoiceFeedback = {
   ],
 };
 
+const zhouObserveLines = [
+  { speaker: "回忆", node: "ask_zhou_observe", text: "你先看向周砚川。" },
+  { speaker: "回忆", node: "ask_zhou_observe", text: "他站得离床不远，但没有靠得太近，像是既想确认你的状态，又怕让你更紧张。" },
+  { speaker: "回忆", node: "ask_zhou_observe", text: "外套搭在椅背上，袖口还有一点没抚平的折痕。" },
+  { speaker: "周砚川", character: "zhou", expression: "neutral", node: "ask_zhou_observe", text: "你有没有哪里不舒服？" },
+  { speaker: "玩家", node: "ask_zhou_observe", text: "我只是想确认一下你是不是真的。" },
+  { speaker: "周砚川", character: "zhou", expression: "neutral", node: "ask_zhou_observe", text: "可以。" },
+  { speaker: "玩家", node: "ask_zhou_observe", text: "你怎么这么配合？" },
+  { speaker: "周砚川", character: "zhou", expression: "neutral", node: "ask_zhou_observe", text: "我一直都这样。" },
+];
+
+const linObserveLines = [
+  { speaker: "回忆", node: "ask_lin_observe", text: "你看向林夏。" },
+  { speaker: "回忆", node: "ask_lin_observe", text: "她靠在窗边，姿势很放松，但相机带被她绕在手指上，绕了一圈又松开。" },
+  { speaker: "回忆", node: "ask_lin_observe", text: "她看起来像是在笑，眼神却一直停在你脸上，像在确认你是不是还在发懵。" },
+  { speaker: "林夏", character: "lin", expression: "teasing", node: "ask_lin_observe", text: "观察完了吗？" },
+  { speaker: "玩家", node: "ask_lin_observe", text: "你这么坦然，我反而更害怕。" },
+  { speaker: "林夏", character: "lin", expression: "teasing", node: "ask_lin_observe", text: "我也害怕啊。" },
+  { speaker: "玩家", node: "ask_lin_observe", text: "完全看不出来。" },
+  { speaker: "林夏", character: "lin", expression: "teasing", node: "ask_lin_observe", text: "那说明我表情管理还不错。" },
+  { speaker: "回忆", node: "ask_lin_observe", text: "她说完，指尖又把相机带绕紧了一点。" },
+];
+
 const askLines = {
   zhouIdentity: [
     { speaker: "玩家", text: "你是谁？" },
     { speaker: "周砚川", character: "zhou", expression: "neutral", text: "周砚川。" },
-    { speaker: "玩家", text: "然后呢？" },
     { speaker: "周砚川", character: "zhou", expression: "neutral", text: "我是你对象。" },
     { speaker: "玩家", text: "你说得也太平了。" },
-    { speaker: "周砚川", character: "zhou", expression: "frown", text: "因为这是事实。" },
-    { speaker: "玩家", text: "事实要有证据。" },
-    { speaker: "周砚川", character: "zhou", expression: "neutral", text: "门锁密码是 0417。" },
+    { speaker: "周砚川", character: "zhou", expression: "frown", text: "因为这是事实。你家门锁密码是 0417。" },
     { speaker: "玩家", text: "（尝试输入，门打开了）……" },
     { speaker: "周砚川", character: "zhou", expression: "embarrassed", text: "不是猜的。你设的时候说，这个数字好记。" },
     { speaker: "玩家", text: "为什么好记？" },
@@ -188,13 +214,13 @@ const askLines = {
     { speaker: "玩家", text: "你翻过我抽屉？" },
     { speaker: "周砚川", character: "zhou", expression: "frown", text: "你让我放的。" },
     { speaker: "玩家", text: "我为什么让你放？" },
-    { speaker: "周砚川", character: "zhou", expression: "neutral", text: "因为你第三次把钥匙忘在门外。" },
-    { speaker: "玩家", text: "第三次？" },
-    { speaker: "周砚川", character: "zhou", expression: "neutral", text: "第一次你说是意外。第二次你说门锁针对你。第三次你让我想办法。" },
+    { speaker: "周砚川", character: "zhou", expression: "neutral", text: "因为你有一阵子经常把钥匙忘在门外。" },
+    { speaker: "周砚川", character: "zhou", expression: "neutral", text: "有一次钥匙挂在门上，你人已经坐电梯下楼。还有一次，你拎着外卖站在门口，说门锁针对你。" },
+    { speaker: "周砚川", character: "zhou", expression: "neutral", text: "后来你让我想办法。" },
     { speaker: "玩家", text: "所以你的办法是放备用钥匙？" },
     { speaker: "周砚川", character: "zhou", expression: "embarrassed", text: "还有换个大钥匙扣。你说丑。" },
     { speaker: "玩家", text: "确实听起来像我会说的话。" },
-    { speaker: "周砚川", character: "zhou", expression: "embarrassed", text: "嗯。所以我没换。" },
+    { speaker: "周砚川", character: "zhou", expression: "embarrassed", text: "嗯。但你还是换了。" },
   ],
   linIdentity: [
     { speaker: "玩家", text: "你是谁？" },
@@ -240,8 +266,6 @@ const contradictionLines = [
   { speaker: "玩家", text: "你们都不记得？" },
   { speaker: "周砚川", character: "zhou", expression: "neutral", text: "不记得，不代表没发生。" },
   { speaker: "林夏", character: "lin", expression: "teasing", text: "哇，这句话终于有点像悬疑片男主了。" },
-  { speaker: "周砚川", character: "zhou", expression: "frown", text: "我只是说可能性。" },
-  { speaker: "林夏", character: "lin", expression: "teasing", text: "嗯，可能性先生。" },
   { speaker: "404", text: "矛盾已贴好。" },
 ];
 
@@ -255,7 +279,9 @@ const endingLines = [
   { speaker: "周砚川", character: "zhou", expression: "frown", text: "不是拆台，是核对。" },
   { speaker: "林夏", character: "lin", expression: "teasing", text: "更像开会了。" },
   { speaker: "玩家", text: "……" },
-  { speaker: "玩家", text: "我需要知道，你们到底谁在说真话。" },
+  { speaker: "玩家", text: "先别吵，我需要知道，你们到底谁在说真话。" },
+  { speaker: "回忆", text: "三张证据贴在记录板上，门锁密码、便利店拍立得和那条“对象”备注聊天挤在一起。" },
+  { speaker: "回忆", text: "房间没有变暗，但你忽然觉得这里比醒来时更陌生。" },
   { speaker: "404", text: "第二章已解锁：交换证词。" },
 ];
 
@@ -265,7 +291,7 @@ const dialogueText = document.querySelector("#dialogueText");
 const dialoguePanel = document.querySelector(".dialogue-panel");
 const chapterGoal = document.querySelector("#chapterGoal");
 const questionGrid = document.querySelector("#questionGrid");
-const questionHint = document.querySelector("#questionHint");
+const choiceStack = document.querySelector(".choice-stack");
 const phoneButton = document.querySelector('[data-action="phone"]');
 const clueList = document.querySelector("#clueList");
 const evidenceCount = document.querySelector("#evidenceCount");
@@ -285,6 +311,10 @@ const sceneCard = document.querySelector(".scene-card");
 const zhouPanel = document.querySelector("#zhouPanel");
 const linPanel = document.querySelector("#linPanel");
 
+if (sceneCard && choiceStack && choiceStack.parentElement !== sceneCard) {
+  sceneCard.appendChild(choiceStack);
+}
+
 let currentLines = introLines;
 let afterLinear = showFalseChoice;
 let afterItemPopup = null;
@@ -292,9 +322,17 @@ let afterItemPopup = null;
 renderLine(currentLines[0]);
 setButtons([{ label: "点击继续", action: "continue" }]);
 
-dialoguePanel.addEventListener("click", () => {
-  if (state.mode === "linear") advanceLine();
-});
+// 整块场景都能点：点立绘、点空白、点背景都会推进对话（按钮/选项区等交互除外；
+// 立绘在 ask 模式由自身监听处理选人，linear 模式则冒泡到这里推进）
+if (sceneCard) {
+  sceneCard.addEventListener("click", (event) => {
+    const interactive = event.target.closest(
+      "button, .question-grid, .evidence-card, .judgement-row, [data-action]"
+    );
+    if (interactive) return;
+    if (state.mode === "linear") advanceLine();
+  });
+}
 
 document.querySelectorAll(".standee").forEach((standee) => {
   standee.addEventListener("click", () => {
@@ -410,7 +448,6 @@ function handleAction(action) {
   }
   if (action === "identity") askIdentity();
   if (action === "proof") askProof();
-  if (action === "observe") observe();
   if (action === "phone") tryOpenPhone();
   if (action === "evidence") openEvidence();
   if (action === "restart") window.location.reload();
@@ -439,9 +476,16 @@ function renderLine(line) {
   sceneCard.classList.toggle("sleep-mode", line.scene === "sleep");
   dialoguePanel.classList.remove("hidden");
   setDialogueStandees();
-  speaker.textContent = displaySpeaker(line);
-  nodeLabel.textContent = line.node || nodeForMode();
+  const isNarrationLine = line.speaker === "回忆" || line.speaker === "404";
+  speaker.textContent = displaySpeakerName(line);
+  nodeLabel.textContent = "";
   dialogueText.textContent = line.text;
+  if (dialoguePanel) {
+    dialoguePanel.classList.toggle("is-narration", isNarrationLine);
+    dialoguePanel.classList.remove("line-enter");
+    void dialoguePanel.offsetWidth;
+    dialoguePanel.classList.add("line-enter");
+  }
   updateExpression(line);
   updateStandeeFocus(line.character);
   updateTopbarState();
@@ -465,7 +509,7 @@ function recordDialogueLine() {
 function recordChoice(label) {
   appendLogEntry({
     kind: "choice",
-    speaker: "玩家选择",
+    speaker: "我选择",
     node: nodeForMode(),
     text: label,
   });
@@ -473,53 +517,59 @@ function recordChoice(label) {
 
 function appendLogEntry(entry) {
   const last = state.log[state.log.length - 1];
-  if (
-    last &&
-    last.kind === entry.kind &&
-    last.speaker === entry.speaker &&
-    last.node === entry.node &&
-    last.text === entry.text
-  ) {
+  if (last && last.kind === entry.kind && last.speaker === entry.speaker && last.node === entry.node && last.text === entry.text) {
     return;
   }
+  if (last && last.kind === entry.kind && last.speaker === entry.speaker) {
+    last.node = entry.node;
+    last.texts = Array.isArray(last.texts) ? last.texts : [last.text].filter(Boolean);
+    last.texts.push(entry.text);
+    last.text = last.texts.join("\n\n");
+    renderLog();
+    return;
+  }
+  entry.texts = [entry.text];
   state.log.push(entry);
   renderLog();
 }
 
 function renderLog() {
   logList.innerHTML = "";
-  state.log.forEach((entry) => {
+  state.log.slice(-80).forEach((entry) => {
     const item = document.createElement("li");
-    const head = document.createElement("div");
-    const speakerName = document.createElement("strong");
-    const nodeName = document.createElement("small");
-    const text = document.createElement("p");
+    const speakerName = document.createElement("span");
+    const lines = document.createElement("div");
 
+    item.className = `log-entry ${entry.kind === "choice" ? "choice" : "log-dialogue"} ${entry.speaker === "叙述" ? "log-narration" : ""}`;
+    speakerName.className = "log-speaker";
     speakerName.textContent = entry.speaker;
-    nodeName.textContent = entry.node;
-    text.textContent = entry.text;
-    head.append(speakerName, nodeName);
-    item.className = `log-entry ${entry.kind}`;
-    item.append(head, text);
+    lines.className = "log-lines";
+    (Array.isArray(entry.texts) ? entry.texts : [entry.text]).forEach((line) => {
+      const paragraph = document.createElement("p");
+      paragraph.textContent = line;
+      lines.appendChild(paragraph);
+    });
+    item.append(speakerName, lines);
     logList.appendChild(item);
   });
-  logCount.textContent = `${state.log.length} 条`;
+  const lineCount = state.log.reduce((count, entry) => count + (Array.isArray(entry.texts) ? entry.texts.length : 1), 0);
+  logCount.textContent = `${lineCount} 条`;
   logEmpty.classList.toggle("hidden", state.log.length > 0);
 }
 
-function displaySpeaker(line) {
+function displaySpeakerName(line) {
   if (line.speaker === "周砚川" && !state.characterNamesKnown.zhou) return "？？";
   if (line.speaker === "林夏" && !state.characterNamesKnown.lin) return "？？";
+  if (line.speaker === "玩家") return "我";
+  if (line.speaker === "回忆" || line.speaker === "404") return "叙述";
   return line.speaker;
 }
 
 function updateExpression(line) {
   if (!line.character) return;
   const panel = line.character === "zhou" ? zhouPanel : linPanel;
-  const expression = line.expression || "neutral";
-  const source = standeeAssets[line.character]?.[expression];
+  const source = standeeAssets[line.character]?.base;
   if (source) panel.src = source;
-  panel.dataset.expression = expression;
 }
 
 function rememberCharacterName(line) {
@@ -528,10 +578,25 @@ function rememberCharacterName(line) {
 }
 
 function setDialogueStandees() {
-  zhouPanel.src = standeeAssets.zhou.neutral;
-  linPanel.src = standeeAssets.lin.teasing;
-  zhouPanel.dataset.expression = "neutral";
-  linPanel.dataset.expression = "teasing";
+  zhouPanel.src = standeeAssets.zhou.base;
+  linPanel.src = standeeAssets.lin.base;
+  zhouPanel.dataset.expression = "base";
+  linPanel.dataset.expression = "base";
+
+  // 立绘首次「真正显示」时才触发出场动画（sleep-mode 下立绘隐藏，动画无意义）
+  if (!standeesEntered && !sceneCard.classList.contains("sleep-mode")) {
+    standeesEntered = true;
+    [zhouPanel, linPanel].forEach((p) => {
+      p.classList.remove("standee-enter");
+      void p.offsetWidth;
+      p.classList.add("standee-enter");
+      // 动画播完即移除类，避免 fill-mode 压住 hover/active 效果
+      p.addEventListener("animationend", function handler() {
+        p.classList.remove("standee-enter");
+        p.removeEventListener("animationend", handler);
+      });
+    });
+  }
 }
 
 function updateStandeeFocus(character) {
@@ -612,23 +677,75 @@ function selectCharacter(character) {
   const isZhou = character === "zhou";
   chapterGoal.textContent = isZhou ? "正在询问周砚川" : "正在询问林夏";
   updateStandeeFocus(character);
-  renderLine({
-    speaker: isZhou ? "周砚川" : "林夏",
-    character,
-    expression: isZhou ? "neutral" : "teasing",
-    node: isZhou ? "ch01_006_ask_zhou" : "ch01_007_ask_lin",
-    text: isZhou ? "你想问什么？" : "好，审讯开始？你先问。",
-  });
-  setAskButtons(character);
+
+  // 点击角色后先自动播放观察文本，不作为按钮
+  const observed = isZhou ? state.asked.zhouObserve : state.asked.linObserve;
+  if (!observed) {
+    startLinear(isZhou ? zhouObserveLines : linObserveLines, () => {
+      if (isZhou) state.asked.zhouObserve = true;
+      else state.asked.linObserve = true;
+      showNextAsk(character);
+    });
+    return;
+  }
+
+  showNextAsk(character);
+}
+
+function showNextAsk(character) {
+  const isZhou = character === "zhou";
+  if (isZhou) {
+    if (!state.asked.zhouIdentity) {
+      renderLine({
+        speaker: "周砚川",
+        character,
+        expression: "neutral",
+        node: "ask_zhou_identity",
+        text: "你想问什么？",
+      });
+      setButtons([{ label: "你是谁？", action: "identity" }]);
+      return;
+    }
+    if (!state.asked.zhouProof) {
+      renderLine({
+        speaker: "周砚川",
+        character,
+        expression: "neutral",
+        node: "ask_zhou_proof",
+        text: "还想问什么？",
+      });
+      setButtons([{ label: "你怎么证明？", action: "proof" }]);
+      return;
+    }
+  } else {
+    if (!state.asked.linIdentity) {
+      renderLine({
+        speaker: "林夏",
+        character,
+        expression: "teasing",
+        node: "ask_lin_identity",
+        text: "好，审讯开始？你先问。",
+      });
+      setButtons([{ label: "你是谁？", action: "identity" }]);
+      return;
+    }
+    if (!state.asked.linProof) {
+      renderLine({
+        speaker: "林夏",
+        character,
+        expression: "teasing",
+        node: "ask_lin_proof",
+        text: "还有什么想知道的？",
+      });
+      setButtons([{ label: "你怎么证明？", action: "proof" }]);
+      return;
+    }
+  }
+  afterAsk();
 }
 
 function setAskButtons(character) {
-  const isZhou = character === "zhou";
-  setButtons([
-    { label: "先观察一下", action: "observe", disabled: isZhou ? state.asked.zhouObserve : state.asked.linObserve },
-    { label: "你是谁？", action: "identity", disabled: isZhou ? state.asked.zhouIdentity : state.asked.linIdentity },
-    { label: "你怎么证明？", action: "proof", disabled: isZhou ? state.asked.zhouProof : state.asked.linProof },
-  ]);
+  showNextAsk(character);
 }
 
 function askIdentity() {
@@ -680,29 +797,6 @@ function maybeUnlockPhone() {
     { speaker: "404", node: "ch01_007_phone_unlock", text: "要看吗？" },
   ], enterAskMode);
   return true;
-}
-
-function observe() {
-  const character = state.selectedCharacter;
-  if (character === "zhou") {
-    state.asked.zhouObserve = true;
-    startLinear([
-      {
-        speaker: "玩家",
-        node: "observe_zhou",
-        text: "他站得很稳，但手一直压在袖口边缘。像是在努力保持冷静。",
-      },
-    ], afterAsk);
-  } else {
-    state.asked.linObserve = true;
-    startLinear([
-      {
-        speaker: "玩家",
-        node: "observe_lin",
-        text: "她看起来轻松，视线却一直跟着你的反应。像是怕你真的慌了。",
-      },
-    ], afterAsk);
-  }
 }
 
 function isCharacterComplete(character) {
@@ -837,14 +931,19 @@ function addClue(text) {
 }
 
 function setButtons(buttons, options = {}) {
+  const visibleButtons = buttons.filter((item) => item.action !== "continue");
+  sceneCard?.classList.toggle("has-floating-choices", visibleButtons.length > 0);
+  questionGrid.hidden = false;
+  if (choiceStack) choiceStack.hidden = false;
   questionGrid.classList.remove("collapsed");
   questionGrid.innerHTML = "";
-  if (!buttons.length) {
+  if (!visibleButtons.length) {
     questionGrid.classList.add("collapsed");
-    if (options.showHint !== false) questionGrid.appendChild(questionHint);
+    questionGrid.hidden = true;
+    if (choiceStack) choiceStack.hidden = true;
     return;
   }
-  buttons.forEach((item) => {
+  visibleButtons.forEach((item) => {
     const button = document.createElement("button");
     button.type = "button";
     button.dataset.action = item.action;

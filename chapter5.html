@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>谁是你的对象？ - Chapter 05 Prototype</title>
+    <link rel="stylesheet" href="./styles.css?v=20260818-narration" />
+  </head>
+  <body class="chapter2-page chapter3-page chapter4-page chapter5-page">
+    <main class="game-shell" aria-label="谁是你的对象第五章界面原型">
+      <header class="topbar" aria-label="顶部功能栏">
+        <button class="icon-btn" type="button" aria-label="菜单">
+          <span></span><span></span><span></span>
+          <small>菜单</small>
+        </button>
+        <button class="icon-btn" type="button" data-action="phone" aria-label="手机">
+          <span class="phone-icon"></span>
+          <small>手机</small>
+        </button>
+        <button class="icon-btn" type="button" data-action="evidence" aria-label="证据">
+          <span class="folder-icon"></span>
+          <small>证据</small>
+        </button>
+        <button class="icon-btn" type="button" data-action="log" aria-label="日志">
+          <span class="note-icon"></span>
+          <small>日志</small>
+        </button>
+        <button class="icon-btn" type="button" aria-label="设置">
+          <span class="gear-icon"></span>
+          <small>设置</small>
+        </button>
+      </header>
+
+      <section class="scene-card chapter5-scene" id="sceneCard" aria-label="第五章场景">
+        <img class="chapter5-cg" id="sceneImage" src="./assets/chapter5/ch05_overlap_room_game.png" alt="第五章 CG" />
+
+        <article class="dialogue-panel" id="dialoguePanel">
+          <div class="dialogue-copy">
+            <div class="dialogue-nameplate" id="speaker">叙述</div>
+            <div class="dialogue-header">
+              <span id="node"></span>
+              <span class="next-cue" id="nextCue">▼</span>
+            </div>
+            <p class="dialogue-text" id="dialogueText">两份生活记录并排摊开。</p>
+          </div>
+        </article>
+      </section>
+
+      <section class="choice-stack" aria-label="选择按钮" hidden>
+        <div class="question-grid collapsed" id="questionGrid" hidden></div>
+      </section>
+    </main>
+
+    <div class="evidence-modal" id="evidenceModal" aria-hidden="true">
+      <div class="evidence-sheet" role="dialog" aria-modal="true" aria-label="第五章证据">
+        <div class="sheet-top">
+          <div>
+            <span>证据</span>
+            <strong>最后选择</strong>
+          </div>
+          <button type="button" id="closeEvidence" aria-label="关闭证据面板">关闭</button>
+        </div>
+        <aside class="evidence-rail" aria-label="证物栏">
+          <div class="panel-title">
+            <span>记录</span>
+            <small id="evidenceCount">0/4</small>
+          </div>
+          <p class="evidence-empty" id="evidenceEmpty">第五章记录会随着剧情推进贴入这里。</p>
+          <button class="evidence-card locked" type="button" data-evidence="missing">
+            <img class="evidence-thumb" src="./assets/chapter5/ch05_overlap_room_game.png" alt="两种生活的缺页" />
+            <span>
+              <strong>E012 两种生活的缺页</strong>
+              <small>两份生活都真实，也都缺了最难熬的部分</small>
+            </span>
+          </button>
+          <button class="evidence-card locked" type="button" data-evidence="zhouReads">
+            <img class="evidence-thumb" src="./assets/chapter5/ch05_zhou_reads_lin_life_game.png" alt="周砚川阅读林夏生活记录" />
+            <span>
+              <strong>周砚川理解林夏</strong>
+              <small>未知不是浪漫滤镜，而是可以被一起处理</small>
+            </span>
+          </button>
+          <button class="evidence-card locked" type="button" data-evidence="linReads">
+            <img class="evidence-thumb" src="./assets/chapter5/ch05_lin_reads_zhou_life_game.png" alt="林夏阅读周砚川生活记录" />
+            <span>
+              <strong>林夏理解周砚川</strong>
+              <small>稳定不是控制，而是把旧生活改到能继续</small>
+            </span>
+          </button>
+          <button class="evidence-card locked" type="button" data-evidence="finalChoice">
+            <img class="evidence-thumb" src="./assets/chapter5/ch05_final_choice_board_blank_game.png" alt="最终选择板" />
+            <span>
+              <strong>最终选择板</strong>
+              <small>选择未来，不是判定谁更真</small>
+            </span>
+          </button>
+        </aside>
+
+        <section class="deduction-board" aria-label="第五章记录">
+          <div class="panel-title">
+            <span>已确认</span>
+            <small>第五章</small>
+          </div>
+          <ul class="clue-list" id="clueList">
+            <li class="empty">尚未形成最终记录。</li>
+          </ul>
+        </section>
+      </div>
+    </div>
+
+    <div class="log-modal" id="logModal" aria-hidden="true">
+      <div class="log-sheet" role="dialog" aria-modal="true" aria-label="过往交互日志">
+        <div class="sheet-top">
+          <div>
+            <span>日志</span>
+            <strong>交互记录</strong>
+          </div>
+          <button type="button" id="closeLog" aria-label="关闭日志面板">关闭</button>
+        </div>
+        <div class="panel-title">
+          <span>已发生剧情</span>
+          <small id="logCount">0 条</small>
+        </div>
+        <p class="log-empty" id="logEmpty">还没有新的交互记录。</p>
+        <ol class="log-list" id="logList"></ol>
+      </div>
+    </div>
+
+    <div class="phone-modal" id="phoneModal" aria-hidden="true">
+      <div class="phone chapter2-phone" role="dialog" aria-modal="true" aria-label="第五章手机">
+        <div class="phone-top">
+          <button type="button" id="closePhone" aria-label="关闭手机界面">‹</button>
+          <span>手机</span>
+          <span>•••</span>
+        </div>
+        <div class="phone-content">
+          <div class="phone-evidence-card">
+            <div class="phone-meta">
+              <span>第五章</span>
+              <strong id="phoneStatus">最后选择尚未确认</strong>
+              <small id="phoneDetail">选择会记录在证据页和日志里。</small>
+            </div>
+            <div class="phone-actions">
+              <button class="phone-investigate" type="button" data-phone-action="evidence">查看最终记录</button>
+            </div>
+          </div>
+          <div class="phone-evidence-card phone-achievement-entry" id="phoneAchievementEntry" hidden>
+            <div class="phone-meta">
+              <span>成就系统</span>
+              <strong>结局成就</strong>
+              <small id="phoneAchievementSummary">尚未解锁结局。</small>
+            </div>
+            <button class="phone-investigate" type="button" data-phone-action="achievements" id="phoneAchievementsToggle">成就系统</button>
+          </div>
+          <div class="phone-evidence-card phone-contact-entry" id="phoneContactEntry" hidden>
+            <div class="phone-meta">
+              <span>联系人</span>
+              <strong>新的好友申请<i class="phone-red-dot" aria-hidden="true"></i></strong>
+              <small id="phoneContactSummary">有 2 条待处理申请。</small>
+            </div>
+            <button class="phone-investigate phone-contact-toggle" type="button" data-phone-action="contacts" id="phoneContactsToggle">
+              联系人<i class="phone-red-dot" aria-hidden="true"></i>
+            </button>
+          </div>
+          <section class="phone-contacts" id="phoneContacts" aria-label="好友申请" hidden>
+            <div class="panel-title">
+              <span>好友申请</span>
+              <small>2 条</small>
+            </div>
+            <div class="contact-request-list">
+              <article class="contact-request">
+                <img class="contact-avatar" src="./assets/avatar_frame_sample/ch05_contact_avatar_zhou_on_duty_v1.png?v=20260815" alt="值班中头像" />
+                <strong>值班中</strong>
+              </article>
+              <article class="contact-request">
+                <img class="contact-avatar" src="./assets/avatar_frame_sample/ch05_contact_avatar_lin_oops_burnt_v1.png?v=20260815" alt="Oops焦了头像" />
+                <strong>Oops焦了</strong>
+              </article>
+            </div>
+          </section>
+          <section class="phone-achievements" id="phoneAchievements" aria-label="结局成就" hidden>
+            <div class="panel-title">
+              <span>成就</span>
+              <small id="achievementProgress">0/4</small>
+            </div>
+            <div class="phone-achievement-grid" id="phoneAchievementGrid"></div>
+            <article class="phone-achievement-preview" id="phoneAchievementPreview" hidden>
+              <button class="phone-achievement-back" type="button" data-achievement-back>‹ 成就列表</button>
+              <img id="phoneAchievementImage" alt="" />
+              <strong id="phoneAchievementName"></strong>
+              <p id="phoneAchievementDesc"></p>
+            </article>
+          </section>
+        </div>
+      </div>
+    </div>
+
+    <div class="confirm-modal" id="confirmModal" aria-hidden="true">
+      <div class="confirm-sheet" role="dialog" aria-modal="true" aria-label="最终选择确认">
+        <strong id="confirmTitle">你确定吗？</strong>
+        <p id="confirmText"></p>
+        <div class="confirm-actions">
+          <button type="button" id="confirmBack">返回</button>
+          <button type="button" id="confirmOk">确认</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="./chapter5_app.js?v=20260818-narration"></script>
+    <script src="./editor.js?v=3"></script>
+  </body>
+</html>

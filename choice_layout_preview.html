@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>多选项布局方案预览</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: start center;
+      background: #eceae4;
+      color: #242424;
+      font-family: "Microsoft YaHei", "PingFang SC", system-ui, sans-serif;
+    }
+    .page {
+      width: min(100vw, 430px);
+      padding: 14px 16px 28px;
+    }
+    .tabs {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      padding: 8px 0 10px;
+      background: #eceae4;
+    }
+    .tabs button,
+    .choice button {
+      border: 1px solid rgba(46,46,46,.18);
+      background: rgba(255,253,248,.9);
+      color: inherit;
+      cursor: pointer;
+    }
+    .tabs button {
+      min-height: 34px;
+      border-radius: 8px;
+      font-weight: 700;
+    }
+    .tabs button.active {
+      border-color: #8c6f4f;
+      background: #dbc5ab;
+    }
+    .phone {
+      position: relative;
+      width: 100%;
+      min-height: 760px;
+      padding: 16px;
+      border-radius: 24px;
+      background: #fffdf8;
+      box-shadow: 0 16px 44px rgba(46,46,46,.12);
+      overflow: hidden;
+    }
+    .nav {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      align-items: center;
+      height: 68px;
+      border-bottom: 1px solid #d6cfc2;
+      text-align: center;
+      font-size: 13px;
+    }
+    .icon {
+      display: block;
+      width: 26px;
+      height: 20px;
+      margin: 0 auto 4px;
+      border-top: 3px solid #333;
+      border-bottom: 3px solid #333;
+      opacity: .9;
+    }
+    .stage {
+      position: relative;
+      height: 560px;
+      margin-top: 14px;
+      border: 1px solid #cfc6b8;
+      border-radius: 18px;
+      overflow: hidden;
+      background:
+        linear-gradient(rgba(20,30,35,.04), rgba(20,30,35,.16)),
+        url("./assets/chapter4/camping_complete_v5.png") center / cover no-repeat;
+    }
+    .dialogue {
+      position: absolute;
+      left: 18px;
+      right: 18px;
+      bottom: 24px;
+      min-height: 132px;
+      padding: 16px 18px;
+      border: 1px solid rgba(46,46,46,.16);
+      border-radius: 16px;
+      background: rgba(255,253,248,.9);
+      box-shadow: 0 8px 22px rgba(46,46,46,.12);
+      backdrop-filter: blur(2px);
+    }
+    .name {
+      display: inline-block;
+      min-width: 86px;
+      margin-bottom: 10px;
+      padding: 6px 14px;
+      border: 1px solid #b99d7b;
+      border-radius: 9px;
+      background: #d8bea2;
+      text-align: center;
+      font-weight: 800;
+      color: #594936;
+    }
+    .text {
+      margin: 0;
+      font-size: 17px;
+      line-height: 1.7;
+    }
+    .choice {
+      display: grid;
+      gap: 8px;
+    }
+    .choice button {
+      min-height: 48px;
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: 16px;
+      line-height: 1.35;
+    }
+    .caption {
+      margin: 10px 2px 0;
+      color: #6e6458;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    .variant { display: none; }
+    .variant.active { display: block; }
+    .bottom-float .choice {
+      position: absolute;
+      left: 14px;
+      right: 14px;
+      bottom: 12px;
+      gap: 6px;
+      padding: 8px;
+      border: 1px solid rgba(46,46,46,.12);
+      border-radius: 14px;
+      background: rgba(255,253,248,.78);
+      box-shadow: 0 10px 24px rgba(46,46,46,.12);
+      backdrop-filter: blur(5px);
+    }
+    .bottom-float .choice button {
+      min-height: 34px;
+      padding: 6px 10px;
+      border-radius: 10px;
+      font-size: 13px;
+      line-height: 1.28;
+    }
+    .bottom-float .dialogue {
+      bottom: 142px;
+      min-height: 88px;
+      padding: 10px 13px 9px;
+    }
+    .side-drawer .drawer {
+      position: absolute;
+      right: 10px;
+      top: 98px;
+      width: 48%;
+      max-height: 440px;
+      padding: 10px;
+      border-radius: 16px;
+      background: rgba(255,253,248,.86);
+      box-shadow: -8px 10px 26px rgba(46,46,46,.14);
+      backdrop-filter: blur(6px);
+    }
+    .side-drawer .choice button {
+      min-height: 58px;
+      font-size: 14px;
+      text-align: left;
+    }
+    .paged .dialogue { bottom: 22px; min-height: 246px; }
+    .paged .choice {
+      margin-top: 12px;
+      grid-template-columns: 1fr;
+    }
+    .paged .pager {
+      display: flex;
+      justify-content: center;
+      gap: 7px;
+      margin-top: 10px;
+    }
+    .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #b7ac9e;
+    }
+    .dot.active { background: #755f47; }
+    .decision-sheet .overlay {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      align-content: end;
+      padding: 18px;
+      background: linear-gradient(rgba(20,24,22,.2), rgba(20,24,22,.72));
+    }
+    .decision-sheet .panel {
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(255,253,248,.92);
+      box-shadow: 0 -10px 30px rgba(0,0,0,.22);
+    }
+    .decision-sheet h2 {
+      margin: 0 0 8px;
+      font-size: 18px;
+    }
+    .decision-sheet p {
+      margin: 0 0 12px;
+      color: #63594d;
+      line-height: 1.5;
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <div class="tabs" role="tablist">
+      <button class="active" data-target="a">A 底浮</button>
+      <button data-target="b">B 侧抽</button>
+      <button data-target="c">C 分页</button>
+      <button data-target="d">D 决策</button>
+    </div>
+
+    <section class="variant bottom-float active" id="a">
+      <div class="phone">
+        <div class="nav"><span><i class="icon"></i>菜单</span><span><i class="icon"></i>手机</span><span><i class="icon"></i>证据</span><span><i class="icon"></i>日志</span><span><i class="icon"></i>设置</span></div>
+        <div class="stage">
+          <div class="dialogue"><span class="name">周砚川</span><p class="text">先确认它有没有受伤。其他事回头再想。</p></div>
+          <div class="choice">
+            <button>先带去宠物医院检查</button>
+            <button>在业主群问有没有人丢猫</button>
+            <button>买猫粮和纸箱，先照顾一晚</button>
+          </div>
+        </div>
+      </div>
+      <p class="caption">A：选项浮在画面底部，不改变主舞台高度；适合 2-4 个选项，缺点是会挡住画面下缘。</p>
+    </section>
+
+    <section class="variant side-drawer" id="b">
+      <div class="phone">
+        <div class="nav"><span><i class="icon"></i>菜单</span><span><i class="icon"></i>手机</span><span><i class="icon"></i>证据</span><span><i class="icon"></i>日志</span><span><i class="icon"></i>设置</span></div>
+        <div class="stage">
+          <div class="dialogue"><span class="name">周砚川</span><p class="text">他没有立刻替你决定，只是把情况摆在你面前。</p></div>
+          <div class="drawer choice">
+            <button>先带去宠物医院检查</button>
+            <button>在业主群问有没有人丢猫</button>
+            <button>买猫粮和纸箱，先照顾一晚</button>
+          </div>
+        </div>
+      </div>
+      <p class="caption">B：右侧抽屉式选项，主画面高度不变；适合角色不在右侧或背景右侧信息不重要时。</p>
+    </section>
+
+    <section class="variant paged" id="c">
+      <div class="phone">
+        <div class="nav"><span><i class="icon"></i>菜单</span><span><i class="icon"></i>手机</span><span><i class="icon"></i>证据</span><span><i class="icon"></i>日志</span><span><i class="icon"></i>设置</span></div>
+        <div class="stage">
+          <div class="dialogue">
+            <span class="name">玩家</span>
+            <p class="text">这件事你会怎么处理？</p>
+            <div class="choice">
+              <button>先带去宠物医院检查</button>
+              <button>在业主群问有没有人丢猫</button>
+            </div>
+            <div class="pager"><span class="dot active"></span><span class="dot"></span></div>
+          </div>
+        </div>
+      </div>
+      <p class="caption">C：对话框内分页，画面最稳定；适合选项文字很长，但需要多点一次翻页。</p>
+    </section>
+
+    <section class="variant decision-sheet" id="d">
+      <div class="phone">
+        <div class="nav"><span><i class="icon"></i>菜单</span><span><i class="icon"></i>手机</span><span><i class="icon"></i>证据</span><span><i class="icon"></i>日志</span><span><i class="icon"></i>设置</span></div>
+        <div class="stage">
+          <div class="dialogue"><span class="name">周砚川</span><p class="text">你看向纸箱里的猫，它安静得不像一件意外。</p></div>
+          <div class="overlay">
+            <div class="panel">
+              <h2>选择你的处理方式</h2>
+              <p>这是一次明确决策，暂停对白，把注意力交给选择本身。</p>
+              <div class="choice">
+                <button>先带去宠物医院检查</button>
+                <button>在业主群问有没有人丢猫</button>
+                <button>买猫粮和纸箱，先照顾一晚</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="caption">D：全屏决策卡，最强调选择；适合章末/关键节点，不适合频繁小选择。</p>
+    </section>
+  </main>
+  <script>
+    document.querySelectorAll(".tabs button").forEach((button) => {
+      button.addEventListener("click", () => {
+        document.querySelectorAll(".tabs button").forEach((item) => item.classList.toggle("active", item === button));
+        document.querySelectorAll(".variant").forEach((item) => item.classList.toggle("active", item.id === button.dataset.target));
+      });
+    });
+  </script>
+</body>
+</html>

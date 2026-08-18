@@ -1371,9 +1371,24 @@ button {
 
 /* chapter2.html room mode uses free-room class from JS */
 .chapter2-page .chapter2-scene.free-room::before {
-  background:
+  background-image:
     linear-gradient(180deg, rgba(255, 253, 248, 0.05), rgba(255, 253, 248, 0.18) 72%, rgba(235, 226, 215, 0.34)),
-    url("./assets/chapter2/room_investigation.webp") center center / cover no-repeat;
+    url("./assets/chapter2/room_investigation.webp");
+  background-position: center center, center center;
+  background-size: 100% 100%, cover;
+  background-repeat: no-repeat;
+}
+
+.chapter2-page .chapter2-scene.free-room.free-view-left::before {
+  background-position: center center, left center;
+}
+
+.chapter2-page .chapter2-scene.free-room.free-view-center::before {
+  background-position: center center, 43% center;
+}
+
+.chapter2-page .chapter2-scene.free-room.free-view-right::before {
+  background-position: center center, right center;
 }
 
 .chapter2-page .chapter2-scene.chapter2-detail-drawer::before {

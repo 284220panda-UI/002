@@ -20,6 +20,17 @@ const state = {
   roomView: "center",
 };
 
+// 全局错误捕获：方便远程调试设备兼容性问题
+window.addEventListener("error", (e) => {
+  console.error("[P002-ERROR]", e.message, e.filename, e.lineno);
+  if (window.P002Errors) window.P002Errors.push({t: Date.now(), msg: e.message, file: e.filename, line: e.lineno});
+});
+window.addEventListener("unhandledrejection", (e) => {
+  console.error("[P002-REJECT]", e.reason);
+  if (window.P002Errors) window.P002Errors.push({t: Date.now(), msg: String(e.reason), type: "rejection"});
+});
+window.P002Errors = [];
+
 const standeeAssets = {
   zhou: {
     neutral: "./assets/characters/v1_full/zhou_base.png",
@@ -407,21 +418,26 @@ document.querySelector("#closePhone").addEventListener("click", closePhone);
 document.querySelector("#closeItem").addEventListener("click", closeItem);
 
 function handleAction(action) {
-  if (action === "continue") advanceLine();
-  if (action === "show_chat_zhou") startLinear(zhouChatLines, afterChatPresent);
-  if (action === "show_chat_lin") startLinear(linChatLines, afterChatPresent);
-  if (action === "open_room") openRoomMode();
-  if (action === "room_back") enterCrossMode();
-  if (action === "cross_back") enterCrossMode();
-  if (action === "ask_zhou_story") startLinear(zhouStoryLines, afterCrossLine);
-  if (action === "ask_lin_story") startLinear(linStoryLines, afterCrossLine);
-  if (action === "show_key_zhou_memory") startLinear(keyToZhouMemoryLines, afterCrossLine);
-  if (action === "show_photo_lin_memory") startLinear(photoToLinMemoryLines, afterCrossLine);
-  if (action === "show_key_lin") startLinear(keyToLinLines, afterCrossLine);
-  if (action === "show_album_zhou") startLinear(albumToZhouLines, afterCrossLine);
-  if (action === "deduction") openEvidence();
-  if (action === "restart_ch02") window.location.reload();
-  if (action === "goto_ch3" && window.P002ChapterMenu) window.P002ChapterMenu.gotoNext();
+  try {
+    if (action === "continue") advanceLine();
+    if (action === "show_chat_zhou") startLinear(zhouChatLines, afterChatPresent);
+    if (action === "show_chat_lin") startLinear(linChatLines, afterChatPresent);
+    if (action === "open_room") openRoomMode();
+    if (action === "room_back") enterCrossMode();
+    if (action === "cross_back") enterCrossMode();
+    if (action === "ask_zhou_story") startLinear(zhouStoryLines, afterCrossLine);
+    if (action === "ask_lin_story") startLinear(linStoryLines, afterCrossLine);
+    if (action === "show_key_zhou_memory") startLinear(keyToZhouMemoryLines, afterCrossLine);
+    if (action === "show_photo_lin_memory") startLinear(photoToLinMemoryLines, afterCrossLine);
+    if (action === "show_key_lin") startLinear(keyToLinLines, afterCrossLine);
+    if (action === "show_album_zhou") startLinear(albumToZhouLines, afterCrossLine);
+    if (action === "deduction") openEvidence();
+    if (action === "restart_ch02") window.location.reload();
+    if (action === "goto_ch3" && window.P002ChapterMenu) window.P002ChapterMenu.gotoNext();
+  } catch (err) {
+    console.error("[P002-HANDLE-ERROR]", action, err);
+    if (window.P002Errors) window.P002Errors.push({t: Date.now(), action, msg: err.message, type: "handle"});
+  }
 }
 
 function advanceLine() {
@@ -915,6 +931,13 @@ function setButtons(buttons, options = {}) {
     button.dataset.action = item.action;
     button.textContent = item.label;
     button.disabled = Boolean(item.disabled);
+    // 直接绑定点击事件，绕过某些设备上事件委托的兼容问题
+    button.onclick = (e) => {
+      e.stopPropagation();
+      if (button.disabled) return;
+      recordChoice(button.textContent);
+      handleAction(button.dataset.action);
+    };
     questionGrid.appendChild(button);
   });
 }

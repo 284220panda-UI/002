@@ -2786,9 +2786,9 @@ button {
   display: none;
 }
 
-.chapter2-page .dialogue-panel.is-narration .dialogue-header,
-.chapter3-page .dialogue-panel.is-narration .dialogue-header,
-.chapter4-page .dialogue-panel.is-narration .dialogue-header {
+.chapter2-page .dialogue-header,
+.chapter3-page .dialogue-header,
+.chapter4-page .dialogue-header {
   display: none;
 }
 

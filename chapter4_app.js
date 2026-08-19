@@ -279,7 +279,6 @@ const zhouCampingIntro = [
 
 const zhouCampingChoices = [
   { label: "帮朋友铺野餐垫", action: "camp_help_picnic_mat" },
-  { label: "和周砚川去车上拿食物", action: "camp_fetch_food" },
   { label: "偷偷拍一张朋友们围在一起的照片", action: "camp_sneak_photo" },
 ];
 
@@ -288,12 +287,6 @@ const zhouCampingFeedback = {
     { speaker: "回忆", node: "ch04_003_zhou_weekend_camping", text: "你和朋友把野餐垫压在草地上，风一吹又翘起来。", background: "chapter4-memory-zhou-camping" },
     { speaker: "回忆", node: "ch04_003_zhou_weekend_camping", text: "周砚川把营地灯放在垫角，刚好压住。", background: "chapter4-memory-zhou-camping" },
     { speaker: "朋友", node: "ch04_003_zhou_weekend_camping", text: "可以啊，你们俩有点默契。", background: "chapter4-memory-zhou-camping" },
-  ],
-  fetch_food: [
-    { speaker: "回忆", node: "ch04_003_zhou_weekend_camping", text: "车后备箱里塞着食物、水和一袋被遗忘的纸杯。", background: "chapter4-memory-zhou-camping" },
-    { speaker: "回忆", node: "ch04_003_zhou_weekend_camping", text: "周砚川把重的那袋拎走，只把轻一点的零食袋递给你。", background: "chapter4-memory-zhou-camping" },
-    { speaker: "玩家", node: "ch04_003_zhou_weekend_camping", text: "你是不是又在分配重量？", background: "chapter4-memory-zhou-camping" },
-    { speaker: "周砚川", character: "zhou", node: "ch04_003_zhou_weekend_camping", text: "这叫合理运用资源。", background: "chapter4-memory-zhou-camping" },
   ],
   sneak_photo: [
     { speaker: "回忆", node: "ch04_003_zhou_weekend_camping", text: "你举起手机，拍到朋友们围着炉子争论先烤什么。", background: "chapter4-memory-zhou-camping" },
@@ -1422,7 +1415,6 @@ function catChoiceText(choice) {
 function campingChoiceText(choice) {
   return {
     help_picnic_mat: "帮朋友铺野餐垫",
-    fetch_food: "和周砚川去车上拿食物",
     sneak_photo: "偷偷拍一张朋友们围在一起的照片",
   }[choice];
 }

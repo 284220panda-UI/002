@@ -2220,6 +2220,14 @@ button {
   background-repeat: no-repeat;
 }
 
+/* 林夏单人线背景统一为新城公寓 */
+.chapter4-page .chapter4-solo-lin::before,
+.chapter4-page .chapter4-mini-mode.mini-home::before {
+  background:
+    linear-gradient(180deg, rgba(255, 253, 248, 0.08), rgba(255, 253, 248, 0.22) 76%, rgba(245, 239, 230, 0.34)),
+    url("./assets/chapter4/memory_lin_home_game.webp") center top / cover no-repeat;
+}
+
 .chapter4-page .chapter4-memory-mode .standee,
 .chapter4-page .chapter4-memory-zhou-camping .standee,
 .chapter4-page .chapter4-memory-zhou-cat .standee,
@@ -2237,6 +2245,9 @@ button {
 .chapter4-page .chapter4-solo-zhou .standee-zhou,
 .chapter4-page .chapter4-solo-lin .standee-lin {
   display: block;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 58%;
 }
 
 .chapter4-page .chapter4-memory-mode .chapter-bubble,

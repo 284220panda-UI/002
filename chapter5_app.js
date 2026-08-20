@@ -21,6 +21,7 @@ const dialogueText = document.querySelector("#dialogueText");
 const nextCue = document.querySelector("#nextCue");
 const questionGrid = document.querySelector("#questionGrid");
 const choiceStack = document.querySelector(".choice-stack");
+const testFeedbackPanel = document.querySelector("#testFeedbackPanel");
 const evidenceModal = document.querySelector("#evidenceModal");
 const logModal = document.querySelector("#logModal");
 const phoneModal = document.querySelector("#phoneModal");
@@ -327,11 +328,8 @@ const selfEnding = [
   { speaker: "回忆", node: "ending_self", text: "你把它留在那里。像给自己留下一次重新出发的余地。", image: assets.selfCalendar },
   { speaker: "回忆", node: "ending_self_friend_requests", text: "手机屏幕忽然亮了一下。不是日历提醒。", image: assets.selfCalendar, unlockFriendRequests: true },
   { speaker: "回忆", node: "ending_self_friend_requests", text: "通讯录图标右上角，多了一个红点。", image: assets.selfCalendar },
-  { speaker: "回忆", node: "ending_self_friend_requests", text: "你点开手机。点开联系人。", image: assets.selfCalendar },
-  { speaker: "回忆", node: "ending_self_friend_requests", text: "新的好友申请里，安静地躺着两个名字。", image: assets.selfCalendar },
-  { speaker: "回忆", node: "ending_self_friend_requests", text: "值班中。", image: assets.selfCalendar },
-  { speaker: "回忆", node: "ending_self_friend_requests", text: "Oops焦了。", image: assets.selfCalendar },
-  { speaker: "回忆", node: "ending_self_friend_requests", text: "你盯着那两个头像看了一会儿。", image: assets.selfCalendar },
+  { speaker: "回忆", node: "ending_self_friend_requests", text: "新的好友申请安静地停在那里。", image: assets.selfCalendar },
+  { speaker: "404", node: "ending_self_friend_requests", text: "提示：打开手机，查看新的联系人申请。", image: assets.selfCalendar },
   { speaker: "回忆", node: "ending_self_friend_requests", text: "没有立刻点接受。", image: assets.selfCalendar },
   { speaker: "回忆", node: "ending_self_friend_requests", text: "也没有划掉。", image: assets.selfCalendar },
   { speaker: "回忆", node: "ending_self_friend_requests", text: "空白的一天，忽然有了两个很轻的入口。", image: assets.selfCalendar },
@@ -437,6 +435,15 @@ const endingGallery = [
     image: assets.mergeReunion,
   },
 ];
+
+const lockedAchievementHints = {
+  ending_merge_try: {
+    title: "???",
+    routeLabel: "隐藏结局",
+    hint: "还有一种选择没有出现。先看清两种生活都不完整，再回到最后选择。",
+    marker: "提示",
+  },
+};
 
 function init() {
   state.unlockedMergeEnding = computeMergeUnlock();
@@ -560,6 +567,7 @@ function showFinalChoice() {
   state.mode = "choice";
   sceneCard.classList.remove("is-ending-sequence", "is-ending-complete", "cg-swapping");
   achievementCard.classList.remove("open");
+  hideTestFeedbackPanel();
   nextCue.classList.remove("hidden");
   sceneImage.src = assets.finalChoiceBoard;
   sceneCard.style.setProperty("--chapter5-current-cg", `url("${assets.finalChoiceBoard}")`);
@@ -645,11 +653,20 @@ function finishEnding() {
   updatePhoneStatus();
   sceneCard.classList.add("is-ending-sequence", "is-ending-complete");
   nextCue.classList.add("hidden");
-  setButtons([
-    { label: "重看最终选择", action: "restart_choice" },
-    { label: "重新开始第五章", action: "restart_ch05" },
-    { label: "回到第一章", action: "goto_ch1" },
-  ]);
+  setButtons([]);
+  showTestFeedbackPanel();
+}
+
+function showTestFeedbackPanel() {
+  if (!testFeedbackPanel) return;
+  testFeedbackPanel.hidden = false;
+  testFeedbackPanel.classList.add("open");
+}
+
+function hideTestFeedbackPanel() {
+  if (!testFeedbackPanel) return;
+  testFeedbackPanel.classList.remove("open");
+  testFeedbackPanel.hidden = true;
 }
 
 function unlockEvidence(id) {
@@ -777,6 +794,7 @@ function renderPhoneAchievements(selectedId = null) {
   endingGallery.forEach((ending) => {
     const isUnlocked = unlocked.has(ending.id);
     const achievement = achievements[ending.id];
+    const lockedHint = lockedAchievementHints[ending.id];
     const button = document.createElement("button");
     button.type = "button";
     button.className = `phone-achievement ${isUnlocked ? "unlocked" : "locked"}`;
@@ -785,16 +803,16 @@ function renderPhoneAchievements(selectedId = null) {
     const text = document.createElement("span");
     const title = document.createElement("strong");
     const route = document.createElement("small");
-    title.textContent = isUnlocked ? achievement.title : "???";
-    route.textContent = ending.routeLabel;
+    title.textContent = isUnlocked ? achievement.title : lockedHint?.title || "???";
+    route.textContent = isUnlocked ? ending.routeLabel : lockedHint?.routeLabel || ending.routeLabel;
     text.append(title, route);
     if (!isUnlocked) {
       const hint = document.createElement("em");
-      hint.textContent = "尚未解锁";
+      hint.textContent = lockedHint?.hint || "尚未解锁";
       text.appendChild(hint);
     }
     const marker = document.createElement("b");
-    marker.textContent = isUnlocked ? "查看" : "???";
+    marker.textContent = isUnlocked ? "查看" : lockedHint?.marker || "???";
     button.appendChild(text);
     button.appendChild(marker);
     phoneAchievementGrid.appendChild(button);
@@ -927,11 +945,13 @@ function closeLog() {
 }
 
 function openPhone() {
+  const shouldShowContacts = hasUnseenFriendRequests();
   updatePhoneStatus();
   if (phoneContacts) phoneContacts.hidden = true;
   if (phoneAchievements) phoneAchievements.hidden = true;
   phoneModal.classList.add("open");
   phoneModal.setAttribute("aria-hidden", "false");
+  if (shouldShowContacts) showPhoneContacts();
 }
 
 function closePhone() {
@@ -978,6 +998,23 @@ questionGrid.addEventListener("click", (event) => {
     return;
   }
   openConfirm(action);
+});
+
+testFeedbackPanel?.addEventListener("click", (event) => {
+  const button = event.target.closest("[data-feedback-action]");
+  if (!button) return;
+  const action = button.dataset.feedbackAction;
+  if (action === "restart_choice") {
+    showFinalChoice();
+    return;
+  }
+  if (action === "end_game") {
+    if (window.P002ChapterMenu) {
+      window.P002ChapterMenu.gotoFirst();
+      return;
+    }
+    window.location.href = "./index.html";
+  }
 });
 
 document.querySelector("#closeEvidence").addEventListener("click", closeEvidence);

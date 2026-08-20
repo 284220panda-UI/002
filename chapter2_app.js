@@ -810,8 +810,7 @@ function finishChapter() {
   chapterGoal.textContent = "第二章完成";
   renderLine({ speaker: "404", node: "chapter_02_complete", text: "第二章记录已归档。第三章已解锁。" });
   setButtons([
-    { label: "进入第三章 ›", action: "goto_ch3" },
-    { label: "重新开始第二章", action: "restart_ch02" },
+    { label: "继续下一章 ›", action: "goto_ch3" },
   ]);
 }
 

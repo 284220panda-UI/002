@@ -116,7 +116,7 @@ const introLines = [
     node: "ch01_002_double_claim",
     text: "有。我听见塑料瓶响了。",
   },
-  { speaker: "回忆", node: "ch01_002_double_claim", text: "周砚川把水瓶往身后收了一点。" },
+  { speaker: "回忆", node: "ch01_002_double_claim", text: "男人把水瓶往身后收了一点。" },
   { speaker: "玩家", node: "ch01_002_double_claim", text: "……你们是谁？" },
   {
     speaker: "周砚川",
@@ -310,6 +310,7 @@ const judgementRow = document.querySelector("#judgementRow");
 const sceneCard = document.querySelector(".scene-card");
 const zhouPanel = document.querySelector("#zhouPanel");
 const linPanel = document.querySelector("#linPanel");
+const coverScreen = document.querySelector("#coverScreen");
 
 if (sceneCard && choiceStack && choiceStack.parentElement !== sceneCard) {
   sceneCard.appendChild(choiceStack);
@@ -321,6 +322,13 @@ let afterItemPopup = null;
 
 renderLine(currentLines[0]);
 setButtons([{ label: "点击继续", action: "continue" }]);
+
+if (coverScreen) {
+  coverScreen.addEventListener("click", () => {
+    coverScreen.hidden = true;
+    document.body.classList.remove("has-cover");
+  });
+}
 
 // 整块场景都能点：点立绘、点空白、点背景都会推进对话（按钮/选项区等交互除外；
 // 立绘在 ask 模式由自身监听处理选人，linear 模式则冒泡到这里推进）
@@ -907,8 +915,7 @@ function finishChapter() {
   chapterGoal.textContent = "第一章完成";
   renderLine({ speaker: "404", node: "ch01_010_chapter_end", text: "第一章结束。第二章：交换证词。" });
   setButtons([
-    { label: "进入第二章 ›", action: "goto_ch2" },
-    { label: "重新开始第一章", action: "restart" },
+    { label: "继续下一章 ›", action: "goto_ch2" },
   ]);
 }
 

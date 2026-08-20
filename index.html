@@ -4,10 +4,13 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>谁是你的对象？ - UI Prototype</title>
-    <link rel="stylesheet" href="./styles.css?v=20260819-1048" />
+    <link rel="stylesheet" href="./styles.css?v=20260820-1512" />
   </head>
-  <body class="chapter1-page">
+  <body class="chapter1-page has-cover" data-bgm="daily">
     <main class="game-shell" aria-label="谁是你的对象第一章界面原型">
+      <button class="cover-screen" id="coverScreen" type="button" aria-label="点击开始游戏">
+        <img src="./assets/cover/cover_design.webp" alt="谁是你的对象？点击开始" />
+      </button>
       <header class="topbar" aria-label="顶部功能栏">
         <button class="icon-btn" type="button" aria-label="菜单">
           <span></span><span></span><span></span>
@@ -25,7 +28,7 @@
           <span class="note-icon"></span>
           <small>日志</small>
         </button>
-        <button class="icon-btn" type="button" aria-label="设置">
+        <button class="icon-btn" type="button" data-action="audio" aria-label="声音设置">
           <span class="gear-icon"></span>
           <small>设置</small>
         </button>
@@ -203,9 +206,10 @@
       </div>
     </div>
 
-    <script src="./app.js?v=20260819-1048"></script>
-      <script src="./tracking.js?v=20260819-1048"></script>
-    <script src="./chapter_menu.js?v=20260819-1048"></script>
+    <script src="./audio.js?v=20260820-1512" defer></script>
+    <script src="./app.js?v=20260820-1512"></script>
+      <script src="./tracking.js?v=20260820-1512"></script>
+    <script src="./chapter_menu.js?v=20260820-1512"></script>
     <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
     <script>LA.init({id:"3Qv1GQSdmKRRdIxV",ck:"3Qv1GQSdmKRRdIxV"})</script>
   </body>

@@ -631,9 +631,7 @@ function finishChapter() {
       text: "第三章完成。下一章：两种生活。",
     });
     setButtons([
-      { label: "进入第四章 ›", action: "goto_ch4" },
-      { label: "打开证据", action: "open_evidence" },
-      { label: "重新体验第三章", action: "restart_ch03" },
+      { label: "继续下一章 ›", action: "goto_ch4" },
     ]);
   });
 }

@@ -277,17 +277,7 @@ const zhouCampingIntro = [
   { speaker: "404", node: "ch04_003_camping_setup", text: "轻互动：把露营物品放到合适位置。" },
 ];
 
-const zhouCampingChoices = [
-  { label: "帮朋友铺野餐垫", action: "camp_help_picnic_mat" },
-  { label: "偷偷拍一张朋友们围在一起的照片", action: "camp_sneak_photo" },
-];
-
 const zhouCampingFeedback = {
-  help_picnic_mat: [
-    { speaker: "回忆", node: "ch04_003_zhou_weekend_camping", text: "你和朋友把野餐垫压在草地上，风一吹又翘起来。", background: "chapter4-memory-zhou-camping" },
-    { speaker: "回忆", node: "ch04_003_zhou_weekend_camping", text: "周砚川把营地灯放在垫角，刚好压住。", background: "chapter4-memory-zhou-camping" },
-    { speaker: "朋友", node: "ch04_003_zhou_weekend_camping", text: "可以啊，你们俩有点默契。", background: "chapter4-memory-zhou-camping" },
-  ],
   sneak_photo: [
     { speaker: "回忆", node: "ch04_003_zhou_weekend_camping", text: "你举起手机，拍到朋友们围着炉子争论先烤什么。", background: "chapter4-memory-zhou-camping" },
     { speaker: "回忆", node: "ch04_003_zhou_weekend_camping", text: "周砚川没有看镜头，只伸手替你挡了一下风。", background: "chapter4-memory-zhou-camping" },
@@ -474,7 +464,7 @@ const linMapIntro = [
 
 const linMapAfter = [
   { speaker: "回忆", node: "ch04_008_lin_unfamiliar_cost", text: "门口传来钥匙声。" },
-  { speaker: "回忆", node: "ch04_008_lin_unfamiliar_cost", text: "林夏回来时，手里拎着一袋楼下小店买的热饮，袋子上还贴着新店开业的贴纸。" },
+  { speaker: "回忆", node: "ch04_008_lin_unfamiliar_cost", text: "林夏回来时，手里拎着一袋楼下小店买的热饮，袋子上还贴着新店开业的贴纸。", background: "chapter4-solo-lin chapter4-lin-home-complete" },
   { speaker: "林夏", character: "lin", node: "ch04_008_lin_unfamiliar_cost", text: "我回来了。今天一个人开荒怎么样？" },
   { speaker: "玩家", node: "ch04_008_lin_unfamiliar_cost", text: "外卖难吃，路也不认识。但我标了一张地图。" },
   { speaker: "回忆", node: "ch04_008_lin_unfamiliar_cost", text: "林夏把袋子放到桌边，凑过来看你画到一半的生活地图。" },
@@ -730,6 +720,8 @@ function setSceneMode(mode) {
     "chapter4-memory-lin-beach",
     "chapter4-solo-zhou",
     "chapter4-solo-lin",
+    "chapter4-lin-home-empty",
+    "chapter4-lin-home-complete",
     "chapter4-mini-mode",
     "chapter4-mini-complete-mode",
     "chapter4-review-mode",
@@ -785,7 +777,7 @@ function startZhouLife() {
     startMiniGame("camping", () => {
       state.completedCampingSetup = true;
       addClue("轻互动：完成老城露营物品拼贴。");
-      setButtons(zhouCampingChoices);
+      chooseCamping("sneak_photo");
     });
   });
 }
@@ -842,7 +834,7 @@ function startLinLife() {
     enterLifeBoard();
     return;
   }
-  setSceneMode("chapter4-solo-lin");
+  setSceneMode("chapter4-lin-home-empty");
   chapterGoal.textContent = "新城一周";
   startLinear(linHomeIntro, () => {
     startMiniGame("home", () => {
@@ -884,7 +876,7 @@ function chooseBeach(choice) {
 }
 
 function startLinMap() {
-  setSceneMode("chapter4-solo-lin");
+  setSceneMode("chapter4-lin-home-complete");
   chapterGoal.textContent = "陌生生活";
   startLinear(linMapIntro, () => {
     state.completedNewCityMap = true;
@@ -936,9 +928,7 @@ function finishChapter() {
       text: "第四章完成。下一章：最后选择。",
     });
     setButtons([
-      { label: "进入第五章 ›", action: "goto_ch5" },
-      { label: "打开证据", action: "open_evidence" },
-      { label: "重新体验第四章", action: "restart_ch04" },
+      { label: "继续下一章 ›", action: "goto_ch5" },
     ]);
   });
 }
@@ -1414,7 +1404,6 @@ function catChoiceText(choice) {
 
 function campingChoiceText(choice) {
   return {
-    help_picnic_mat: "帮朋友铺野餐垫",
     sneak_photo: "偷偷拍一张朋友们围在一起的照片",
   }[choice];
 }

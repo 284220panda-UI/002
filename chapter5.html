@@ -4,8 +4,8 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>谁是你的对象？ - Chapter 05 Prototype</title>
-    <link rel="stylesheet" href="./styles.css?v=20260819-1048" /></head>
-  <body class="chapter2-page chapter3-page chapter4-page chapter5-page">
+    <link rel="stylesheet" href="./styles.css?v=20260820-1512" /></head>
+  <body class="chapter2-page chapter3-page chapter4-page chapter5-page" data-bgm="daily">
     <main class="game-shell" aria-label="谁是你的对象第五章界面原型">
       <header class="topbar" aria-label="顶部功能栏">
         <button class="icon-btn" type="button" aria-label="菜单">
@@ -24,7 +24,7 @@
           <span class="note-icon"></span>
           <small>日志</small>
         </button>
-        <button class="icon-btn" type="button" aria-label="设置">
+        <button class="icon-btn" type="button" data-action="audio" aria-label="声音设置">
           <span class="gear-icon"></span>
           <small>设置</small>
         </button>
@@ -43,6 +43,23 @@
             <p class="dialogue-text" id="dialogueText">两份生活记录并排摊开。</p>
           </div>
         </article>
+
+        <section class="test-feedback-panel" id="testFeedbackPanel" aria-label="测试反馈" hidden>
+          <div>
+            <span>感谢体验</span>
+            <strong>你已经完成一个结局</strong>
+            <p>如果方便，希望你简单填写一下测试反馈，帮助我们继续调整节奏、剧情和界面体验。</p>
+          </div>
+          <div class="test-feedback-actions">
+            <a
+              href="https://0e11ac74e40d463496878e08e8ff8f17.app.workbuddy.link/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >填写问卷</a>
+            <button type="button" data-feedback-action="restart_choice">回到第五章选择</button>
+            <button type="button" data-feedback-action="end_game">结束游戏</button>
+          </div>
+        </section>
       </section>
 
       <section class="choice-stack" aria-label="选择按钮" hidden>
@@ -133,6 +150,32 @@
           <span>•••</span>
         </div>
         <div class="phone-content">
+          <div class="phone-evidence-card phone-contact-entry" id="phoneContactEntry" hidden>
+            <div class="phone-meta">
+              <span>联系人</span>
+              <strong>新的好友申请<i class="phone-red-dot" aria-hidden="true"></i></strong>
+              <small id="phoneContactSummary">有 2 条待处理申请。</small>
+            </div>
+            <button class="phone-investigate phone-contact-toggle" type="button" data-phone-action="contacts" id="phoneContactsToggle">
+              联系人<i class="phone-red-dot" aria-hidden="true"></i>
+            </button>
+          </div>
+          <section class="phone-contacts" id="phoneContacts" aria-label="好友申请" hidden>
+            <div class="panel-title">
+              <span>好友申请</span>
+              <small>2 条</small>
+            </div>
+            <div class="contact-request-list">
+              <article class="contact-request">
+                <img class="contact-avatar" src="./assets/avatar_frame_sample/ch05_contact_avatar_zhou_on_duty_v1.webp?v=20260820-1512" alt="值班中头像" />
+                <strong>值班中</strong>
+              </article>
+              <article class="contact-request">
+                <img class="contact-avatar" src="./assets/avatar_frame_sample/ch05_contact_avatar_lin_oops_burnt_v1.webp?v=20260820-1512" alt="Oops焦了头像" />
+                <strong>Oops焦了</strong>
+              </article>
+            </div>
+          </section>
           <div class="phone-evidence-card">
             <div class="phone-meta">
               <span>第五章</span>
@@ -151,32 +194,6 @@
             </div>
             <button class="phone-investigate" type="button" data-phone-action="achievements" id="phoneAchievementsToggle">成就系统</button>
           </div>
-          <div class="phone-evidence-card phone-contact-entry" id="phoneContactEntry" hidden>
-            <div class="phone-meta">
-              <span>联系人</span>
-              <strong>新的好友申请<i class="phone-red-dot" aria-hidden="true"></i></strong>
-              <small id="phoneContactSummary">有 2 条待处理申请。</small>
-            </div>
-            <button class="phone-investigate phone-contact-toggle" type="button" data-phone-action="contacts" id="phoneContactsToggle">
-              联系人<i class="phone-red-dot" aria-hidden="true"></i>
-            </button>
-          </div>
-          <section class="phone-contacts" id="phoneContacts" aria-label="好友申请" hidden>
-            <div class="panel-title">
-              <span>好友申请</span>
-              <small>2 条</small>
-            </div>
-            <div class="contact-request-list">
-              <article class="contact-request">
-                <img class="contact-avatar" src="./assets/avatar_frame_sample/ch05_contact_avatar_zhou_on_duty_v1.webp?v=20260819-1048" alt="值班中头像" />
-                <strong>值班中</strong>
-              </article>
-              <article class="contact-request">
-                <img class="contact-avatar" src="./assets/avatar_frame_sample/ch05_contact_avatar_lin_oops_burnt_v1.webp?v=20260819-1048" alt="Oops焦了头像" />
-                <strong>Oops焦了</strong>
-              </article>
-            </div>
-          </section>
           <section class="phone-achievements" id="phoneAchievements" aria-label="结局成就" hidden>
             <div class="panel-title">
               <span>成就</span>
@@ -205,9 +222,10 @@
       </div>
     </div>
 
-    <script src="./chapter5_app.js?v=20260819-1048"></script>
-      <script src="./tracking.js?v=20260819-1048"></script>
-    <script src="./chapter_menu.js?v=20260819-1048"></script>
+    <script src="./audio.js?v=20260820-1512" defer></script>
+    <script src="./chapter5_app.js?v=20260820-1512"></script>
+      <script src="./tracking.js?v=20260820-1512"></script>
+    <script src="./chapter_menu.js?v=20260820-1512"></script>
     <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js" defer></script>
     <script defer>LA.init({id:"3Qv1GQSdmKRRdIxV",ck:"3Qv1GQSdmKRRdIxV"})</script>
   </body>

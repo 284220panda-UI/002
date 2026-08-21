@@ -28,10 +28,10 @@ const state = {
 
 const standeeAssets = {
   zhou: {
-    base: "./assets/characters/v1_full/zhou_base.png",
+    base: "./assets/characters/v1_full/zhou_base.webp",
   },
   lin: {
-    base: "./assets/characters/v1_full/lin_base.png",
+    base: "./assets/characters/v1_full/lin_base.webp",
   },
 };
 

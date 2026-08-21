@@ -319,6 +319,10 @@ button {
   border-radius: 18px;
   object-fit: contain;
   cursor: pointer;
+  outline: 0;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-drag: none;
+  user-select: none;
   filter:
     drop-shadow(0 18px 18px rgba(46, 46, 46, 0.14))
     saturate(0.96);
@@ -326,6 +330,10 @@ button {
     transform 160ms ease,
     opacity 160ms ease,
     filter 160ms ease;
+}
+
+.standee:focus {
+  outline: 0;
 }
 
 .standee-zhou {
@@ -2259,7 +2267,7 @@ button {
 .chapter4-page .chapter4-mini-mode.mini-home::before {
   background:
     linear-gradient(180deg, rgba(255, 253, 248, 0.08), rgba(255, 253, 248, 0.22) 76%, rgba(245, 239, 230, 0.34)),
-    url("./assets/chapter4/home_board_v12_from_final_cg.png") center center / cover no-repeat;
+    url("./assets/chapter4/home_board_v12_from_final_cg.webp") center center / cover no-repeat;
 }
 
 .chapter4-page .chapter4-lin-home-complete::before {

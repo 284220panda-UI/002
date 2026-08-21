@@ -67,15 +67,15 @@ let suppressMiniClick = false;
 
 const standeeAssets = {
   zhou: {
-    neutral: "./assets/characters/v1_full/zhou_base.png",
-    frown: "./assets/characters/v1_full/zhou_base.png",
-    embarrassed: "./assets/characters/v1_full/zhou_base.png",
+    neutral: "./assets/characters/v1_full/zhou_base.webp",
+    frown: "./assets/characters/v1_full/zhou_base.webp",
+    embarrassed: "./assets/characters/v1_full/zhou_base.webp",
   },
   lin: {
-    neutral: "./assets/characters/v1_full/lin_base.png",
-    teasing: "./assets/characters/v1_full/lin_base.png",
-    serious: "./assets/characters/v1_full/lin_base.png",
-    offended: "./assets/characters/v1_full/lin_base.png",
+    neutral: "./assets/characters/v1_full/lin_base.webp",
+    teasing: "./assets/characters/v1_full/lin_base.webp",
+    serious: "./assets/characters/v1_full/lin_base.webp",
+    offended: "./assets/characters/v1_full/lin_base.webp",
   },
 };
 
@@ -108,10 +108,10 @@ const miniConfigs = {
     layerOrder: ["tent", "mat", "boardgame", "food"],
     requiredCount: 4,
     items: [
-      { id: "tent", label: "帐篷", asset: "./assets/chapter4/items/tent_sticker.png", zone: "tent" },
-      { id: "mat", label: "野餐垫", asset: "./assets/chapter4/items/mat_sticker.png", zone: "mat" },
-      { id: "boardgame", label: "桌游", asset: "./assets/chapter4/items/boardgame_sticker.png", zone: "boardgame" },
-      { id: "food", label: "食物", asset: "./assets/chapter4/items/food_sticker.png", zone: "food" },
+      { id: "tent", label: "帐篷", asset: "./assets/chapter4/items/tent_sticker.webp", zone: "tent" },
+      { id: "mat", label: "野餐垫", asset: "./assets/chapter4/items/mat_sticker.webp", zone: "mat" },
+      { id: "boardgame", label: "桌游", asset: "./assets/chapter4/items/boardgame_sticker.webp", zone: "boardgame" },
+      { id: "food", label: "食物", asset: "./assets/chapter4/items/food_sticker.webp", zone: "food" },
     ],
     zones: [
       {
@@ -121,8 +121,8 @@ const miniConfigs = {
         top: 12.08,
         width: 55.08,
         height: 33.33,
-        hintLayer: "./assets/chapter4/hints/tent_hint.png",
-        revealLayer: "./assets/chapter4/reveals/tent_reveal.png",
+        hintLayer: "./assets/chapter4/hints/tent_hint.webp",
+        revealLayer: "./assets/chapter4/reveals/tent_reveal.webp",
       },
       {
         id: "mat",
@@ -131,8 +131,8 @@ const miniConfigs = {
         top: 37.08,
         width: 100,
         height: 50.63,
-        hintLayer: "./assets/chapter4/hints/mat_hint.png",
-        revealLayer: "./assets/chapter4/reveals/mat_reveal.png",
+        hintLayer: "./assets/chapter4/hints/mat_hint.webp",
+        revealLayer: "./assets/chapter4/reveals/mat_reveal.webp",
       },
       {
         id: "boardgame",
@@ -141,8 +141,8 @@ const miniConfigs = {
         top: 50.63,
         width: 43.49,
         height: 24.48,
-        hintLayer: "./assets/chapter4/hints/boardgame_hint.png",
-        revealLayer: "./assets/chapter4/reveals/boardgame_reveal.png",
+        hintLayer: "./assets/chapter4/hints/boardgame_hint.webp",
+        revealLayer: "./assets/chapter4/reveals/boardgame_reveal.webp",
       },
       {
         id: "food",
@@ -151,25 +151,25 @@ const miniConfigs = {
         top: 44.79,
         width: 46.61,
         height: 36.56,
-        hintLayer: "./assets/chapter4/hints/food_hint.png",
-        revealLayer: "./assets/chapter4/reveals/food_reveal.png",
+        hintLayer: "./assets/chapter4/hints/food_hint.webp",
+        revealLayer: "./assets/chapter4/reveals/food_reveal.webp",
       },
     ],
     completeText: "露营地收拾好了。",
   },
   home: {
     goal: "新城小公寓布置",
-    board: "./assets/chapter4/home_board_v12_from_final_cg.png",
+    board: "./assets/chapter4/home_board_v12_from_final_cg.webp",
     complete: "./assets/chapter4/home_complete_v12_from_final_cg.webp",
     node: "ch04_006_new_home_setup",
     prompt: "把贴纸拖到对应阴影处，让空房间一点点变成能住的家。",
     layeredReveal: true,
     layerOrder: ["fridge_notes", "bookcase_life_corner", "controller_pair", "dinner_pair"],
     items: [
-      { id: "fridge_notes", label: "冰箱便签", asset: "./assets/chapter4/items/home_fridge_notes_v11_retry2.png", zone: "fridge_notes" },
-      { id: "bookcase_life_corner", label: "生活角", asset: "./assets/chapter4/items/home_bookcase_life_corner_v11_retry2.png", zone: "bookcase_life_corner" },
-      { id: "controller_pair", label: "双人手柄", asset: "./assets/chapter4/items/home_controller_pair_v11_retry2.png", zone: "controller_pair" },
-      { id: "dinner_pair", label: "外卖袋", asset: "./assets/chapter4/items/home_takeout_bag_v11_retry2.png", zone: "dinner_pair" },
+      { id: "fridge_notes", label: "冰箱便签", asset: "./assets/chapter4/items/home_fridge_notes_v11_retry2.webp", zone: "fridge_notes" },
+      { id: "bookcase_life_corner", label: "生活角", asset: "./assets/chapter4/items/home_bookcase_life_corner_v11_retry2.webp", zone: "bookcase_life_corner" },
+      { id: "controller_pair", label: "双人手柄", asset: "./assets/chapter4/items/home_controller_pair_v11_retry2.webp", zone: "controller_pair" },
+      { id: "dinner_pair", label: "外卖袋", asset: "./assets/chapter4/items/home_takeout_bag_v11_retry2.webp", zone: "dinner_pair" },
     ],
     zones: [
       {
@@ -179,8 +179,8 @@ const miniConfigs = {
         top: 11.46,
         width: 27.34,
         height: 23.96,
-        hintLayer: "./assets/chapter4/hints/home_fridge_notes_hint_v12_from_final_cg.png",
-        revealLayer: "./assets/chapter4/reveals/home_fridge_notes_reveal_v12_masked.png",
+        hintLayer: "./assets/chapter4/hints/home_fridge_notes_hint_v12_from_final_cg.webp",
+        revealLayer: "./assets/chapter4/reveals/home_fridge_notes_reveal_v12_masked.webp",
       },
       {
         id: "bookcase_life_corner",
@@ -189,8 +189,8 @@ const miniConfigs = {
         top: 31.25,
         width: 35.16,
         height: 29.69,
-        hintLayer: "./assets/chapter4/hints/home_bookcase_life_corner_hint_v12_from_final_cg.png",
-        revealLayer: "./assets/chapter4/reveals/home_bookcase_life_corner_reveal_v12_masked.png",
+        hintLayer: "./assets/chapter4/hints/home_bookcase_life_corner_hint_v12_from_final_cg.webp",
+        revealLayer: "./assets/chapter4/reveals/home_bookcase_life_corner_reveal_v12_masked.webp",
       },
       {
         id: "controller_pair",
@@ -199,8 +199,8 @@ const miniConfigs = {
         top: 59.38,
         width: 28.65,
         height: 16.67,
-        hintLayer: "./assets/chapter4/hints/home_controller_pair_hint_v12_from_final_cg.png",
-        revealLayer: "./assets/chapter4/reveals/home_controller_pair_reveal_v12_masked.png",
+        hintLayer: "./assets/chapter4/hints/home_controller_pair_hint_v12_from_final_cg.webp",
+        revealLayer: "./assets/chapter4/reveals/home_controller_pair_reveal_v12_masked.webp",
       },
       {
         id: "dinner_pair",
@@ -209,8 +209,8 @@ const miniConfigs = {
         top: 53.13,
         width: 42.32,
         height: 29.69,
-        hintLayer: "./assets/chapter4/hints/home_dinner_pair_hint_v12_from_final_cg.png",
-        revealLayer: "./assets/chapter4/reveals/home_dinner_pair_reveal_v12_masked.png",
+        hintLayer: "./assets/chapter4/hints/home_dinner_pair_hint_v12_from_final_cg.webp",
+        revealLayer: "./assets/chapter4/reveals/home_dinner_pair_reveal_v12_masked.webp",
       },
     ],
     completeText: "小公寓终于有了生活的痕迹。",
@@ -222,11 +222,11 @@ const miniConfigs = {
     node: "ch04_008_new_city_map",
     prompt: "标出至少四个生活点，把陌生街区拆成能处理的小事。",
     items: [
-      { id: "home", label: "小公寓地址", asset: "./assets/chapter4/items/map_home.png", zone: "home" },
-      { id: "dinner", label: "能接受的晚饭", asset: "./assets/chapter4/items/map_dinner.png", zone: "dinner" },
-      { id: "pharmacy", label: "常用药店", asset: "./assets/chapter4/items/map_pharmacy.png", zone: "pharmacy" },
-      { id: "noise", label: "施工噪音点", asset: "./assets/chapter4/items/map_noise.png", zone: "noise" },
-      { id: "route", label: "夜间回家路线", asset: "./assets/chapter4/items/map_route.png", zone: "route" },
+      { id: "home", label: "小公寓地址", asset: "./assets/chapter4/items/map_home.webp", zone: "home" },
+      { id: "dinner", label: "能接受的晚饭", asset: "./assets/chapter4/items/map_dinner.webp", zone: "dinner" },
+      { id: "pharmacy", label: "常用药店", asset: "./assets/chapter4/items/map_pharmacy.webp", zone: "pharmacy" },
+      { id: "noise", label: "施工噪音点", asset: "./assets/chapter4/items/map_noise.webp", zone: "noise" },
+      { id: "route", label: "夜间回家路线", asset: "./assets/chapter4/items/map_route.webp", zone: "route" },
     ],
     zones: [
       { id: "home", label: "住处定位", left: 44, top: 43, width: 18, height: 14 },
@@ -1159,7 +1159,7 @@ function getMiniHintAsset(miniId, zoneId) {
   if (zone?.hintLayer) return zone.hintLayer;
   const item = config?.items?.find((i) => i.zone === zoneId);
   if (item?.asset) return item.asset;
-  return `./assets/chapter4/hints/${miniId}_${zoneId}_hint.png`;
+  return `./assets/chapter4/hints/${miniId}_${zoneId}_hint.webp`;
 }
 
 function buildMiniRevealCrop(completeImage, zone) {

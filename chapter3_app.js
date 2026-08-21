@@ -55,15 +55,15 @@ let afterItemClose = null;
 
 const standeeAssets = {
   zhou: {
-    neutral: "./assets/characters/v1_full/zhou_base.png",
-    frown: "./assets/characters/v1_full/zhou_base.png",
-    embarrassed: "./assets/characters/v1_full/zhou_base.png",
+    neutral: "./assets/characters/v1_full/zhou_base.webp",
+    frown: "./assets/characters/v1_full/zhou_base.webp",
+    embarrassed: "./assets/characters/v1_full/zhou_base.webp",
   },
   lin: {
-    neutral: "./assets/characters/v1_full/lin_base.png",
-    teasing: "./assets/characters/v1_full/lin_base.png",
-    serious: "./assets/characters/v1_full/lin_base.png",
-    offended: "./assets/characters/v1_full/lin_base.png",
+    neutral: "./assets/characters/v1_full/lin_base.webp",
+    teasing: "./assets/characters/v1_full/lin_base.webp",
+    serious: "./assets/characters/v1_full/lin_base.webp",
+    offended: "./assets/characters/v1_full/lin_base.webp",
   },
 };
 

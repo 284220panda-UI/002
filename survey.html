@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>《谁是你的对象》体验问卷</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  body {
+    font-family: "PingFang SC","Microsoft YaHei","Helvetica Neue",Arial,sans-serif;
+    background: linear-gradient(160deg,#fdf3f5 0%,#f8e8ee 55%,#f3dce4 100%);
+    min-height:100vh;
+    color:#4a3640;
+    padding:24px 16px 48px;
+  }
+  .card {
+    max-width:560px;
+    margin:0 auto;
+    background:#fffdfd;
+    border-radius:20px;
+    box-shadow:0 8px 30px rgba(190,120,140,.18);
+    padding:28px 22px 32px;
+  }
+  .logo {
+    width:56px;height:56px;border-radius:50%;
+    background:linear-gradient(135deg,#e86a8a,#c95d8f);
+    display:flex;align-items:center;justify-content:center;
+    font-size:28px;margin:0 auto 12px;box-shadow:0 6px 16px rgba(232,106,138,.35);
+  }
+  h1 { font-size:20px; text-align:center; color:#3d2b34; letter-spacing:.5px; }
+  .sub { text-align:center; font-size:13px; color:#9a7b88; margin:6px 0 22px; }
+  .q { margin-bottom:26px; }
+  .q-title { font-size:15px; font-weight:600; color:#4a3640; margin-bottom:12px; line-height:1.5; }
+  .q-title b { color:#e86a8a; font-weight:600; margin-right:4px; }
+  .opts { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .opt { position:relative; }
+  .opt input { position:absolute; opacity:0; pointer-events:none; }
+  .opt label {
+    display:flex;align-items:center;justify-content:center;gap:6px;
+    padding:12px 6px;border:1.5px solid #f0dbe3;border-radius:12px;
+    background:#fff;font-size:14px;color:#6b5260;cursor:pointer;
+    transition:all .15s ease;user-select:none;
+  }
+  .opt label:hover { border-color:#eeb4c6; background:#fef6f9; }
+  .opt input:checked + label {
+    border-color:#e86a8a;background:linear-gradient(135deg,#fceef3,#fde2ea);
+    color:#c14b72;font-weight:600;box-shadow:0 3px 10px rgba(232,106,138,.18);
+  }
+  .opt input:focus-visible + label { outline:2px solid #e86a8a; outline-offset:2px; }
+  .opts-col { grid-template-columns:1fr; gap:8px; }
+  .opt-row { display:flex; align-items:center; gap:10px; }
+  .opt-row .opt label { width:132px; flex-shrink:0; }
+  .reason {
+    flex:1; min-width:0; padding:10px 12px;
+    border:1.5px solid #f0dbe3;border-radius:10px;
+    font-size:13px;font-family:inherit;color:#4a3640;background:#fff;
+    transition:border-color .15s ease;
+  }
+  .reason:focus { outline:none; border-color:#e86a8a; background:#fffdfd; }
+  .reason::placeholder { color:#bda3ae; }
+  .opt-extreme { display:flex; flex-direction:column; gap:6px; }
+  .opt-extreme .reason { display:none; padding:8px 10px; font-size:12.5px; border-radius:8px; }
+  .opt-extreme.on .reason { display:block; animation:reasonIn .2s ease; }
+  @keyframes reasonIn { from { opacity:0; transform:translateY(-3px); } to { opacity:1; transform:none; } }
+  textarea {
+    width:100%;min-height:110px;resize:vertical;
+    border:1.5px solid #f0dbe3;border-radius:12px;padding:12px 14px;
+    font-size:14px;font-family:inherit;color:#4a3640;background:#fff;
+    transition:border-color .15s ease;
+  }
+  textarea:focus { outline:none; border-color:#e86a8a; background:#fffdfd; }
+  textarea::placeholder { color:#bda3ae; }
+  .btn-wrap { margin-top:8px; }
+  button {
+    width:100%;padding:14px;border:none;border-radius:14px;
+    background:linear-gradient(135deg,#e86a8a,#c95d8f);color:#fff;
+    font-size:16px;font-weight:600;letter-spacing:2px;cursor:pointer;
+    box-shadow:0 6px 18px rgba(232,106,138,.35);transition:transform .12s ease,opacity .15s ease;
+  }
+  button:active { transform:scale(.97); }
+  button:disabled { opacity:.6; cursor:not-allowed; }
+  .ok {
+    display:none;text-align:center;padding:34px 10px;
+  }
+  .ok.show { display:block; }
+  .ok .big { font-size:52px; }
+  .ok h2 { font-size:19px; color:#3d2b34; margin:14px 0 8px; }
+  .ok p { font-size:13.5px; color:#9a7b88; line-height:1.7; }
+  .foot { text-align:center; font-size:12px; color:#c2a7b3; margin-top:18px; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="logo">💌</div>
+    <h1>《谁是你的对象》体验问卷</h1>
+    <p class="sub">谢谢你的游玩！大约 1 分钟就能填完，你的反馈会帮助我们把游戏做得更好 ❤</p>
+
+    <form id="survey">
+      <div class="q">
+        <div class="q-title"><b>1.</b>你觉得游戏的美术风格怎么样？（画面、立绘、UI）</div>
+        <div class="opts">
+          <div class="opt opt-extreme"><input type="radio" name="q1_美术" id="q1a" value="非常喜欢" required><label for="q1a">😍 超级喜欢</label><input type="text" class="reason" name="q1_非常喜欢原因" placeholder="选填：说说理由，比如最喜欢哪里？"></div>
+          <div class="opt"><input type="radio" name="q1_美术" id="q1b" value="喜欢"><label for="q1b">😊 喜欢</label></div>
+          <div class="opt"><input type="radio" name="q1_美术" id="q1c" value="一般"><label for="q1c">😐 一般</label></div>
+          <div class="opt opt-extreme"><input type="radio" name="q1_美术" id="q1d" value="不喜欢"><label for="q1d">🙁 不喜欢</label><input type="text" class="reason" name="q1_不喜欢原因" placeholder="选填：说说理由，比如哪里不满意？"></div>
+        </div>
+      </div>
+
+      <div class="q">
+        <div class="q-title"><b>2.</b>你觉得剧情怎么样？（故事走向、叙事节奏）</div>
+        <div class="opts">
+          <div class="opt opt-extreme"><input type="radio" name="q2_剧情" id="q2a" value="非常喜欢" required><label for="q2a">😍 超级喜欢</label><input type="text" class="reason" name="q2_非常喜欢原因" placeholder="选填：说说理由，比如哪段剧情最打动你？"></div>
+          <div class="opt"><input type="radio" name="q2_剧情" id="q2b" value="喜欢"><label for="q2b">😊 喜欢</label></div>
+          <div class="opt"><input type="radio" name="q2_剧情" id="q2c" value="一般"><label for="q2c">😐 一般</label></div>
+          <div class="opt opt-extreme"><input type="radio" name="q2_剧情" id="q2d" value="不喜欢"><label for="q2d">🙁 不喜欢</label><input type="text" class="reason" name="q2_不喜欢原因" placeholder="选填：说说理由，比如哪里不满意？"></div>
+        </div>
+      </div>
+
+      <div class="q">
+        <div class="q-title"><b>3.</b>你喜欢林夏和周砚川这两个角色吗？（人物塑造、性格表现）</div>
+        <div class="opts">
+          <div class="opt opt-extreme"><input type="radio" name="q3_人物" id="q3a" value="非常喜欢" required><label for="q3a">😍 超级喜欢</label><input type="text" class="reason" name="q3_非常喜欢原因" placeholder="选填：说说理由，比如最喜欢谁、为什么？"></div>
+          <div class="opt"><input type="radio" name="q3_人物" id="q3b" value="喜欢"><label for="q3b">😊 喜欢</label></div>
+          <div class="opt"><input type="radio" name="q3_人物" id="q3c" value="一般"><label for="q3c">😐 一般</label></div>
+          <div class="opt opt-extreme"><input type="radio" name="q3_人物" id="q3d" value="不喜欢"><label for="q3d">🙁 不喜欢</label><input type="text" class="reason" name="q3_不喜欢原因" placeholder="选填：说说理由，比如哪里不满意？"></div>
+        </div>
+      </div>
+
+      <div class="q">
+        <div class="q-title"><b>4.</b>这两个人，你更喜欢谁？（选完可以在旁边说两句 ☺）</div>
+        <div class="opts opts-col">
+          <div class="opt-row">
+            <div class="opt"><input type="radio" name="q4_喜欢谁" id="q4a" value="林夏" required><label for="q4a">林夏 👩</label></div>
+            <input type="text" class="reason" name="q4_林夏原因" placeholder="选填：喜欢她哪里？">
+          </div>
+          <div class="opt-row">
+            <div class="opt"><input type="radio" name="q4_喜欢谁" id="q4b" value="周砚川"><label for="q4b">周砚川 👨</label></div>
+            <input type="text" class="reason" name="q4_周砚川原因" placeholder="选填：喜欢他哪里？">
+          </div>
+          <div class="opt-row">
+            <div class="opt"><input type="radio" name="q4_喜欢谁" id="q4c" value="都喜欢"><label for="q4c">都喜欢 💕</label></div>
+            <input type="text" class="reason" name="q4_都喜欢原因" placeholder="选填：说说理由？">
+          </div>
+          <div class="opt-row">
+            <div class="opt"><input type="radio" name="q4_喜欢谁" id="q4d" value="都不喜欢"><label for="q4d">都不喜欢 🙅</label></div>
+            <input type="text" class="reason" name="q4_都不喜欢原因" placeholder="选填：哪里不满意？">
+          </div>
+        </div>
+      </div>
+
+      <div class="q">
+        <div class="q-title"><b>5.</b>游戏的交互体验如何？（对话选择、证据收集、多结局玩法）</div>
+        <div class="opts">
+          <div class="opt opt-extreme"><input type="radio" name="q5_交互" id="q5a" value="非常喜欢" required><label for="q5a">😍 非常喜欢</label><input type="text" class="reason" name="q5_非常喜欢原因" placeholder="选填：最喜欢哪个玩法？"></div>
+          <div class="opt"><input type="radio" name="q5_交互" id="q5b" value="喜欢"><label for="q5b">😊 喜欢</label></div>
+          <div class="opt"><input type="radio" name="q5_交互" id="q5c" value="一般"><label for="q5c">😐 一般</label></div>
+          <div class="opt opt-extreme"><input type="radio" name="q5_交互" id="q5d" value="不喜欢"><label for="q5d">🙁 不喜欢</label><input type="text" class="reason" name="q5_不喜欢原因" placeholder="选填：哪里不好用？"></div>
+        </div>
+      </div>
+
+      <div class="q">
+        <div class="q-title"><b>6.</b>还有什么想对制作组说的话吗？（建议、吐槽、期待都可以）</div>
+        <textarea name="q6_建议" placeholder="选填，比如：希望增加更多的结局、某个剧情很打动我、UI 哪里不好用……"></textarea>
+      </div>
+
+      <div class="btn-wrap">
+        <button type="submit" id="submitBtn">提交问卷 💌</button>
+      </div>
+    </form>
+
+    <div class="ok" id="okBox">
+      <div class="big">🎉</div>
+      <h2>提交成功！</h2>
+      <p>感谢你的反馈，我们会认真阅读每一条留言。<br>祝你和你的「对象」玩得开心！</p>
+      <p id="okId" style="margin-top:12px;font-size:12.5px;color:#c2a7b3;word-break:break-all;"></p>
+    </div>
+
+    <div class="foot">《谁是你的对象》体验版 · 你的反馈是我们前进的动力</div>
+  </div>
+
+<script>
+(function(){
+  var form = document.getElementById('survey');
+  var btn = document.getElementById('submitBtn');
+  var okBox = document.getElementById('okBox');
+
+  var SUPABASE_URL = "https://cmwoimsjojbxullugzpz.supabase.co";
+  var ANON_KEY = "sb_publishable_tPNgOAZeJJV4vgthXitxfA_dEdkIxAc";
+  var FALLBACK_EMAIL = "13639110563@163.com"; // 提交失败兜底转发邮箱
+
+  // 极端选项（超级喜欢/不喜欢）选填理由框：选中展开、切换/取消收起
+  var allRadios = document.querySelectorAll('input[type="radio"]');
+  allRadios.forEach(function(radio){
+    radio.addEventListener('change', function(){
+      var group = document.querySelectorAll('input[type="radio"][name="' + radio.name + '"]');
+      group.forEach(function(r){
+        var box = r.closest('.opt-extreme');
+        if (box) box.classList.toggle('on', r.checked);
+      });
+    });
+  });
+
+  function val(name){
+    var el = form.querySelector('[name="'+name+'"]:checked');
+    return el ? el.value : "";
+  }
+  function txt(name){
+    var el = form.querySelector('[name="'+name+'"]');
+    return el ? el.value.trim() : "";
+  }
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    if (!form.checkValidity()) { form.reportValidity(); return; }
+    btn.disabled = true;
+    btn.textContent = '提交中…';
+
+    var q4val = val("q4_喜欢谁");
+    var preferReasonMap = {
+      "林夏": "q4_林夏原因",
+      "周砚川": "q4_周砚川原因",
+      "都喜欢": "q4_都喜欢原因",
+      "都不喜欢": "q4_都不喜欢原因"
+    };
+    var detailLines = [
+      ["1_美术_喜欢理由", txt("q1_非常喜欢原因")],
+      ["1_美术_不喜欢理由", txt("q1_不喜欢原因")],
+      ["2_剧情_喜欢理由", txt("q2_非常喜欢原因")],
+      ["2_剧情_不喜欢理由", txt("q2_不喜欢原因")],
+      ["3_人物_喜欢理由", txt("q3_非常喜欢原因")],
+      ["3_人物_不喜欢理由", txt("q3_不喜欢原因")],
+      ["4_更喜欢谁_理由", q4val ? txt(preferReasonMap[q4val]) : ""],
+      ["5_交互_喜欢理由", txt("q5_非常喜欢原因")],
+      ["5_交互_不喜欢理由", txt("q5_不喜欢原因")]
+    ].filter(function(item){ return item[1]; });
+    var suggestionText = txt("q6_建议");
+    if (detailLines.length) {
+      suggestionText += (suggestionText ? "\n\n" : "") + "【选项理由】\n" + detailLines.map(function(item){
+        return item[0] + "：" + item[1];
+      }).join("\n");
+    }
+
+    var payload = {
+      q_art: val("q1_美术"),
+      q_story: val("q2_剧情"),
+      q_char: val("q3_人物"),
+      q_prefer: q4val,
+      q_interact: val("q5_交互"),
+      suggestion: suggestionText
+    };
+    var extendedPayload = Object.assign({}, payload, {
+      art_like_reason: txt("q1_非常喜欢原因"),
+      art_dislike_reason: txt("q1_不喜欢原因"),
+      story_like_reason: txt("q2_非常喜欢原因"),
+      story_dislike_reason: txt("q2_不喜欢原因"),
+      char_like_reason: txt("q3_非常喜欢原因"),
+      char_dislike_reason: txt("q3_不喜欢原因"),
+      prefer_reason: q4val ? txt(preferReasonMap[q4val]) : "",
+      interact_like_reason: txt("q5_非常喜欢原因"),
+      interact_dislike_reason: txt("q5_不喜欢原因")
+    });
+
+    submitPayload(extendedPayload).catch(function(){
+      return submitPayload(payload);
+    }).then(function(rows){
+      var id = (rows && rows[0] && rows[0].id) ? rows[0].id : "";
+      showOk(id);
+    }).catch(function(err){
+      console.error(err);
+      // 兜底：数据库写不进，把原始回答发到邮箱，保证不丢
+      emailFallback(extendedPayload);
+      btn.disabled = false;
+      btn.textContent = '提交失败，已转你邮箱，也可重试 💌';
+    });
+  });
+
+  function submitPayload(data){
+    return fetch(SUPABASE_URL + "/rest/v1/survey_responses", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "apikey": ANON_KEY,
+        "Authorization": "Bearer " + ANON_KEY,
+        "Prefer": "return=minimal"
+      },
+      body: JSON.stringify(data)
+    }).then(function(res){
+      if (res.ok || res.status === 201) {
+        return res.text().then(function(t){
+          return t ? JSON.parse(t) : [];
+        });
+      }
+      return res.text().then(function(t){
+        throw new Error(t || ("HTTP " + res.status));
+      });
+    });
+  }
+
+  // 兜底转发：提交失败时把原始回答发到邮箱（隐藏 iframe 表单提交，免 CORS 问题）
+  function emailFallback(data){
+    try {
+      var iframe = document.createElement('iframe');
+      iframe.name = 'fs_fb_' + Date.now();
+      iframe.style.display = 'none';
+      document.body.appendChild(iframe);
+      var form = document.createElement('form');
+      form.method = 'POST';
+      form.action = 'https://formsubmit.co/' + FALLBACK_EMAIL + '?_captcha=false&_subject=问卷兜底转发-提交失败';
+      form.target = iframe.name;
+      var labels = {
+        q_art: "1_美术", q_story: "2_剧情", q_char: "3_人物",
+        q_prefer: "4_更喜欢谁", q_interact: "5_交互",
+        art_like_reason: "1_美术_喜欢理由", art_dislike_reason: "1_美术_不喜欢理由",
+        story_like_reason: "2_剧情_喜欢理由", story_dislike_reason: "2_剧情_不喜欢理由",
+        char_like_reason: "3_人物_喜欢理由", char_dislike_reason: "3_人物_不喜欢理由",
+        prefer_reason: "4_更喜欢谁_理由", interact_like_reason: "5_交互_喜欢理由",
+        interact_dislike_reason: "5_交互_不喜欢理由", suggestion: "6_建议"
+      };
+      for (var k in labels) {
+        var v = data[k];
+        if (v === '' || v == null) continue;
+        var inp = document.createElement('input');
+        inp.type = 'hidden'; inp.name = labels[k]; inp.value = v;
+        form.appendChild(inp);
+      }
+      var t = document.createElement('input');
+      t.type = 'hidden'; t.name = '提交时间'; t.value = new Date().toLocaleString('zh-CN');
+      form.appendChild(t);
+      document.body.appendChild(form);
+      form.submit();
+    } catch(e) { /* 兜底失败也不影响页面 */ }
+  }
+
+  function showOk(id){
+    form.style.display = 'none';
+    okBox.classList.add('show');
+    if (id) {
+      var p = document.getElementById('okId');
+      if (p) p.textContent = '你的提交编号：' + id + '（凭此可核对记录）';
+    }
+    okBox.scrollIntoView({behavior:'smooth', block:'center'});
+  }
+})();
+</script>
+</body>
+</html>
